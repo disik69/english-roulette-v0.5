@@ -9,17 +9,18 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-//@Component
+@Component
 public class FxApplicationRunner extends Application implements ApplicationRunner {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(
-                FxApplicationRunner.class.getResource("SearchController.fxml")
+        FXMLLoader layoutLoader = new FXMLLoader(
+                FxApplicationRunner.class.getResource("LayoutController.fxml")
         );
-        AnchorPane page = loader.load();
-        Scene scene = new Scene(page);
+        AnchorPane layout = layoutLoader.load();
 
-        primaryStage.setTitle("Title goes here");
+        Scene scene = new Scene(layout);
+
+        primaryStage.setTitle("English Roulette");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

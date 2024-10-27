@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="ua.pp.disik.englishroulette.desktop.fx.LayoutController">
+        <VBox>
+            <MenuBar>
+                <Menu fx:id="vocabulary" text="Vocabulary" />
+                <Menu text="Studying">
+                    <MenuItem fx:id="reading" text="Reading"
+                              onAction="#handleReading"
+                    />
+                    <MenuItem fx:id="memory" text="Memory"
+                              onAction="#handleMemory"
+                    />
+                    <MenuItem fx:id="repeating" text="Repeating"
+                              onAction="#handleRepeating"
+                    />
+                </Menu>
+            </MenuBar>
+            <AnchorPane fx:id="layout"></AnchorPane>
+        </VBox>
+</AnchorPane>
