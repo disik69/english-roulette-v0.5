@@ -13,14 +13,14 @@ import jakarta.persistence.*;
 )
 @Data
 @NoArgsConstructor
-public class Word {
+public class Phrase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String body;
 
-    public Word(String body) {
+    public Phrase(String body) {
         this.body = body;
     }
 }

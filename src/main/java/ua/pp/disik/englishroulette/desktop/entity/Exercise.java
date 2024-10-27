@@ -2,6 +2,7 @@ package ua.pp.disik.englishroulette.desktop.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import jakarta.persistence.*;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Exercise {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,19 +25,19 @@ public class Exercise {
     @ManyToMany(cascade = CascadeType.ALL)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<Word> foreignWords;
+    private List<Phrase> foreignPhrases;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<Word> nativeWords;
+    private List<Phrase> nativePhrases;
 
-    public Exercise() {
-        this.readingCount = 7;
-        this.memoryCount = 7;
+    public Exercise(int readingCount, int memoryCount) {
+        this.readingCount = readingCount;
+        this.memoryCount = memoryCount;
         this.checkedAt = System.currentTimeMillis();
         this.updatedAt = System.currentTimeMillis();
-        this.nativeWords = new ArrayList<>();
-        this.foreignWords = new ArrayList<>();
+        this.nativePhrases = new ArrayList<>();
+        this.foreignPhrases = new ArrayList<>();
     }
 }

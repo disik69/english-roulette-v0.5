@@ -4,39 +4,50 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
-import ua.pp.disik.englishroulette.desktop.entity.Word;
+import ua.pp.disik.englishroulette.desktop.entity.Phrase;
+import ua.pp.disik.englishroulette.desktop.entity.SettingName;
+import ua.pp.disik.englishroulette.desktop.service.SettingService;
 
 import java.util.List;
+import java.util.Map;
 
-@Component
+//@Component
 public class JpaApplicationRunner implements ApplicationRunner {
     private final WordRepository wordRepository;
     private final ExerciseRepository exerciseRepository;
+    private final SettingService settingService;
 
     public JpaApplicationRunner(
             WordRepository wordRepository,
-            ExerciseRepository exerciseRepository
+            ExerciseRepository exerciseRepository,
+            SettingService settingService
     ) {
         this.wordRepository = wordRepository;
         this.exerciseRepository = exerciseRepository;
+        this.settingService = settingService;
     }
 
     @Override
     public void run(ApplicationArguments args) {
-        Word word1 = new Word("instead");
-        Word word2 = new Word("вместо");
-        wordRepository.saveAll(List.of(word1, word2));
+        Phrase phrase1 = new Phrase("instead");
+        Phrase phrase2 = new Phrase("вместо");
+        wordRepository.saveAll(List.of(phrase1, phrase2));
 
-        Exercise exercise = new Exercise();
-        exercise.setForeignWords(List.of(
-                new Word("match"),
-                new Word("feet"),
-                new Word("suit")
+        Map<SettingName, String> settings = settingService.getMap();
+
+        Exercise exercise = new Exercise(
+                Integer.parseInt(settings.get(SettingName.READING_COUNT)),
+                Integer.parseInt(settings.get(SettingName.MEMORY_COUNT))
+        );
+        exercise.setForeignPhrases(List.of(
+                new Phrase("match"),
+                new Phrase("feet"),
+                new Phrase("suit")
         ));
-        exercise.setNativeWords(List.of(
-                new Word("совпадать"),
-                new Word("подходить по размеру"),
-                new Word("быть к лицу")
+        exercise.setNativePhrases(List.of(
+                new Phrase("совпадать"),
+                new Phrase("подходить по размеру"),
+                new Phrase("быть к лицу")
         ));
         exerciseRepository.save(exercise);
     }
