@@ -2,51 +2,54 @@ package ua.pp.disik.englishroulette.desktop.fx;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 
 public class LayoutController {
-    @FXML
-    private Menu vocabulary;
+    private AnchorPane vocabulary;
+
+    private AnchorPane exercise;
+    private ExerciseController exerciseController;
 
     @FXML
-    private MenuItem reading;
+    private VBox layout;
 
     @FXML
-    private MenuItem memory;
+    private void initialize() throws Exception {
+        FXMLLoader vocabularyLoader = new FXMLLoader(
+                FxApplicationRunner.class.getResource("VocabularyController.fxml")
+        );
+        vocabulary = vocabularyLoader.load();
 
-    @FXML
-    private MenuItem repeating;
-
-    @FXML
-    private AnchorPane layout;
-
-    @FXML
-    private void initialize() {
-
+        FXMLLoader exerciseLoader = new FXMLLoader(
+                FxApplicationRunner.class.getResource("ExerciseController.fxml")
+        );
+        exercise = exerciseLoader.load();
+        exerciseController = exerciseLoader.getController();
     }
 
     public void handleVocabulary(ActionEvent event) {
-        setLabel("Vocabulary");
+        setLayout(vocabulary);
     }
 
     public void handleReading(ActionEvent event) {
-        setLabel("Reading");
+        exerciseController.setLabel("Reading");
+        setLayout(exercise);
     }
 
     public void handleMemory(ActionEvent event) {
-        setLabel("Memory");
+        exerciseController.setLabel("Memory");
+        setLayout(exercise);
     }
 
     public void handleRepeating(ActionEvent event) {
-        setLabel("Repeating");
+        exerciseController.setLabel("Repeating");
+        setLayout(exercise);
     }
 
-    private void setLabel(String text) {
-        int size = layout.getChildren().size();
+    private void setLayout(AnchorPane anchorPane) {
         layout.getChildren().clear();
-        layout.getChildren().add(new Label(text));
+        layout.getChildren().add(anchorPane);
     }
 }

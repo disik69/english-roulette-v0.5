@@ -11,19 +11,15 @@
             fx:controller="ua.pp.disik.englishroulette.desktop.fx.LayoutController">
         <VBox>
             <MenuBar>
-                <Menu fx:id="vocabulary" text="Vocabulary" />
+                <Menu text="Vocabulary">
+                    <MenuItem text="Vocabulary" onAction="#handleVocabulary" />
+                </Menu>
                 <Menu text="Studying">
-                    <MenuItem fx:id="reading" text="Reading"
-                              onAction="#handleReading"
-                    />
-                    <MenuItem fx:id="memory" text="Memory"
-                              onAction="#handleMemory"
-                    />
-                    <MenuItem fx:id="repeating" text="Repeating"
-                              onAction="#handleRepeating"
-                    />
+                    <MenuItem text="Reading" onAction="#handleReading" />
+                    <MenuItem text="Memory" onAction="#handleMemory" />
+                    <MenuItem text="Repeating" onAction="#handleRepeating" />
                 </Menu>
             </MenuBar>
-            <AnchorPane fx:id="layout"></AnchorPane>
         </VBox>
+        <VBox fx:id="layout"></VBox>
 </AnchorPane>
