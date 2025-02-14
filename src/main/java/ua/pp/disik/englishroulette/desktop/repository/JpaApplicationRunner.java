@@ -5,6 +5,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
 import ua.pp.disik.englishroulette.desktop.entity.Phrase;
+import ua.pp.disik.englishroulette.desktop.entity.Priority;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.service.SettingService;
 
@@ -37,7 +38,8 @@ public class JpaApplicationRunner implements ApplicationRunner {
 
         Exercise exercise = new Exercise(
                 Integer.parseInt(settings.get(SettingName.READING_COUNT)),
-                Integer.parseInt(settings.get(SettingName.MEMORY_COUNT))
+                Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)),
+                Priority.HIGH.getIndex()
         );
         exercise.setForeignPhrases(List.of(
                 new Phrase("match"),

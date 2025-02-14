@@ -19,6 +19,7 @@ public class Exercise {
 
     private int readingCount;
     private int memoryCount;
+    private int priority;
     private long checkedAt;
     private long updatedAt;
 
@@ -32,7 +33,7 @@ public class Exercise {
     @EqualsAndHashCode.Exclude
     private List<Phrase> nativePhrases;
 
-    public Exercise(int readingCount, int memoryCount) {
+    public Exercise(int readingCount, int memoryCount, int priority) {
         this.readingCount = readingCount;
         this.memoryCount = memoryCount;
         this.checkedAt = System.currentTimeMillis();
