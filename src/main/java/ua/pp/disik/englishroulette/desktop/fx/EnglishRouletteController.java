@@ -8,13 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class EnglishRouletteController {
-    private ExerciseController exerciseController;
-
     @FXML
     private MenuBar menu;
-
-    @FXML
-    private GridPane main;
 
     @FXML
     private void initialize() throws Exception {

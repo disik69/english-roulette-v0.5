@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -15,35 +16,40 @@
             <MenuItem onAction="#handleRepeating" text="Repeating" />
         </Menu>
     </MenuBar>
-    <GridPane>
-        <children>
-            <TextField alignment="CENTER" promptText="filter"
-                       GridPane.columnIndex="0"
-                       GridPane.rowIndex="0" />
-            <Button text="Create"
-                    GridPane.columnIndex="1"
-                    GridPane.rowIndex="0" />
-            <Button text="Reset"
-                    GridPane.columnIndex="2"
-                    GridPane.rowIndex="0" />
-            <Button text="Delete"
-                    GridPane.columnIndex="3"
-                    GridPane.rowIndex="0" />
-            <TableView prefHeight="200.0" prefWidth="200.0"
-                    GridPane.columnIndex="0"
-                    GridPane.rowIndex="1"
-                    GridPane.columnSpan="4" >
-                <columns>
-                    <TableColumn prefWidth="75.0" text="C1"/>
-                    <TableColumn prefWidth="75.0" text="C2"/>
-                </columns>
-            </TableView>
-            <Button text="&lt;"
-                    GridPane.columnIndex="1"
-                    GridPane.rowIndex="2" />
-            <Button text="&gt;"
-                    GridPane.columnIndex="2"
-                    GridPane.rowIndex="2" />
-        </children>
-    </GridPane>
+        <GridPane hgap="5" vgap="5" >
+            <padding>
+                <Insets bottom="5" left="5" right="5" top="5" />
+            </padding>
+            <children>
+                <TextField alignment="CENTER" promptText="filter"
+                           GridPane.columnIndex="0"
+                           GridPane.rowIndex="0" />
+                <Button text="Create"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="0" />
+                <Button text="Reset"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="0" />
+                <Button text="Delete"
+                        GridPane.columnIndex="3"
+                        GridPane.rowIndex="0" />
+                <TableView GridPane.columnIndex="0"
+                           GridPane.rowIndex="1"
+                           GridPane.columnSpan="4" >
+                    <columns>
+                        <TableColumn prefWidth="100.0" text="Foreign" />
+                        <TableColumn prefWidth="100.0" text="Native" />
+                        <TableColumn prefWidth="100.0" text="Reading" />
+                        <TableColumn prefWidth="100.0" text="Memory" />
+                        <TableColumn prefWidth="100.0" text="Checked" />
+                    </columns>
+                </TableView>
+                <Button text="&lt;"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="2" />
+                <Button text="&gt;"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="2" />
+            </children>
+        </GridPane>
 </VBox>

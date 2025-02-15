@@ -36,21 +36,49 @@ public class JpaApplicationRunner implements ApplicationRunner {
 
         Map<SettingName, String> settings = settingService.getMap();
 
-        Exercise exercise = new Exercise(
+        Exercise exercise1 = new Exercise(
                 Integer.parseInt(settings.get(SettingName.READING_COUNT)),
                 Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)),
-                Priority.HIGH.getIndex()
+                Priority.MIDDLE.getIndex()
         );
-        exercise.setForeignPhrases(List.of(
+        exercise1.setForeignPhrases(List.of(
                 new Phrase("match"),
                 new Phrase("feet"),
                 new Phrase("suit")
         ));
-        exercise.setNativePhrases(List.of(
+        exercise1.setNativePhrases(List.of(
                 new Phrase("совпадать"),
                 new Phrase("подходить по размеру"),
                 new Phrase("быть к лицу")
         ));
-        exerciseRepository.save(exercise);
+        exerciseRepository.save(exercise1);
+
+        Exercise exercise2 = new Exercise(
+                Integer.parseInt(settings.get(SettingName.READING_COUNT)),
+                Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)),
+                Priority.LOW.getIndex()
+        );
+        exercise2.setForeignPhrases(List.of(
+                new Phrase("I'm fed up.")
+        ));
+        exercise2.setNativePhrases(List.of(
+                new Phrase("Мне это надоело.")
+        ));
+        exerciseRepository.save(exercise2);
+
+        Exercise exercise3 = new Exercise(
+                Integer.parseInt(settings.get(SettingName.READING_COUNT)),
+                Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)),
+                Priority.HIGH.getIndex()
+        );
+        exercise3.setForeignPhrases(List.of(
+                new Phrase("to drop out")
+        ));
+        exercise3.setNativePhrases(List.of(
+                new Phrase("отсеятся"),
+                new Phrase("вылететь"),
+                new Phrase("выпасть")
+        ));
+        exerciseRepository.save(exercise3);
     }
 }
