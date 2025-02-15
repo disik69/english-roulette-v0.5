@@ -2,7 +2,7 @@ package ua.pp.disik.englishroulette.desktop.fx;
 
 import javafx.fxml.FXML;
 
-public class VocabularyController {
+public class PhraseController {
     @FXML
     private void initialize() {
 

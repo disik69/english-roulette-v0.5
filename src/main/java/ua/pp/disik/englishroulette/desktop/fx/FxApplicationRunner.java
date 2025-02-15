@@ -2,6 +2,9 @@ package ua.pp.disik.englishroulette.desktop.fx;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.Scene;
@@ -12,17 +15,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class FxApplicationRunner extends Application implements ApplicationRunner {
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        FXMLLoader layoutLoader = new FXMLLoader(
-                FxApplicationRunner.class.getResource("LayoutController.fxml")
+    public void start(Stage stage) throws Exception {
+        FXMLLoader viewLoader = new FXMLLoader(
+                FxApplicationRunner.class.getResource("EnglishRouletteView.fxml")
         );
-        AnchorPane layout = layoutLoader.load();
+        VBox englishRoulette = viewLoader.load();
 
-        Scene scene = new Scene(layout);
+        Scene scene = new Scene(englishRoulette);
 
-        primaryStage.setTitle("English Roulette");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        stage.setScene(scene);
+        stage.setWidth(600);
+        stage.setHeight(400);
+        stage.setTitle("English Roulette");
+        stage.show();
     }
 
     @Override
