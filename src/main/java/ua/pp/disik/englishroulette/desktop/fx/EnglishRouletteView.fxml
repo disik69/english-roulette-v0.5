@@ -16,21 +16,37 @@
             <MenuItem onAction="#handleRepeating" text="Repeating" />
         </Menu>
     </MenuBar>
-        <GridPane hgap="5" vgap="5" >
+        <GridPane hgap="5" vgap="5" gridLinesVisible="true" style="-fx-background-color: red;"
+                  AnchorPane.rightAnchor="10"
+                  AnchorPane.leftAnchor="10" >
             <padding>
                 <Insets bottom="5" left="5" right="5" top="5" />
             </padding>
+            <columnConstraints>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="10"/>
+                <RowConstraints percentHeight="80"/>
+                <RowConstraints percentHeight="10"/>
+            </rowConstraints>
             <children>
                 <TextField alignment="CENTER" promptText="filter"
                            GridPane.columnIndex="0"
                            GridPane.rowIndex="0" />
                 <Button text="Create"
+                        GridPane.halignment="CENTER"
                         GridPane.columnIndex="1"
                         GridPane.rowIndex="0" />
                 <Button text="Reset"
+                        GridPane.halignment="CENTER"
                         GridPane.columnIndex="2"
                         GridPane.rowIndex="0" />
                 <Button text="Delete"
+                        GridPane.halignment="CENTER"
                         GridPane.columnIndex="3"
                         GridPane.rowIndex="0" />
                 <TableView GridPane.columnIndex="0"
@@ -45,9 +61,11 @@
                     </columns>
                 </TableView>
                 <Button text="&lt;"
+                        GridPane.halignment="RIGHT"
                         GridPane.columnIndex="1"
                         GridPane.rowIndex="2" />
                 <Button text="&gt;"
+                        GridPane.halignment="LEFT"
                         GridPane.columnIndex="2"
                         GridPane.rowIndex="2" />
             </children>
