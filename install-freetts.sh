@@ -3,7 +3,7 @@
 if [[ $1 = "" ]]; then
     echo "The script needs a maven binary file for installing local freetts libraries to repository."
     echo "The format is \"$0 <path to binary file>\""
-    exit 0
+    exit 1
 fi
 
 $1 install:install-file -Dfile=freetts/cmu_us_kal.jar -DgroupId=ua.pp.disik -DartifactId=cmu_us_kal -Dversion=1.0 -Dpackaging=jar -DgeneratePom=true
