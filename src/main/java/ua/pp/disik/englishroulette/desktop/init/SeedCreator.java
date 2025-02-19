@@ -1,38 +1,38 @@
-package ua.pp.disik.englishroulette.desktop.repository;
+package ua.pp.disik.englishroulette.desktop.init;
 
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
 import ua.pp.disik.englishroulette.desktop.entity.Phrase;
 import ua.pp.disik.englishroulette.desktop.entity.Priority;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
+import ua.pp.disik.englishroulette.desktop.repository.ExerciseRepository;
+import ua.pp.disik.englishroulette.desktop.repository.PhraseRepository;
 import ua.pp.disik.englishroulette.desktop.service.SettingService;
 
 import java.util.List;
 import java.util.Map;
 
-//@Component
-public class JpaApplicationRunner implements ApplicationRunner {
-    private final WordRepository wordRepository;
+@Component
+public class SeedCreator extends Creator {
+    private final PhraseRepository phraseRepository;
     private final ExerciseRepository exerciseRepository;
     private final SettingService settingService;
 
-    public JpaApplicationRunner(
-            WordRepository wordRepository,
+    public SeedCreator(
+            PhraseRepository phraseRepository,
             ExerciseRepository exerciseRepository,
             SettingService settingService
     ) {
-        this.wordRepository = wordRepository;
+        this.phraseRepository = phraseRepository;
         this.exerciseRepository = exerciseRepository;
         this.settingService = settingService;
     }
 
     @Override
-    public void run(ApplicationArguments args) {
+    public void create() {
         Phrase phrase1 = new Phrase("instead");
         Phrase phrase2 = new Phrase("вместо");
-        wordRepository.saveAll(List.of(phrase1, phrase2));
+        phraseRepository.saveAll(List.of(phrase1, phrase2));
 
         Map<SettingName, String> settings = settingService.getMap();
 

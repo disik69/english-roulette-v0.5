@@ -4,7 +4,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.pp.disik.englishroulette.desktop.fx.EnglishRouletteController">
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ua.pp.disik.englishroulette.desktop.fx.EnglishRoulettePresenter">
     <MenuBar fx:id="menu">
         <Menu text="Vocabulary">
             <MenuItem onAction="#handleCreation" text="Create" />

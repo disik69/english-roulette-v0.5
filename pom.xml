@@ -93,6 +93,14 @@
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <mainClass>ua.pp.disik.englishroulette.desktop.fx.FxApplication</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

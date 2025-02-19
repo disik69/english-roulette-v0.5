@@ -36,6 +36,7 @@ public class Exercise {
     public Exercise(int readingCount, int memoryCount, int priority) {
         this.readingCount = readingCount;
         this.memoryCount = memoryCount;
+        this.priority = priority;
         this.checkedAt = System.currentTimeMillis();
         this.updatedAt = System.currentTimeMillis();
         this.nativePhrases = new ArrayList<>();
