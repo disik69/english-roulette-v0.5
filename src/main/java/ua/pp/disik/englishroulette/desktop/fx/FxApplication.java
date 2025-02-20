@@ -5,19 +5,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.init.SettingCreator;
 import ua.pp.disik.englishroulette.desktop.init.SeedCreator;
 
-@Component
 public class FxApplication extends Application {
-    ApplicationContext applicationContext;
+    ConfigurableApplicationContext applicationContext;
 
     @Override
     public void init() {
         applicationContext = new AnnotationConfigApplicationContext("ua.pp.disik.englishroulette.desktop");
+        applicationContext.registerShutdownHook();
 
         applicationContext.getBean(SettingCreator.class).run();
         applicationContext.getBean(SeedCreator.class).run();
