@@ -18,9 +18,7 @@
             <MenuItem onAction="#handleRepeating" text="Repeating" />
         </Menu>
     </MenuBar>
-        <GridPane hgap="5" vgap="5" gridLinesVisible="true" style="-fx-background-color: red;"
-                  AnchorPane.rightAnchor="10"
-                  AnchorPane.leftAnchor="10" >
+        <GridPane hgap="5" vgap="5" gridLinesVisible="true" style="-fx-background-color: red;" >
             <padding>
                 <Insets bottom="5" left="5" right="5" top="5" />
             </padding>

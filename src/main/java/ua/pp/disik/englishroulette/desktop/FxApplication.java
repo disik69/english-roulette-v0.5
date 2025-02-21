@@ -1,31 +1,27 @@
-package ua.pp.disik.englishroulette.desktop.fx;
+package ua.pp.disik.englishroulette.desktop;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ua.pp.disik.englishroulette.desktop.init.SettingCreator;
-import ua.pp.disik.englishroulette.desktop.init.SeedCreator;
 
+@SpringBootApplication
 public class FxApplication extends Application {
     ConfigurableApplicationContext applicationContext;
 
     @Override
     public void init() {
-        applicationContext = new AnnotationConfigApplicationContext("ua.pp.disik.englishroulette.desktop");
-        applicationContext.registerShutdownHook();
-
-        applicationContext.getBean(SettingCreator.class).run();
-        applicationContext.getBean(SeedCreator.class).run();
+        applicationContext = SpringApplication.run(FxApplication.class);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader viewLoader = new FXMLLoader(
-                FxApplication.class.getResource("EnglishRouletteView.fxml")
+                FxApplication.class.getResource("fx/EnglishRouletteView.fxml")
         );
         viewLoader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
         VBox englishRoulette = viewLoader.load();
