@@ -9,6 +9,8 @@ import ua.pp.disik.englishroulette.desktop.repository.ExerciseRepository;
 import ua.pp.disik.englishroulette.desktop.repository.PhraseRepository;
 import ua.pp.disik.englishroulette.desktop.service.SettingService;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
@@ -54,10 +56,11 @@ public class SeedCreator extends Creator {
         exerciseRepository.save(exercise1);
 
         Exercise exercise2 = new Exercise(
-                Integer.parseInt(settings.get(SettingName.READING_COUNT)),
-                Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)),
+                0,
+                0,
                 Priority.LOW.getIndex()
         );
+        exercise2.setCheckedAt(Instant.now().minus(5, ChronoUnit.DAYS).toEpochMilli());
         exercise2.setForeignPhrases(List.of(
                 new Phrase("I'm fed up.")
         ));

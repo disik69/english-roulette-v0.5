@@ -54,9 +54,9 @@
                        GridPane.columnSpan="4" >
                 <columns>
                     <TableColumn fx:id="exerciseTableColumnForeign"
-                                 prefWidth="100.0" text="Foreign" />
+                                 prefWidth="200.0" text="Foreign" />
                     <TableColumn fx:id="exerciseTableColumnNative"
-                                 prefWidth="100.0" text="Native" />
+                                 prefWidth="200.0" text="Native" />
                     <TableColumn fx:id="exerciseTableColumnReading"
                                  prefWidth="100.0" text="Reading" />
                     <TableColumn fx:id="exerciseTableColumnMemory"

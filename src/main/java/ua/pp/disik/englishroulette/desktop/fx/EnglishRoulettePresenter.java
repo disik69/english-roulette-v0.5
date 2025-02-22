@@ -1,5 +1,6 @@
 package ua.pp.disik.englishroulette.desktop.fx;
 
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,7 +13,7 @@ import ua.pp.disik.englishroulette.desktop.entity.*;
 import ua.pp.disik.englishroulette.desktop.fx.entity.*;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
 
-import java.util.List;
+import java.time.Instant;
 
 @Component
 @Slf4j
@@ -21,35 +22,36 @@ public class EnglishRoulettePresenter {
     private ExerciseService exerciseService;
 
     @FXML
-    private TableView<ExerciseDao> exerciseTable;
+    private TableView<ExerciseReadDto> exerciseTable;
 
     @FXML
-    private TableColumn<ExerciseDao, List<Phrase>> exerciseTableColumnForeign;
+    private TableColumn<ExerciseReadDto, String> exerciseTableColumnForeign;
 
     @FXML
-    private TableColumn<ExerciseDao, List<Phrase>> exerciseTableColumnNative;
+    private TableColumn<ExerciseReadDto, String> exerciseTableColumnNative;
 
     @FXML
-    private TableColumn<ExerciseDao, Integer> exerciseTableColumnReading;
+    private TableColumn<ExerciseReadDto, Integer> exerciseTableColumnReading;
 
     @FXML
-    private TableColumn<ExerciseDao, Integer> exerciseTableColumnMemory;
+    private TableColumn<ExerciseReadDto, Integer> exerciseTableColumnMemory;
 
     @FXML
-    private TableColumn<ExerciseDao, Integer> exerciseTableColumnPriority;
+    private TableColumn<ExerciseReadDto, String> exerciseTableColumnPriority;
 
     @FXML
-    private TableColumn<ExerciseDao, Long> exerciseTableColumnChecked;
+    private TableColumn<ExerciseReadDto, String> exerciseTableColumnChecked;
 
     @FXML
     private void initialize() {
+        exerciseTableColumnForeign.setCellValueFactory(new PropertyValueFactory<>("foreignPhrases"));
+        exerciseTableColumnNative.setCellValueFactory(new PropertyValueFactory<>("nativePhrases"));
+        exerciseTableColumnReading.setCellValueFactory(new PropertyValueFactory<>("readingCount"));
+        exerciseTableColumnMemory.setCellValueFactory(new PropertyValueFactory<>("memoryCount"));
+        exerciseTableColumnPriority.setCellValueFactory(new PropertyValueFactory<>("priority"));
+        exerciseTableColumnChecked.setCellValueFactory(new PropertyValueFactory<>("checkedAt"));
+
         exerciseTable.setItems(FXCollections.observableArrayList(exerciseService.findAll()));
-        exerciseTableColumnForeign.setCellValueFactory(new PropertyValueFactory<>("getForeignPhrases"));
-        exerciseTableColumnNative.setCellValueFactory(new PropertyValueFactory<>("getNativePhrases"));
-        exerciseTableColumnReading.setCellValueFactory(new PropertyValueFactory<>("getReadingCount"));
-        exerciseTableColumnMemory.setCellValueFactory(new PropertyValueFactory<>("getMemoryCount"));
-        exerciseTableColumnPriority.setCellValueFactory(new PropertyValueFactory<>("getPriority"));
-        exerciseTableColumnChecked.setCellValueFactory(new PropertyValueFactory<>("getCheckedAt"));
     }
 
     public void handleCreation(ActionEvent event) {

@@ -1,5 +1,6 @@
 package ua.pp.disik.englishroulette.desktop.entity;
 
+import jakarta.annotation.Nullable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,10 @@ public class Exercise {
     private int readingCount;
     private int memoryCount;
     private int priority;
-    private long checkedAt;
+
+    @Nullable
+    private Long checkedAt;
+
     private long updatedAt;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -37,9 +41,8 @@ public class Exercise {
         this.readingCount = readingCount;
         this.memoryCount = memoryCount;
         this.priority = priority;
-        this.checkedAt = System.currentTimeMillis();
         this.updatedAt = System.currentTimeMillis();
-        this.nativePhrases = new ArrayList<>();
         this.foreignPhrases = new ArrayList<>();
+        this.nativePhrases = new ArrayList<>();
     }
 }

@@ -29,8 +29,8 @@ public class FxApplication extends Application {
         Scene scene = new Scene(englishRoulette);
 
         stage.setScene(scene);
-        stage.setWidth(600);
-        stage.setHeight(400);
+        stage.setWidth(810);
+        stage.setHeight(500);
         stage.setTitle("English Roulette");
         stage.show();
     }
