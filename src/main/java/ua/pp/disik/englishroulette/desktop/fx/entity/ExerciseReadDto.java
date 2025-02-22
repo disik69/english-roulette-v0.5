@@ -1,6 +1,5 @@
 package ua.pp.disik.englishroulette.desktop.fx.entity;
 
-import javafx.beans.property.ReadOnlyStringWrapper;
 import ua.pp.disik.englishroulette.desktop.entity.*;
 
 import java.time.Instant;
@@ -12,6 +11,10 @@ public class ExerciseReadDto {
 
     public ExerciseReadDto(Exercise exercise) {
         this.exercise = exercise;
+    }
+
+    public Integer getId() {
+        return exercise.getId();
     }
 
     public int getReadingCount() {

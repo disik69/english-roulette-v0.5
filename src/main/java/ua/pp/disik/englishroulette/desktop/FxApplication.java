@@ -24,9 +24,9 @@ public class FxApplication extends Application {
                 FxApplication.class.getResource("fx/EnglishRouletteView.fxml")
         );
         viewLoader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
-        VBox englishRoulette = viewLoader.load();
+        VBox englishRouletteView = viewLoader.load();
 
-        Scene scene = new Scene(englishRoulette);
+        Scene scene = new Scene(englishRouletteView);
 
         stage.setScene(scene);
         stage.setWidth(810);
