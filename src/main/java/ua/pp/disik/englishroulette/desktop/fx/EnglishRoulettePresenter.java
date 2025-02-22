@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import ua.pp.disik.englishroulette.desktop.FxApplication;
 import ua.pp.disik.englishroulette.desktop.fx.entity.*;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
 
@@ -29,6 +28,9 @@ public class EnglishRoulettePresenter {
 
     @Autowired
     private ExerciseService exerciseService;
+
+    @Autowired
+    private CurrentExercise currentExercise;
 
     @FXML
     private VBox main;
@@ -102,12 +104,13 @@ public class EnglishRoulettePresenter {
 
     @SneakyThrows
     private void writeExercise(Integer exerciseId) {
+        currentExercise.setId(exerciseId);
+
         FXMLLoader viewLoader = new FXMLLoader(
-                FxApplication.class.getResource("fx/ExerciseView.fxml")
+                EnglishRoulettePresenter.class.getResource("ExerciseView.fxml")
         );
         viewLoader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
         GridPane exerciseView = viewLoader.load();
-        viewLoader.<ExercisePresenter>getController().setExerciseId(exerciseId);
 
         Scene scene = new Scene(exerciseView);
 
@@ -115,8 +118,8 @@ public class EnglishRoulettePresenter {
         stage.setScene(scene);
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(main.getScene().getWindow());
-        stage.setWidth(100);
-        stage.setHeight(100);
+        stage.setWidth(400);
+        stage.setHeight(800);
         stage.setTitle("Exercise");
         stage.showAndWait();
 

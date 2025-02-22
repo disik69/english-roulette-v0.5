@@ -8,7 +8,7 @@ import ua.pp.disik.englishroulette.desktop.repository.ExerciseRepository;
 import java.util.List;
 
 @Service
-public class ExerciseService implements RepositoryService {
+public class ExerciseService implements RepositoryService<ExerciseRepository> {
     private final ExerciseRepository exerciseRepository;
 
     public ExerciseService(
@@ -18,7 +18,7 @@ public class ExerciseService implements RepositoryService {
     }
 
     @Override
-    public Object repository() {
+    public ExerciseRepository repository() {
         return exerciseRepository;
     }
 
