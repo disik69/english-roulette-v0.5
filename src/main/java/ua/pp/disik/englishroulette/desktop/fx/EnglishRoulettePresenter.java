@@ -107,7 +107,7 @@ public class EnglishRoulettePresenter {
         currentExercise.setId(exerciseId);
 
         FXMLLoader viewLoader = new FXMLLoader(
-                EnglishRoulettePresenter.class.getResource("ExerciseView.fxml")
+                ExercisePresenter.class.getResource("ExerciseView.fxml")
         );
         viewLoader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
         GridPane exerciseView = viewLoader.load();
