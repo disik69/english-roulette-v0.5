@@ -1,6 +1,7 @@
 package ua.pp.disik.englishroulette.desktop.fx;
 
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -49,19 +50,33 @@ public class ExercisePresenter {
             currentExerciseDto = exerciseService.findById(currentExercise.getId());
         }
 
-        foreignList.setEditable(true);
-        foreignList.setCellFactory(TextFieldListCell.forListView(listStringConverter()));
-        foreignList.setItems(currentExerciseDto.foreignPhraseProperty());
+        renderForeignList();
 
-        nativeList.setEditable(true);
-        nativeList.setItems(currentExerciseDto.nativePhraseProperty());
-        nativeList.setCellFactory(TextFieldListCell.forListView(listStringConverter()));
+        renderNativeList();
 
         renderPriority();
     }
 
-    private StringConverter<Phrase> listStringConverter() {
-        return new StringConverter<Phrase>() {
+    private void renderForeignList() {
+        foreignList.setEditable(true);
+        foreignList.setCellFactory(TextFieldListCell.forListView(phraseStringConverter()));
+        foreignList.setItems(currentExerciseDto.foreignPhraseProperty());
+
+        currentExerciseDto.foreignPhraseProperty().add(new Phrase(""));
+        foreignList.setOnEditCommit(this::handlePhraseListCommit);
+    }
+
+    private void renderNativeList() {
+        nativeList.setEditable(true);
+        nativeList.setCellFactory(TextFieldListCell.forListView(phraseStringConverter()));
+        nativeList.setItems(currentExerciseDto.nativePhraseProperty());
+
+        currentExerciseDto.nativePhraseProperty().add(new Phrase(""));
+        nativeList.setOnEditCommit(this::handlePhraseListCommit);
+    }
+
+    private StringConverter<Phrase> phraseStringConverter() {
+        return new StringConverter<>() {
             @Override
             public String toString(Phrase object) {
                 return object.getBody();
@@ -72,6 +87,21 @@ public class ExercisePresenter {
                 return new Phrase(string);
             }
         };
+    }
+
+    private void handlePhraseListCommit(ListView.EditEvent<Phrase> event) {
+        ObservableList<Phrase> list = event.getSource().getItems();
+        int lastIndex = list.size() - 1;
+        if (event.getNewValue().getBody().isEmpty()) {
+            if (event.getIndex() != lastIndex) {
+                list.remove(event.getIndex());
+            }
+        } else {
+            list.set(event.getIndex(), event.getNewValue());
+            if (event.getIndex() == lastIndex) {
+                list.add(new Phrase(""));
+            }
+        }
     }
 
     private void renderPriority() {
