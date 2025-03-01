@@ -8,5 +8,5 @@
 
 <GridPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ua.pp.disik.englishroulette.desktop.fx.PhraseController">
+            fx:controller="ua.pp.disik.englishroulette.desktop.fx.PhrasePresenter">
 </GridPane>

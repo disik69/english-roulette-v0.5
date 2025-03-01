@@ -4,9 +4,57 @@
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ua.pp.disik.englishroulette.desktop.fx.ExerciseController">
+<GridPane fx:id="main" xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="ua.pp.disik.englishroulette.desktop.fx.ExercisePresenter"
+          hgap="5" vgap="5"
+          gridLinesVisible="true" style="-fx-background-color: red;">
+        <padding>
+            <Insets bottom="5" left="5" right="5" top="5"/>
+        </padding>
+        <columnConstraints>
+            <ColumnConstraints percentWidth="50"/>
+            <ColumnConstraints percentWidth="50"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints percentHeight="10"/>
+            <RowConstraints percentHeight="70"/>
+            <RowConstraints percentHeight="10"/>
+            <RowConstraints percentHeight="10"/>
+        </rowConstraints>
+        <children>
+            <Label text="Foreign"
+                   GridPane.halignment="CENTER"
+                   GridPane.columnIndex="0"
+                   GridPane.rowIndex="0"/>
+            <Label text="Native"
+                   GridPane.halignment="CENTER"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="0"/>
+            <ListView fx:id="foreignList"
+                      GridPane.columnIndex="0"
+                      GridPane.rowIndex="1"/>
+            <ListView fx:id="nativeList"
+                      GridPane.columnIndex="1"
+                      GridPane.rowIndex="1"/>
+            <Label text="Priority:"
+                   GridPane.halignment="CENTER"
+                   GridPane.columnIndex="0"
+                   GridPane.rowIndex="2"/>
+            <VBox fx:id="priority" spacing="5"
+                  GridPane.columnIndex="1"
+                  GridPane.rowIndex="2">
+                <padding>
+                    <Insets bottom="5" left="5" right="5" top="5"/>
+                </padding>
+            </VBox>
+            <Button text="Save" onAction="#handleSave"
+                    GridPane.halignment="CENTER"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="3"
+                    GridPane.columnSpan="2"/>
+        </children>
 </GridPane>

@@ -1,38 +1,41 @@
-package ua.pp.disik.englishroulette.desktop.repository;
+package ua.pp.disik.englishroulette.desktop.init;
 
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
+import org.apache.commons.collections4.IterableUtils;
 import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
 import ua.pp.disik.englishroulette.desktop.entity.Phrase;
 import ua.pp.disik.englishroulette.desktop.entity.Priority;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
+import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
+import ua.pp.disik.englishroulette.desktop.service.PhraseService;
 import ua.pp.disik.englishroulette.desktop.service.SettingService;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
-//@Component
-public class JpaApplicationRunner implements ApplicationRunner {
-    private final WordRepository wordRepository;
-    private final ExerciseRepository exerciseRepository;
+@Component
+public class SeedCreator extends Creator {
+    private final PhraseService phraseService;
+    private final ExerciseService exerciseService;
     private final SettingService settingService;
 
-    public JpaApplicationRunner(
-            WordRepository wordRepository,
-            ExerciseRepository exerciseRepository,
+    public SeedCreator(
+            PhraseService phraseService,
+            ExerciseService exerciseService,
             SettingService settingService
     ) {
-        this.wordRepository = wordRepository;
-        this.exerciseRepository = exerciseRepository;
+        this.phraseService = phraseService;
+        this.exerciseService = exerciseService;
         this.settingService = settingService;
     }
 
     @Override
-    public void run(ApplicationArguments args) {
+    public void create() {
         Phrase phrase1 = new Phrase("instead");
         Phrase phrase2 = new Phrase("вместо");
-        wordRepository.saveAll(List.of(phrase1, phrase2));
+        phraseService.repository().saveAll(List.of(phrase1, phrase2));
 
         Map<SettingName, String> settings = settingService.getMap();
 
@@ -51,20 +54,21 @@ public class JpaApplicationRunner implements ApplicationRunner {
                 new Phrase("подходить по размеру"),
                 new Phrase("быть к лицу")
         ));
-        exerciseRepository.save(exercise1);
+        exerciseService.repository().save(exercise1);
 
         Exercise exercise2 = new Exercise(
-                Integer.parseInt(settings.get(SettingName.READING_COUNT)),
-                Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)),
+                0,
+                0,
                 Priority.LOW.getIndex()
         );
+        exercise2.setCheckedAt(Instant.now().minus(5, ChronoUnit.DAYS).toEpochMilli());
         exercise2.setForeignPhrases(List.of(
                 new Phrase("I'm fed up.")
         ));
         exercise2.setNativePhrases(List.of(
                 new Phrase("Мне это надоело.")
         ));
-        exerciseRepository.save(exercise2);
+        exerciseService.repository().save(exercise2);
 
         Exercise exercise3 = new Exercise(
                 Integer.parseInt(settings.get(SettingName.READING_COUNT)),
@@ -79,6 +83,6 @@ public class JpaApplicationRunner implements ApplicationRunner {
                 new Phrase("вылететь"),
                 new Phrase("выпасть")
         ));
-        exerciseRepository.save(exercise3);
+        exerciseService.repository().save(exercise3);
     }
 }
