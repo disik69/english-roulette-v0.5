@@ -161,10 +161,16 @@ public class ExercisePresenter {
 
         Map<SettingName, String> settings = settingService.getMap();
 
-        Exercise exercise = currentExerciseDto.getExercise();
+        Exercise exercise = new Exercise();
+        currentExerciseDto.fillExerciseForCreate(exercise);
         exercise.setReadingCount(Integer.parseInt(settings.get(SettingName.READING_COUNT)));
         exercise.setMemoryCount(Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)));
         exercise.setUpdatedAt(System.currentTimeMillis());
+        // the cure for a new exercise "detached entity passed to persist"
+        if (exercise.getId() == null) {
+            exerciseService.save(exercise);
+        }
+        currentExerciseDto.fillExerciseForUpdate(exercise);
         exerciseService.save(exercise);
 
         main.getScene().getWindow().hide();

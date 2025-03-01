@@ -2,7 +2,6 @@ package ua.pp.disik.englishroulette.desktop.service;
 
 import org.springframework.stereotype.Service;
 import org.apache.commons.collections4.IterableUtils;
-import org.springframework.transaction.PlatformTransactionManager;
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
 import ua.pp.disik.englishroulette.desktop.fx.entity.ExerciseReadDto;
 import ua.pp.disik.englishroulette.desktop.fx.entity.ExerciseWriteDto;
@@ -13,14 +12,11 @@ import java.util.List;
 @Service
 public class ExerciseService implements RepositoryService<ExerciseRepository> {
     private final ExerciseRepository exerciseRepository;
-    private final PlatformTransactionManager platformTransactionManager;
 
     public ExerciseService(
-            ExerciseRepository exerciseRepository,
-            PlatformTransactionManager platformTransactionManager
+            ExerciseRepository exerciseRepository
     ) {
         this.exerciseRepository = exerciseRepository;
-        this.platformTransactionManager = platformTransactionManager;
     }
 
     @Override
@@ -42,8 +38,6 @@ public class ExerciseService implements RepositoryService<ExerciseRepository> {
     }
 
     public Exercise save(Exercise exercise) {
-        platformTransactionManager.getTransaction(null);
-
         return exerciseRepository.save(exercise);
     }
 }
