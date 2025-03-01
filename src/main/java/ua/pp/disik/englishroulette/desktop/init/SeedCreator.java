@@ -5,8 +5,8 @@ import ua.pp.disik.englishroulette.desktop.entity.Exercise;
 import ua.pp.disik.englishroulette.desktop.entity.Phrase;
 import ua.pp.disik.englishroulette.desktop.entity.Priority;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
-import ua.pp.disik.englishroulette.desktop.repository.ExerciseRepository;
-import ua.pp.disik.englishroulette.desktop.repository.PhraseRepository;
+import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
+import ua.pp.disik.englishroulette.desktop.service.PhraseService;
 import ua.pp.disik.englishroulette.desktop.service.SettingService;
 
 import java.time.Instant;
@@ -16,17 +16,17 @@ import java.util.Map;
 
 @Component
 public class SeedCreator extends Creator {
-    private final PhraseRepository phraseRepository;
-    private final ExerciseRepository exerciseRepository;
+    private final PhraseService phraseService;
+    private final ExerciseService exerciseService;
     private final SettingService settingService;
 
     public SeedCreator(
-            PhraseRepository phraseRepository,
-            ExerciseRepository exerciseRepository,
+            PhraseService phraseService,
+            ExerciseService exerciseService,
             SettingService settingService
     ) {
-        this.phraseRepository = phraseRepository;
-        this.exerciseRepository = exerciseRepository;
+        this.phraseService = phraseService;
+        this.exerciseService = exerciseService;
         this.settingService = settingService;
     }
 
@@ -34,7 +34,7 @@ public class SeedCreator extends Creator {
     public void create() {
         Phrase phrase1 = new Phrase("instead");
         Phrase phrase2 = new Phrase("вместо");
-        phraseRepository.saveAll(List.of(phrase1, phrase2));
+        phraseService.repository().saveAll(List.of(phrase1, phrase2));
 
         Map<SettingName, String> settings = settingService.getMap();
 
@@ -53,7 +53,7 @@ public class SeedCreator extends Creator {
                 new Phrase("подходить по размеру"),
                 new Phrase("быть к лицу")
         ));
-        exerciseRepository.save(exercise1);
+        exerciseService.repository().save(exercise1);
 
         Exercise exercise2 = new Exercise(
                 0,
@@ -67,7 +67,7 @@ public class SeedCreator extends Creator {
         exercise2.setNativePhrases(List.of(
                 new Phrase("Мне это надоело.")
         ));
-        exerciseRepository.save(exercise2);
+        exerciseService.repository().save(exercise2);
 
         Exercise exercise3 = new Exercise(
                 Integer.parseInt(settings.get(SettingName.READING_COUNT)),
@@ -82,6 +82,6 @@ public class SeedCreator extends Creator {
                 new Phrase("вылететь"),
                 new Phrase("выпасть")
         ));
-        exerciseRepository.save(exercise3);
+        exerciseService.repository().save(exercise3);
     }
 }

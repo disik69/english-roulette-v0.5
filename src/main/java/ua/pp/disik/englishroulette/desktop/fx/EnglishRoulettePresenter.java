@@ -20,6 +20,8 @@ import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.fx.entity.*;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
 
+import java.util.List;
+
 @Component
 @Slf4j
 public class EnglishRoulettePresenter {
@@ -76,13 +78,24 @@ public class EnglishRoulettePresenter {
         writeExercise(null);
     }
 
+    private ObservableList<ExerciseReadDto> getSelectedExercises() {
+        return exerciseTable.getSelectionModel().getSelectedItems();
+    }
+
     public void handleUpdate(ActionEvent event) {
-        TableView.TableViewSelectionModel<ExerciseReadDto> tableViewSelectionModel =
-                exerciseTable.getSelectionModel();
-        ObservableList<ExerciseReadDto> selectedExercises = tableViewSelectionModel.getSelectedItems();
+        ObservableList<ExerciseReadDto> selectedExercises = getSelectedExercises();
         if (selectedExercises.size() == 1) {
             writeExercise(selectedExercises.get(0).getId());
         }
+    }
+
+    public void handleDelete(ActionEvent event) {
+        List<Integer> ids = getSelectedExercises().stream()
+                .map(exercise -> exercise.getId())
+                .toList();
+        exerciseService.repository().deleteAllById(ids);
+
+        updateTableView();
     }
 
     public void handleExit(ActionEvent event) {

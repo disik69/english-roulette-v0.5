@@ -7,7 +7,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane xmlns="http://javafx.com/javafx"
+<GridPane fx:id="main" xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="ua.pp.disik.englishroulette.desktop.fx.ExercisePresenter"
           hgap="5" vgap="5"

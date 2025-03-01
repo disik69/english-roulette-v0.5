@@ -51,7 +51,7 @@
                     GridPane.halignment="CENTER"
                     GridPane.columnIndex="3"
                     GridPane.rowIndex="0"/>
-            <Button text="Delete"
+            <Button text="Delete" onAction="#handleDelete"
                     GridPane.halignment="CENTER"
                     GridPane.columnIndex="4"
                     GridPane.rowIndex="0"/>
