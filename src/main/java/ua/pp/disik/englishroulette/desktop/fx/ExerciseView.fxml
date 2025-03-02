@@ -7,8 +7,9 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane fx:id="main" xmlns="http://javafx.com/javafx"
+<GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
+          fx:id="main"
           fx:controller="ua.pp.disik.englishroulette.desktop.fx.ExercisePresenter"
           hgap="5" vgap="5"
           gridLinesVisible="true" style="-fx-background-color: red;">

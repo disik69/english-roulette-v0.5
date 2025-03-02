@@ -43,7 +43,7 @@ public class EnglishRoulettePresenter {
     private CurrentExercise currentExercise;
 
     @FXML
-    private VBox main;
+    private BorderPane main;
 
     @FXML
     private TextField filterText;
@@ -115,7 +115,7 @@ public class EnglishRoulettePresenter {
     public void handleUpdate(ActionEvent event) {
         ObservableList<ExerciseReadDto> selectedExercises = getSelectedExercises();
         if (selectedExercises.size() == 1) {
-            writeExercise(selectedExercises.get(0).getId());
+            writeExercise(selectedExercises.getFirst().getId());
         }
     }
 
