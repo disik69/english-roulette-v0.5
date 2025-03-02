@@ -52,7 +52,7 @@
                         GridPane.halignment="CENTER"
                         GridPane.columnIndex="2"
                         GridPane.rowIndex="0"/>
-                <Button text="Reset"
+                <Button text="Reset" onAction="#handleReset"
                         GridPane.halignment="CENTER"
                         GridPane.columnIndex="3"
                         GridPane.rowIndex="0"/>

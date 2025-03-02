@@ -165,6 +165,7 @@ public class ExercisePresenter {
         currentExerciseDto.fillExercise(exercise);
         exercise.setReadingCount(Integer.parseInt(settings.get(SettingName.READING_COUNT)));
         exercise.setMemoryCount(Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)));
+        exercise.setCheckedAt(null);
         exercise.setUpdatedAt(System.currentTimeMillis());
         // the cure for a new exercise "detached entity passed to persist"
         if (exercise.getId() == null) {

@@ -18,10 +18,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import ua.pp.disik.englishroulette.desktop.entity.Exercise;
+import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.fx.entity.*;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
+import ua.pp.disik.englishroulette.desktop.service.SettingService;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Slf4j
@@ -38,6 +42,9 @@ public class EnglishRoulettePresenter {
 
     @Autowired
     private ExerciseService exerciseService;
+
+    @Autowired
+    private SettingService settingService;
 
     @Autowired
     private CurrentExercise currentExercise;
@@ -116,6 +123,29 @@ public class EnglishRoulettePresenter {
         ObservableList<ExerciseReadDto> selectedExercises = getSelectedExercises();
         if (selectedExercises.size() == 1) {
             writeExercise(selectedExercises.getFirst().getId());
+        }
+    }
+
+    public void handleReset(ActionEvent event) {
+        ObservableList<ExerciseReadDto> selectedExercises = getSelectedExercises();
+        if (selectedExercises.size() == 1) {
+            ExerciseWriteDto exerciseWriteDto = exerciseService.findById(selectedExercises.getFirst().getId());
+
+            Exercise exercise = new Exercise();
+            exerciseWriteDto.fillExercise(exercise);
+            if (exercise.getCheckedAt() != null) {
+                Map<SettingName, String> settings = settingService.getMap();
+
+                exercise.setReadingCount(Integer.parseInt(settings.get(SettingName.READING_COUNT)));
+                exercise.setMemoryCount(Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)));
+                exercise.setCheckedAt(null);
+                exercise.setUpdatedAt(System.currentTimeMillis());
+                exerciseWriteDto.fillForeignNative(exercise);
+
+                exerciseService.save(exercise); // todo optimize saving
+
+                updateTableView();
+            }
         }
     }
 
