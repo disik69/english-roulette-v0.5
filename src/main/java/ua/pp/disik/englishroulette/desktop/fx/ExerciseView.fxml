@@ -45,7 +45,7 @@
                    GridPane.halignment="CENTER"
                    GridPane.columnIndex="0"
                    GridPane.rowIndex="2"/>
-            <VBox fx:id="priority" spacing="5"
+            <VBox fx:id="priorityBox" spacing="5"
                   GridPane.columnIndex="1"
                   GridPane.rowIndex="2">
                 <padding>

@@ -57,7 +57,7 @@ public class ExercisePresenter {
     private ListView<Phrase> nativeList;
 
     @FXML
-    private VBox priority;
+    private VBox priorityBox;
 
     @FXML
     private void initialize() {
@@ -71,7 +71,7 @@ public class ExercisePresenter {
 
         renderNativeList();
 
-        renderPriority();
+        renderPriorityBox();
     }
 
     private void renderForeignList() {
@@ -132,7 +132,7 @@ public class ExercisePresenter {
         }
     }
 
-    private void renderPriority() {
+    private void renderPriorityBox() {
         List<RadioButton> priorityButtons = Arrays.stream(Priority.values()).map(priority -> {
             RadioButton button = new RadioButton(priority.name());
             if (priority.getIndex() == currentExerciseDto.getPriority()) {
@@ -151,7 +151,7 @@ public class ExercisePresenter {
                 }
         );
 
-        priority.getChildren().addAll(priorityButtons);
+        priorityBox.getChildren().addAll(priorityButtons);
     }
 
     public void handleSave(ActionEvent event) {
