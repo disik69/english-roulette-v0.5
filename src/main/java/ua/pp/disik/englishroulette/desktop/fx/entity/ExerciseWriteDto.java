@@ -37,12 +37,12 @@ public class ExerciseWriteDto {
         return nativePhraseProperty;
     }
 
-    public void fillExerciseForCreate(Exercise exercise) {
+    public void fillExercise(Exercise exercise) {
         exercise.setId(id);
         exercise.setPriority(priority);
     }
 
-    public void fillExerciseForUpdate(Exercise exercise) {
+    public void fillForeignNative(Exercise exercise) {
         exercise.setForeignPhrases(foreignPhraseProperty);
         exercise.setNativePhrases(nativePhraseProperty);
     }

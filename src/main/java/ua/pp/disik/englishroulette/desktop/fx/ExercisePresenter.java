@@ -162,7 +162,7 @@ public class ExercisePresenter {
         Map<SettingName, String> settings = settingService.getMap();
 
         Exercise exercise = new Exercise();
-        currentExerciseDto.fillExerciseForCreate(exercise);
+        currentExerciseDto.fillExercise(exercise);
         exercise.setReadingCount(Integer.parseInt(settings.get(SettingName.READING_COUNT)));
         exercise.setMemoryCount(Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)));
         exercise.setUpdatedAt(System.currentTimeMillis());
@@ -170,7 +170,7 @@ public class ExercisePresenter {
         if (exercise.getId() == null) {
             exerciseService.save(exercise);
         }
-        currentExerciseDto.fillExerciseForUpdate(exercise);
+        currentExerciseDto.fillForeignNative(exercise);
         exerciseService.save(exercise);
 
         main.getScene().getWindow().hide();

@@ -130,7 +130,7 @@ public class EnglishRoulettePresenter {
 
     private void updateTableView() {
         String filter = filterText.getText();
-        List<ExerciseReadDto> exerciseReadDtos = null;
+        List<ExerciseReadDto> exerciseReadDtos;
         if (filter.length() >= MIN_FILTER_LENGTH) {
             exerciseReadDtos = exerciseService.findAllByFilter(filter, currentPage, PAGE_SIZE);
         } else {
