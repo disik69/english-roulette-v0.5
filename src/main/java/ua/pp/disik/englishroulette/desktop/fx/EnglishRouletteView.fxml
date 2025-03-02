@@ -36,7 +36,7 @@
             <RowConstraints percentHeight="10"/>
         </rowConstraints>
         <children>
-            <TextField alignment="CENTER" promptText="filter"
+            <TextField fx:id="filterText" alignment="CENTER" promptText="filter"
                        GridPane.columnIndex="0"
                        GridPane.rowIndex="0"/>
             <Button text="Create" onAction="#handleCreate"
@@ -74,11 +74,11 @@
                                  prefWidth="100.0" text="Checked"/>
                 </columns>
             </TableView>
-            <Button text="&lt;"
+            <Button text="&lt;" onAction="#handleLeftScroll"
                     GridPane.halignment="RIGHT"
                     GridPane.columnIndex="1"
                     GridPane.rowIndex="2"/>
-            <Button text="&gt;"
+            <Button text="&gt;" onAction="#handleRightScroll"
                     GridPane.halignment="LEFT"
                     GridPane.columnIndex="3"
                     GridPane.rowIndex="2"/>

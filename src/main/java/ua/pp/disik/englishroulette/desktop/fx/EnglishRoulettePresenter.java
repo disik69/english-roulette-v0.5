@@ -1,5 +1,6 @@
 package ua.pp.disik.englishroulette.desktop.fx;
 
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,6 +26,13 @@ import java.util.List;
 @Component
 @Slf4j
 public class EnglishRoulettePresenter {
+    private static final int FIRST_PAGE = 0;
+    private static final int PAGE_SIZE = 30;
+
+    private static final int MIN_FILTER_LENGTH = 3;
+
+    private int currentPage = FIRST_PAGE;
+
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -36,6 +44,9 @@ public class EnglishRoulettePresenter {
 
     @FXML
     private VBox main;
+
+    @FXML
+    private TextField filterText;
 
     @FXML
     private TableView<ExerciseReadDto> exerciseTable;
@@ -60,6 +71,8 @@ public class EnglishRoulettePresenter {
 
     @FXML
     private void initialize() {
+        filterText.textProperty().addListener(this::handleInvalidateFilter);
+
         TableView.TableViewSelectionModel<ExerciseReadDto> tableViewSelectionModel =
                 exerciseTable.getSelectionModel();
         tableViewSelectionModel.setSelectionMode(SelectionMode.MULTIPLE);
@@ -78,8 +91,25 @@ public class EnglishRoulettePresenter {
         writeExercise(null);
     }
 
+    public void handleExit(ActionEvent event) {
+        System.exit(0);
+    }
+
+    public void handleReading(ActionEvent event) {
+    }
+
+    public void handleMemory(ActionEvent event) {
+    }
+
+    public void handleRepeating(ActionEvent event) {
+    }
+
     private ObservableList<ExerciseReadDto> getSelectedExercises() {
         return exerciseTable.getSelectionModel().getSelectedItems();
+    }
+
+    private void handleInvalidateFilter(Observable property) {
+        updateTableView();
     }
 
     public void handleUpdate(ActionEvent event) {
@@ -98,21 +128,16 @@ public class EnglishRoulettePresenter {
         updateTableView();
     }
 
-    public void handleExit(ActionEvent event) {
-        System.exit(0);
-    }
-
-    public void handleReading(ActionEvent event) {
-    }
-
-    public void handleMemory(ActionEvent event) {
-    }
-
-    public void handleRepeating(ActionEvent event) {
-    }
-
     private void updateTableView() {
-        exerciseTable.setItems(FXCollections.observableArrayList(exerciseService.findAll()));
+        String filter = filterText.getText();
+        List<ExerciseReadDto> exerciseReadDtos = null;
+        if (filter.length() >= MIN_FILTER_LENGTH) {
+            exerciseReadDtos = exerciseService.findAllByFilter(filter, currentPage, PAGE_SIZE);
+        } else {
+            exerciseReadDtos = exerciseService.findAll(currentPage, PAGE_SIZE);
+        }
+
+        exerciseTable.setItems(FXCollections.observableArrayList(exerciseReadDtos));
     }
 
     @SneakyThrows
@@ -137,5 +162,21 @@ public class EnglishRoulettePresenter {
         stage.showAndWait();
 
         updateTableView();
+    }
+
+    public void handleLeftScroll(ActionEvent event) {
+        if (currentPage > FIRST_PAGE) {
+            currentPage--;
+
+            updateTableView();
+        }
+    }
+
+    public void handleRightScroll(ActionEvent event) {
+        if (exerciseTable.getItems().size() == PAGE_SIZE) {
+            currentPage++;
+
+            updateTableView();
+        }
     }
 }

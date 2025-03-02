@@ -1,7 +1,7 @@
 package ua.pp.disik.englishroulette.desktop.service;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.apache.commons.collections4.IterableUtils;
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
 import ua.pp.disik.englishroulette.desktop.fx.entity.ExerciseReadDto;
 import ua.pp.disik.englishroulette.desktop.fx.entity.ExerciseWriteDto;
@@ -24,8 +24,20 @@ public class ExerciseService implements RepositoryService<ExerciseRepository> {
         return exerciseRepository;
     }
 
-    public List<ExerciseReadDto> findAll() {
-        return IterableUtils.toList(exerciseRepository.findAll()).stream()
+    public List<ExerciseReadDto> findAll(int page, int size) {
+        return exerciseRepository.findByOrderByUpdatedAtDesc(
+                        PageRequest.of(page, size)
+                ).stream()
+                .map(exercise -> new ExerciseReadDto(exercise))
+                .toList();
+    }
+
+    public List<ExerciseReadDto> findAllByFilter(String filter, int page, int size) {
+        return exerciseRepository.findByForeignPhrases_BodyContainingOrNativePhrases_BodyContainingOrderByUpdatedAtDesc(
+                        filter,
+                        filter,
+                        PageRequest.of(page, size)
+                ).stream()
                 .map(exercise -> new ExerciseReadDto(exercise))
                 .toList();
     }
