@@ -160,7 +160,7 @@ public class EnglishRoulettePresenter {
 
     private void updateTableView() {
         String filter = filterText.getText();
-        List<ExerciseReadDto> exerciseReadDtos;
+        List<ExerciseReadDto> exerciseReadDtos = null;
         if (filter.length() >= MIN_FILTER_LENGTH) {
             exerciseReadDtos = exerciseService.findAllByFilter(filter, currentPage, PAGE_SIZE);
         } else {
@@ -187,7 +187,7 @@ public class EnglishRoulettePresenter {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(main.getScene().getWindow());
         stage.setWidth(400);
-        stage.setHeight(800);
+        stage.setHeight(600);
         stage.setTitle("Exercise");
         stage.showAndWait();
 

@@ -7,8 +7,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:id="main"
-      fx:controller="ua.pp.disik.englishroulette.desktop.fx.EnglishRoulettePresenter"
-      style="-fx-border-color: black; -fx-border-width: 1px;">
+      fx:controller="ua.pp.disik.englishroulette.desktop.fx.EnglishRoulettePresenter">
     <top>
         <MenuBar>
             <Menu text="Vocabulary">
