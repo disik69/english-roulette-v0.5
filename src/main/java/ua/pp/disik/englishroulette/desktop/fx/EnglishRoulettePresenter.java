@@ -186,8 +186,17 @@ public class EnglishRoulettePresenter {
         stage.setScene(scene);
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(main.getScene().getWindow());
-        stage.setWidth(400);
-        stage.setHeight(600);
+        stage.setWidth(main.getScene().getWindow().getWidth() / 2);
+        stage.setHeight(main.getScene().getWindow().getHeight());
+        stage.setX(
+                main.getScene().getWindow().getX() +
+                (main.getScene().getWindow().getWidth() / 2) +
+                10
+        );
+        stage.setY(
+                main.getScene().getWindow().getY() -
+                10
+        );
         stage.setTitle("Exercise");
         stage.showAndWait();
 

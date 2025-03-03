@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
+<?import javafx.scene.web.WebView?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:id="main"
@@ -42,7 +43,7 @@
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="1"
                 GridPane.rowIndex="1"/>
-        <TextArea fx:id="translationArea"
+        <WebView fx:id="translationWeb"
                    GridPane.columnIndex="0"
                    GridPane.rowIndex="2"
                    GridPane.columnSpan="2"/>
