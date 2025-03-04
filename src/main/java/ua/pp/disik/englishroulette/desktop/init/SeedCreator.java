@@ -1,6 +1,5 @@
 package ua.pp.disik.englishroulette.desktop.init;
 
-import org.apache.commons.collections4.IterableUtils;
 import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
 import ua.pp.disik.englishroulette.desktop.entity.Phrase;

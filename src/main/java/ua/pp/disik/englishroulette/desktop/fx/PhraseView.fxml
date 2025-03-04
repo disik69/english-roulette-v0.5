@@ -5,8 +5,52 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
+<?import javafx.scene.web.WebView?>
 <GridPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ua.pp.disik.englishroulette.desktop.fx.PhrasePresenter">
+          xmlns:fx="http://javafx.com/fxml"
+          fx:id="main"
+          fx:controller="ua.pp.disik.englishroulette.desktop.fx.PhrasePresenter"
+          hgap="5" vgap="5"
+          gridLinesVisible="true" style="-fx-background-color: red;">
+    <padding>
+        <Insets bottom="5" left="5" right="5" top="5"/>
+    </padding>
+    <columnConstraints>
+        <ColumnConstraints percentWidth="50"/>
+        <ColumnConstraints percentWidth="50"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="10"/>
+        <RowConstraints percentHeight="10"/>
+        <RowConstraints percentHeight="70"/>
+        <RowConstraints percentHeight="10"/>
+    </rowConstraints>
+    <children>
+        <TextField fx:id="phraseText" alignment="CENTER" promptText="phrase"
+                   GridPane.columnIndex="0"
+                   GridPane.rowIndex="0"/>
+        <Button text="Search" onAction="#handleSearch"
+                GridPane.halignment="CENTER"
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="0"/>
+        <RadioButton fx:id="fnRadio" text="F->N" selected="true"
+                GridPane.halignment="CENTER"
+                GridPane.columnIndex="0"
+                GridPane.rowIndex="1"/>
+        <RadioButton fx:id="nfRadio" text="N->F"
+                GridPane.halignment="CENTER"
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="1"/>
+        <WebView fx:id="translationWeb"
+                   GridPane.columnIndex="0"
+                   GridPane.rowIndex="2"
+                   GridPane.columnSpan="2"/>
+        <Button text="OK" onAction="#handleOK"
+                GridPane.halignment="CENTER"
+                GridPane.columnIndex="0"
+                GridPane.rowIndex="3"
+                GridPane.columnSpan="2"/>
+    </children>
 </GridPane>

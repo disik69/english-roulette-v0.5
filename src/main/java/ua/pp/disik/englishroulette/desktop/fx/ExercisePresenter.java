@@ -4,11 +4,16 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -57,7 +62,7 @@ public class ExercisePresenter {
     private ListView<Phrase> nativeList;
 
     @FXML
-    private VBox priority;
+    private VBox priorityBox;
 
     @FXML
     private void initialize() {
@@ -71,7 +76,7 @@ public class ExercisePresenter {
 
         renderNativeList();
 
-        renderPriority();
+        renderPriorityBox();
     }
 
     private void renderForeignList() {
@@ -132,7 +137,7 @@ public class ExercisePresenter {
         }
     }
 
-    private void renderPriority() {
+    private void renderPriorityBox() {
         List<RadioButton> priorityButtons = Arrays.stream(Priority.values()).map(priority -> {
             RadioButton button = new RadioButton(priority.name());
             if (priority.getIndex() == currentExerciseDto.getPriority()) {
@@ -151,7 +156,31 @@ public class ExercisePresenter {
                 }
         );
 
-        priority.getChildren().addAll(priorityButtons);
+        priorityBox.getChildren().addAll(priorityButtons);
+    }
+
+    @SneakyThrows
+    public void handlePhrase(ActionEvent event) {
+        FXMLLoader viewLoader = new FXMLLoader(
+                PhrasePresenter.class.getResource("PhraseView.fxml")
+        );
+        viewLoader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
+        GridPane phraseView = viewLoader.load();
+
+        Scene scene = new Scene(phraseView);
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setWidth(main.getScene().getWindow().getWidth());
+        stage.setHeight(main.getScene().getWindow().getHeight());
+        stage.setX(
+                main.getScene().getWindow().getX() +
+                main.getScene().getWindow().getWidth() +
+                10
+        );
+        stage.setY(main.getScene().getWindow().getY());
+        stage.setTitle("Phrase");
+        stage.showAndWait();
     }
 
     public void handleSave(ActionEvent event) {
@@ -161,10 +190,17 @@ public class ExercisePresenter {
 
         Map<SettingName, String> settings = settingService.getMap();
 
-        Exercise exercise = currentExerciseDto.getExercise();
+        Exercise exercise = new Exercise();
+        currentExerciseDto.fillExercise(exercise);
         exercise.setReadingCount(Integer.parseInt(settings.get(SettingName.READING_COUNT)));
         exercise.setMemoryCount(Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)));
+        exercise.setCheckedAt(null);
         exercise.setUpdatedAt(System.currentTimeMillis());
+        // the cure for a new exercise "detached entity passed to persist"
+        if (exercise.getId() == null) {
+            exerciseService.save(exercise);
+        }
+        currentExerciseDto.fillForeignNative(exercise);
         exerciseService.save(exercise);
 
         main.getScene().getWindow().hide();

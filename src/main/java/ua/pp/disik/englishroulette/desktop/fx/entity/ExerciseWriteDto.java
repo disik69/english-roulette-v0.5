@@ -15,6 +15,8 @@ public class ExerciseWriteDto {
     @Setter
     private int priority;
 
+    private Long checkedAt;
+
     private ObservableList<Phrase> foreignPhraseProperty = FXCollections.observableArrayList();
     private ObservableList<Phrase> nativePhraseProperty = FXCollections.observableArrayList();
 
@@ -25,6 +27,7 @@ public class ExerciseWriteDto {
     public ExerciseWriteDto(Exercise exercise) {
         id = exercise.getId();
         priority = exercise.getPriority();
+        checkedAt = exercise.getCheckedAt();
         foreignPhraseProperty.setAll(exercise.getForeignPhrases());
         nativePhraseProperty.setAll(exercise.getNativePhrases());
     }
@@ -37,12 +40,14 @@ public class ExerciseWriteDto {
         return nativePhraseProperty;
     }
 
-    public Exercise getExercise() {
-        Exercise exercise = new Exercise();
+    public void fillExercise(Exercise exercise) {
         exercise.setId(id);
         exercise.setPriority(priority);
+        exercise.setCheckedAt(checkedAt);
+    }
+
+    public void fillForeignNative(Exercise exercise) {
         exercise.setForeignPhrases(foreignPhraseProperty);
         exercise.setNativePhrases(nativePhraseProperty);
-        return exercise;
     }
 }

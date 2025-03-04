@@ -3,6 +3,7 @@ package ua.pp.disik.englishroulette.desktop;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import org.springframework.boot.SpringApplication;
@@ -25,13 +26,13 @@ public class FxApplication extends Application {
                 EnglishRoulettePresenter.class.getResource("EnglishRouletteView.fxml")
         );
         viewLoader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
-        VBox englishRouletteView = viewLoader.load();
+        BorderPane englishRouletteView = viewLoader.load();
 
         Scene scene = new Scene(englishRouletteView);
 
         stage.setScene(scene);
-        stage.setWidth(810);
-        stage.setHeight(500);
+        stage.setWidth(830);
+        stage.setHeight(600);
         stage.setTitle("English Roulette");
         stage.show();
     }
