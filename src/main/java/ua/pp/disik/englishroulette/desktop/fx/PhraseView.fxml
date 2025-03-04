@@ -35,11 +35,11 @@
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="1"
                 GridPane.rowIndex="0"/>
-        <RadioButton text="F->N"
+        <RadioButton fx:id="fnRadio" text="F->N" selected="true"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="0"
                 GridPane.rowIndex="1"/>
-        <RadioButton text="N->F"
+        <RadioButton fx:id="nfRadio" text="N->F"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="1"
                 GridPane.rowIndex="1"/>

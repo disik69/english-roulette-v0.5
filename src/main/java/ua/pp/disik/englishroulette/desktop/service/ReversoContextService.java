@@ -17,8 +17,6 @@ import java.util.List;
 
 @Component
 public class ReversoContextService {
-    private static final String url = "https://cps.reverso.net/api2";
-
     @Data
     public static class SimpleWriteTranslation {
         private String direction;
@@ -65,6 +63,10 @@ public class ReversoContextService {
         }
     }
 
+    private static final String URL = "https://cps.reverso.net/api2";
+    public static final String EN_RU_TRANSLATION = "en-ru";
+    public static final String RU_EN_TRANSLATION = "ru-en";
+
     private final Repository repository;
 
     public ReversoContextService() {
@@ -77,7 +79,7 @@ public class ReversoContextService {
                 .decoder(new JacksonDecoder(objectMapper))
                 .logger(new ServiceFeignLogger())
                 .logLevel(Logger.Level.BASIC)
-                .target(Repository.class, url);
+                .target(Repository.class, URL);
     }
 
     public SimpleReadTranslation translateSimple(String direction, String source) {
