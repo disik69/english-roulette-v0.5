@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.fx.entity.*;
+import ua.pp.disik.englishroulette.desktop.lesson.ReadingLesson;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
 import ua.pp.disik.englishroulette.desktop.service.SettingService;
 
@@ -48,6 +49,9 @@ public class EnglishRouletteController {
 
     @Autowired
     private CurrentExercise currentExercise;
+
+    @Autowired
+    private CurrentLesson currentLesson;
 
     @FXML
     private BorderPane main;
@@ -103,12 +107,39 @@ public class EnglishRouletteController {
     }
 
     public void handleReading(ActionEvent event) {
+        currentLesson.setLesson(new ReadingLesson(exerciseService));
+
+        renderLesson();
     }
 
     public void handleMemory(ActionEvent event) {
     }
 
     public void handleRepeating(ActionEvent event) {
+    }
+
+    @SneakyThrows
+    public void renderLesson() {
+        FXMLLoader viewLoader = new FXMLLoader(
+                LessonController.class.getResource("LessonView.fxml")
+        );
+        viewLoader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
+        GridPane LessonView = viewLoader.load();
+
+        Scene scene = new Scene(LessonView);
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(main.getScene().getWindow());
+        stage.setWidth(main.getScene().getWindow().getWidth());
+        stage.setHeight(main.getScene().getWindow().getHeight());
+        stage.setX(main.getScene().getWindow().getX() + 10);
+        stage.setY(main.getScene().getWindow().getY() + 10);
+        stage.setTitle("Lesson");
+        stage.showAndWait();
+
+        updateTableView();
     }
 
     private ObservableList<ExerciseReadDto> getSelectedExercises() {

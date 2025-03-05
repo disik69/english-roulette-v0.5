@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:id="main"
+          fx:controller="ua.pp.disik.englishroulette.desktop.fx.LessonController"
+          hgap="5" vgap="5"
+          gridLinesVisible="true" style="-fx-background-color: red;">
+    <padding>
+        <Insets bottom="5" left="5" right="5" top="5"/>
+    </padding>
+    <columnConstraints>
+        <ColumnConstraints percentWidth="50"/>
+        <ColumnConstraints percentWidth="50"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="20"/>
+        <RowConstraints percentHeight="60"/>
+        <RowConstraints percentHeight="10"/>
+        <RowConstraints percentHeight="10"/>
+    </rowConstraints>
+    <children>
+        <Label fx:id="numberLabel"
+               GridPane.halignment="CENTER"
+               GridPane.columnIndex="0"
+               GridPane.rowIndex="0"/>
+        <Label fx:id="countLabel"
+               GridPane.halignment="CENTER"
+               GridPane.columnIndex="1"
+               GridPane.rowIndex="0"/>
+        <Label fx:id="exerciseLabel" onMouseClicked="#handleTurn"
+               GridPane.halignment="CENTER"
+               GridPane.columnIndex="0"
+               GridPane.rowIndex="1"
+               GridPane.columnSpan="2"/>
+        <Button text="Read" onAction="#handleRead"
+                GridPane.halignment="CENTER"
+                GridPane.columnIndex="0"
+                GridPane.rowIndex="2"/>
+        <Button text="YES" onAction="#handleYES"
+                GridPane.halignment="CENTER"
+                GridPane.columnIndex="0"
+                GridPane.rowIndex="3"/>
+        <Button text="NO" onAction="#handleNO"
+                GridPane.halignment="CENTER"
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="3"/>
+    </children>
+</GridPane>
