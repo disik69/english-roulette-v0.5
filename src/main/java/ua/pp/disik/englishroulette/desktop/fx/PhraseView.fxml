@@ -11,7 +11,7 @@
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:id="main"
-          fx:controller="ua.pp.disik.englishroulette.desktop.fx.PhrasePresenter"
+          fx:controller="ua.pp.disik.englishroulette.desktop.fx.PhraseController"
           hgap="5" vgap="5"
           gridLinesVisible="true" style="-fx-background-color: red;">
     <padding>

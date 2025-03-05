@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.service.ReversoContextService;
 
 @Component
-public class PhrasePresenter {
+public class PhraseController {
     @Autowired
     private ReversoContextService reversoContextService;
 

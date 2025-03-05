@@ -8,7 +8,7 @@ import javafx.scene.Scene;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import ua.pp.disik.englishroulette.desktop.fx.EnglishRoulettePresenter;
+import ua.pp.disik.englishroulette.desktop.fx.EnglishRouletteController;
 
 @SpringBootApplication
 public class FxApplication extends Application {
@@ -22,7 +22,7 @@ public class FxApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader viewLoader = new FXMLLoader(
-                EnglishRoulettePresenter.class.getResource("EnglishRouletteView.fxml")
+                EnglishRouletteController.class.getResource("EnglishRouletteView.fxml")
         );
         viewLoader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
         BorderPane englishRouletteView = viewLoader.load();

@@ -10,7 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import lombok.SneakyThrows;
@@ -34,7 +33,7 @@ import java.util.Map;
 
 @Component
 @Slf4j
-public class ExercisePresenter {
+public class ExerciseController {
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -162,7 +161,7 @@ public class ExercisePresenter {
     @SneakyThrows
     public void handlePhrase(ActionEvent event) {
         FXMLLoader viewLoader = new FXMLLoader(
-                PhrasePresenter.class.getResource("PhraseView.fxml")
+                PhraseController.class.getResource("PhraseView.fxml")
         );
         viewLoader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
         GridPane phraseView = viewLoader.load();

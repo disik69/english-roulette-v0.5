@@ -29,7 +29,7 @@ import java.util.Map;
 
 @Component
 @Slf4j
-public class EnglishRoulettePresenter {
+public class EnglishRouletteController {
     private static final int FIRST_PAGE = 0;
     private static final int PAGE_SIZE = 30;
 
@@ -175,7 +175,7 @@ public class EnglishRoulettePresenter {
         currentExercise.setId(exerciseId);
 
         FXMLLoader viewLoader = new FXMLLoader(
-                ExercisePresenter.class.getResource("ExerciseView.fxml")
+                ExerciseController.class.getResource("ExerciseView.fxml")
         );
         viewLoader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
         GridPane exerciseView = viewLoader.load();
