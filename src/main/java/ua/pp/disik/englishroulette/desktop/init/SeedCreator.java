@@ -14,7 +14,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
-@Component
+//@Component
 public class SeedCreator extends Creator {
     private final PhraseService phraseService;
     private final ExerciseService exerciseService;
