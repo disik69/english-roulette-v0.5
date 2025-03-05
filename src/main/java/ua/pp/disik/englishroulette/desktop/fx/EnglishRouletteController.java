@@ -194,7 +194,7 @@ public class EnglishRouletteController {
                 10
         );
         stage.setY(
-                main.getScene().getWindow().getY() -
+                main.getScene().getWindow().getY() +
                 10
         );
         stage.setTitle("Exercise");
