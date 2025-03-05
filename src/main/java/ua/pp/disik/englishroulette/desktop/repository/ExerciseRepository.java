@@ -1,5 +1,6 @@
 package ua.pp.disik.englishroulette.desktop.repository;
 
+import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -17,5 +18,20 @@ public interface ExerciseRepository extends
             String foreignBody,
             String nativeBody,
             Pageable pageable
+    );
+    List<Exercise> findByReadingCountNotOrderByPriorityAscReadingCountAscUpdatedAtAsc(
+            int readingCount,
+            Limit limit
+    );
+    List<Exercise> findByReadingCountAndMemoryCountNotOrderByPriorityAscMemoryCountAscUpdatedAtAsc(
+            int readingCount,
+            int memoryCount,
+            Limit limit
+    );
+    List<Exercise> findByReadingCountAndMemoryCountAndCheckedAtLessThanEqualOrderByPriorityAscCheckedAtAsc(
+            int readingCount,
+            int memoryCount,
+            Long checkedAt,
+            Limit limit
     );
 }
