@@ -51,6 +51,7 @@ public class LessonController {
             numberLabel.setText(String.valueOf(lesson.getAmmount()));
             countLabel.setText(String.valueOf(lesson.getCurrentCount()));
             exerciseLabel.setText(String.valueOf(lesson.getCurrentAvers()));
+            exerciseRevers = false;
         } else {
             numberLabel.setText("");
             countLabel.setText("");

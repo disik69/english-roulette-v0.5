@@ -49,7 +49,7 @@ public class RepeatingLesson implements Lesson {
     public String getCurrentAvers() {
         return current.getNativePhrases().stream()
                 .map(phrase -> phrase.getBody())
-                .reduce((first, second) -> first + "\n" + second)
+                .reduce((first, second) -> first + ",\n" + second)
                 .orElse("");
     }
 
@@ -57,7 +57,7 @@ public class RepeatingLesson implements Lesson {
     public String getCurrentRevers() {
         return current.getForeignPhrases().stream()
                 .map(phrase -> phrase.getBody())
-                .reduce((first, second) -> first + "\n" + second)
+                .reduce((first, second) -> first + ",\n" + second)
                 .orElse("");
     }
 
