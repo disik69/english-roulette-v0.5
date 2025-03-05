@@ -21,7 +21,10 @@ import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.fx.entity.*;
+import ua.pp.disik.englishroulette.desktop.lesson.Lesson;
+import ua.pp.disik.englishroulette.desktop.lesson.MemoryLesson;
 import ua.pp.disik.englishroulette.desktop.lesson.ReadingLesson;
+import ua.pp.disik.englishroulette.desktop.lesson.RepeatingLesson;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
 import ua.pp.disik.englishroulette.desktop.service.SettingService;
 
@@ -107,15 +110,30 @@ public class EnglishRouletteController {
     }
 
     public void handleReading(ActionEvent event) {
-        currentLesson.setLesson(new ReadingLesson(exerciseService));
+        Lesson lesson = new ReadingLesson(exerciseService);
+        if (lesson.getAmmount() > 0) {
+            currentLesson.setLesson(lesson);
 
-        renderLesson();
+            renderLesson();
+        }
     }
 
     public void handleMemory(ActionEvent event) {
+        Lesson lesson = new MemoryLesson(exerciseService);
+        if (lesson.getAmmount() > 0) {
+            currentLesson.setLesson(lesson);
+
+            renderLesson();
+        }
     }
 
     public void handleRepeating(ActionEvent event) {
+        Lesson lesson = new RepeatingLesson(exerciseService, settingService);
+        if (lesson.getAmmount() > 0) {
+            currentLesson.setLesson(lesson);
+
+            renderLesson();
+        }
     }
 
     @SneakyThrows
@@ -134,8 +152,8 @@ public class EnglishRouletteController {
         stage.initOwner(main.getScene().getWindow());
         stage.setWidth(main.getScene().getWindow().getWidth());
         stage.setHeight(main.getScene().getWindow().getHeight());
-        stage.setX(main.getScene().getWindow().getX() + 10);
-        stage.setY(main.getScene().getWindow().getY() + 10);
+        stage.setX(main.getScene().getWindow().getX() + Constants.WINDOW_OFFSET);
+        stage.setY(main.getScene().getWindow().getY() + Constants.WINDOW_OFFSET);
         stage.setTitle("Lesson");
         stage.showAndWait();
 
@@ -222,12 +240,9 @@ public class EnglishRouletteController {
         stage.setX(
                 main.getScene().getWindow().getX() +
                 (main.getScene().getWindow().getWidth() / 2) +
-                10
+                Constants.WINDOW_OFFSET
         );
-        stage.setY(
-                main.getScene().getWindow().getY() +
-                10
-        );
+        stage.setY(main.getScene().getWindow().getY() + Constants.WINDOW_OFFSET);
         stage.setTitle("Exercise");
         stage.showAndWait();
 

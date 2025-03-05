@@ -11,8 +11,7 @@
           xmlns:fx="http://javafx.com/fxml"
           fx:id="main"
           fx:controller="ua.pp.disik.englishroulette.desktop.fx.LessonController"
-          hgap="5" vgap="5"
-          gridLinesVisible="true" style="-fx-background-color: red;">
+          hgap="5" vgap="5">
     <padding>
         <Insets bottom="5" left="5" right="5" top="5"/>
     </padding>
@@ -30,27 +29,33 @@
         <Label fx:id="numberLabel"
                GridPane.halignment="CENTER"
                GridPane.columnIndex="0"
-               GridPane.rowIndex="0"/>
+               GridPane.rowIndex="0"
+               style="-fx-font-size: 15px;"/>
         <Label fx:id="countLabel"
                GridPane.halignment="CENTER"
                GridPane.columnIndex="1"
-               GridPane.rowIndex="0"/>
+               GridPane.rowIndex="0"
+               style="-fx-font-size: 15px;"/>
         <Label fx:id="exerciseLabel" onMouseClicked="#handleTurn"
                GridPane.halignment="CENTER"
                GridPane.columnIndex="0"
                GridPane.rowIndex="1"
-               GridPane.columnSpan="2"/>
+               GridPane.columnSpan="2"
+               style="-fx-font-size: 30px;"/>
         <Button text="Read" onAction="#handleRead"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="0"
-                GridPane.rowIndex="2"/>
+                GridPane.rowIndex="2"
+                style="-fx-font-size: 15px;"/>
         <Button text="YES" onAction="#handleYES"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="0"
-                GridPane.rowIndex="3"/>
+                GridPane.rowIndex="3"
+                style="-fx-font-size: 15px;"/>
         <Button text="NO" onAction="#handleNO"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="1"
-                GridPane.rowIndex="3"/>
+                GridPane.rowIndex="3"
+                style="-fx-font-size: 15px;"/>
     </children>
 </GridPane>

@@ -175,7 +175,7 @@ public class ExerciseController {
         stage.setX(
                 main.getScene().getWindow().getX() +
                 main.getScene().getWindow().getWidth() +
-                10
+                Constants.WINDOW_OFFSET
         );
         stage.setY(main.getScene().getWindow().getY());
         stage.setTitle("Phrase");

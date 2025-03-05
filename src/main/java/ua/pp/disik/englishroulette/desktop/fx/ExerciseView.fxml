@@ -11,8 +11,7 @@
           xmlns:fx="http://javafx.com/fxml"
           fx:id="main"
           fx:controller="ua.pp.disik.englishroulette.desktop.fx.ExerciseController"
-          hgap="5" vgap="5"
-          gridLinesVisible="true" style="-fx-background-color: red;">
+          hgap="5" vgap="5">
     <padding>
         <Insets bottom="5" left="5" right="5" top="5"/>
     </padding>
