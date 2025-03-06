@@ -42,20 +42,21 @@
                GridPane.rowIndex="1"
                GridPane.columnSpan="2"
                style="-fx-font-size: 30px;"/>
-        <Button text="Read" onAction="#handleRead"
+        <Button text="Speak" onAction="#handleSpeak"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="0"
                 GridPane.rowIndex="2"
+                GridPane.columnSpan="2"
                 style="-fx-font-size: 15px;"/>
         <Button text="YES" onAction="#handleYES"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="0"
                 GridPane.rowIndex="3"
-                style="-fx-font-size: 15px;"/>
+                style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: green"/>
         <Button text="NO" onAction="#handleNO"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="1"
                 GridPane.rowIndex="3"
-                style="-fx-font-size: 15px;"/>
+                style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: red"/>
     </children>
 </GridPane>

@@ -99,10 +99,8 @@ public class LessonController {
         }
     }
 
-    public void handleRead(ActionEvent event) {
-        ((Button) event.getTarget()).setDisable(true);
+    public void handleSpeak(ActionEvent event) {
         freeTTSSpeaker.speak(exerciseLabel.getText());
-        ((Button) event.getTarget()).setDisable(false);
     }
 
     public void handleYES(ActionEvent event) {
