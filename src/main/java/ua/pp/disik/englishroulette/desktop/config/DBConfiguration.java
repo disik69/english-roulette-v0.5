@@ -1,5 +1,6 @@
 package ua.pp.disik.englishroulette.desktop.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -18,10 +19,10 @@ public class DBConfiguration {
     }
 
     @Bean
-    public DataSource dataSource() {
+    public DataSource dataSource(@Value("${dbFilename:}") String urlFileName) {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("driverClassName"));
-        dataSource.setUrl(env.getProperty("url"));
+        dataSource.setUrl(env.getProperty("urlPrefix") + urlFileName);
         return dataSource;
     }
 }
