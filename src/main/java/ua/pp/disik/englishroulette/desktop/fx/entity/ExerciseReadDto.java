@@ -34,7 +34,7 @@ public class ExerciseReadDto {
             return "";
         } else {
             return DateTimeFormatter.ofPattern(
-                    "yyyy-MM-dd"
+                    "dd-MM-yyyy"
             ).withZone(
                     ZoneId.systemDefault()
             ).format(

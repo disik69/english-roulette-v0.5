@@ -56,8 +56,8 @@ public class ReadingLesson implements Lesson {
         if (current != null) {
             successNumber++;
 
-            int readingCount = current.getReadingCount();
-            current.setReadingCount(readingCount - 1);
+            int readingCount = current.getReadingCount() - 1;
+            current.setReadingCount(readingCount);
             exerciseService.save(current);
         }
 

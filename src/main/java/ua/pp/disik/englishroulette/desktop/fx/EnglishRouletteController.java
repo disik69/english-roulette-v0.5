@@ -119,7 +119,7 @@ public class EnglishRouletteController {
     }
 
     public void handleMemory(ActionEvent event) {
-        Lesson lesson = new MemoryLesson(exerciseService);
+        Lesson lesson = new MemoryLesson(exerciseService, settingService);
         if (lesson.getAmmount() > 0) {
             currentLesson.setLesson(lesson);
 

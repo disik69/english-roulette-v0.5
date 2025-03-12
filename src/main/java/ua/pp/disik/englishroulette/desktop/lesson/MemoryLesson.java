@@ -1,21 +1,31 @@
 package ua.pp.disik.englishroulette.desktop.lesson;
 
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
+import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
+import ua.pp.disik.englishroulette.desktop.service.SettingService;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class MemoryLesson implements Lesson {
     private final ExerciseService exerciseService;
+    private final SettingService settingService;
 
     private List<Exercise> exercises;
     private Exercise current;
     private int successNumber = 0;
     private int allNumber;
 
-    public MemoryLesson(ExerciseService exerciseService) {
+    public MemoryLesson(
+            ExerciseService exerciseService,
+            SettingService settingService
+    ) {
         this.exerciseService = exerciseService;
+        this.settingService = settingService;
 
         exercises = exerciseService.getMemory();
         allNumber = exercises.size();
@@ -56,8 +66,18 @@ public class MemoryLesson implements Lesson {
         if (current != null) {
             successNumber++;
 
-            int memoryCount = current.getMemoryCount();
-            current.setMemoryCount(memoryCount - 1);
+            int memoryCount = current.getMemoryCount() - 1;
+            current.setMemoryCount(memoryCount);
+            if (memoryCount < 1) {
+                Map<SettingName, String> settings = settingService.getMap();
+
+                long checkedAt = Instant.now().plus(
+                        Long.parseLong(settings.get(SettingName.REPEAT_TERM)),
+                        ChronoUnit.DAYS
+                ).toEpochMilli();
+                current.setCheckedAt(checkedAt);
+                current.setUpdatedAt(System.currentTimeMillis());
+            }
             exerciseService.save(current);
         }
 
