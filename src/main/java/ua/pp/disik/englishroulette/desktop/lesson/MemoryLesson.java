@@ -71,7 +71,7 @@ public class MemoryLesson implements Lesson {
             if (memoryCount < 1) {
                 Map<SettingName, String> settings = settingService.getMap();
 
-                long checkedAt = Instant.now().plus(
+                long checkedAt = Instant.now().truncatedTo(ChronoUnit.DAYS).plus(
                         Long.parseLong(settings.get(SettingName.REPEAT_TERM)),
                         ChronoUnit.DAYS
                 ).toEpochMilli();
