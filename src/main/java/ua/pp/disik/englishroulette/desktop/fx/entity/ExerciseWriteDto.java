@@ -21,7 +21,7 @@ public class ExerciseWriteDto {
     private ObservableList<Phrase> nativePhraseProperty = FXCollections.observableArrayList();
 
     public ExerciseWriteDto() {
-        priority = Priority.HIGH.getIndex();
+        priority = Priority.MIDDLE.getIndex();
     }
 
     public ExerciseWriteDto(Exercise exercise) {
