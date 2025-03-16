@@ -5,12 +5,14 @@
     <groupId>english-roulette</groupId>
     <artifactId>desktop</artifactId>
     <version>0.5</version>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <javafx.version>19</javafx.version>
         <feign.version>11.0</feign.version>
+        <project.build.mainClass>ua.pp.disik.englishroulette.desktop.FxApplicationStarter</project.build.mainClass>
     </properties>
 
     <dependencyManagement>
@@ -135,7 +137,38 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
-                    <mainClass>ua.pp.disik.englishroulette.desktop.FxApplication</mainClass>
+                    <mainClass>${project.build.mainClass}</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>${project.build.mainClass}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>

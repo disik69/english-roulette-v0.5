@@ -22,8 +22,7 @@
         </MenuBar>
     </top>
     <center>
-        <GridPane hgap="5" vgap="5"
-                  gridLinesVisible="true" style="-fx-background-color: red;">
+        <GridPane hgap="5" vgap="5">
             <padding>
                 <Insets bottom="5" left="5" right="5" top="5"/>
             </padding>

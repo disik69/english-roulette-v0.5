@@ -21,6 +21,10 @@ import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.fx.entity.*;
+import ua.pp.disik.englishroulette.desktop.lesson.Lesson;
+import ua.pp.disik.englishroulette.desktop.lesson.MemoryLesson;
+import ua.pp.disik.englishroulette.desktop.lesson.ReadingLesson;
+import ua.pp.disik.englishroulette.desktop.lesson.RepeatingLesson;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
 import ua.pp.disik.englishroulette.desktop.service.SettingService;
 
@@ -48,6 +52,9 @@ public class EnglishRouletteController {
 
     @Autowired
     private CurrentExercise currentExercise;
+
+    @Autowired
+    private CurrentLesson currentLesson;
 
     @FXML
     private BorderPane main;
@@ -103,12 +110,54 @@ public class EnglishRouletteController {
     }
 
     public void handleReading(ActionEvent event) {
+        Lesson lesson = new ReadingLesson(exerciseService);
+        if (lesson.getAmmount() > 0) {
+            currentLesson.setLesson(lesson);
+
+            renderLesson();
+        }
     }
 
     public void handleMemory(ActionEvent event) {
+        Lesson lesson = new MemoryLesson(exerciseService, settingService);
+        if (lesson.getAmmount() > 0) {
+            currentLesson.setLesson(lesson);
+
+            renderLesson();
+        }
     }
 
     public void handleRepeating(ActionEvent event) {
+        Lesson lesson = new RepeatingLesson(exerciseService, settingService);
+        if (lesson.getAmmount() > 0) {
+            currentLesson.setLesson(lesson);
+
+            renderLesson();
+        }
+    }
+
+    @SneakyThrows
+    public void renderLesson() {
+        FXMLLoader viewLoader = new FXMLLoader(
+                LessonController.class.getResource("LessonView.fxml")
+        );
+        viewLoader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
+        GridPane LessonView = viewLoader.load();
+
+        Scene scene = new Scene(LessonView);
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(main.getScene().getWindow());
+        stage.setWidth(main.getScene().getWindow().getWidth());
+        stage.setHeight(main.getScene().getWindow().getHeight());
+        stage.setX(main.getScene().getWindow().getX() + Constants.WINDOW_OFFSET);
+        stage.setY(main.getScene().getWindow().getY() + Constants.WINDOW_OFFSET);
+        stage.setTitle("Lesson");
+        stage.showAndWait();
+
+        updateTableView();
     }
 
     private ObservableList<ExerciseReadDto> getSelectedExercises() {
@@ -191,12 +240,9 @@ public class EnglishRouletteController {
         stage.setX(
                 main.getScene().getWindow().getX() +
                 (main.getScene().getWindow().getWidth() / 2) +
-                10
+                Constants.WINDOW_OFFSET
         );
-        stage.setY(
-                main.getScene().getWindow().getY() -
-                10
-        );
+        stage.setY(main.getScene().getWindow().getY() + Constants.WINDOW_OFFSET);
         stage.setTitle("Exercise");
         stage.showAndWait();
 

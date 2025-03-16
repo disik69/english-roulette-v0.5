@@ -35,8 +35,4 @@ public class FxApplication extends Application {
         stage.setTitle("English Roulette");
         stage.show();
     }
-
-    public static void main(String[] args) {
-        Application.launch(args);
-    }
 }
