@@ -15,9 +15,9 @@
                 <MenuItem onAction="#handleExit" text="Exit"/>
             </Menu>
             <Menu text="Studying">
-                <MenuItem onAction="#handleReading" text="Reading"/>
-                <MenuItem onAction="#handleMemory" text="Memory"/>
                 <MenuItem onAction="#handleRepeating" text="Repeating"/>
+                <MenuItem onAction="#handleMemory" text="Memory"/>
+                <MenuItem onAction="#handleReading" text="Reading"/>
             </Menu>
         </MenuBar>
     </top>
