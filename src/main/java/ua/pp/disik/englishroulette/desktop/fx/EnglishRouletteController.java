@@ -191,7 +191,7 @@ public class EnglishRouletteController {
                 exercise.setUpdatedAt(System.currentTimeMillis());
                 exerciseWriteDto.fillForeignNative(exercise);
 
-                exerciseService.save(exercise); // todo optimize saving
+                exerciseService.save(exercise);
 
                 updateTableView();
             }
