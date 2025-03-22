@@ -40,8 +40,7 @@
                GridPane.halignment="CENTER"
                GridPane.columnIndex="0"
                GridPane.rowIndex="1"
-               GridPane.columnSpan="2"
-               style="-fx-font-size: 30px;"/>
+               GridPane.columnSpan="2"/>
         <Button text="Speak" onAction="#handleSpeak"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="0"

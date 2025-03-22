@@ -20,6 +20,19 @@ import ua.pp.disik.englishroulette.desktop.lesson.Lesson;
 
 @Component
 public class LessonController {
+    private final String AVERS_STYLE = "" +
+            "-fx-font-size: 30px; " +
+            "-fx-border-width: 2px; " +
+            "-fx-border-radius: 5px; " +
+            "-fx-border-style: dotted; " +
+            "-fx-border-color: black; ";
+    private final String REVERS_STYLE = "" +
+            "-fx-font-size: 30px; " +
+            "-fx-border-width: 2px; " +
+            "-fx-border-radius: 5px; " +
+            "-fx-border-style: dotted; " +
+            "-fx-border-color: blue; ";
+
     @Autowired
     private CurrentLesson currentLesson;
 
@@ -51,11 +64,13 @@ public class LessonController {
             numberLabel.setText(String.valueOf(lesson.getAmmount()));
             countLabel.setText(String.valueOf(lesson.getCurrentCount()));
             exerciseLabel.setText(String.valueOf(lesson.getCurrentAvers()));
+            exerciseLabel.setStyle(AVERS_STYLE);
             exerciseRevers = false;
         } else {
             numberLabel.setText("");
             countLabel.setText("");
             exerciseLabel.setText("");
+            exerciseLabel.setStyle("");
             renderScore(lesson.getSuccessNumber(), lesson.getAllNumber());
         }
     }
@@ -92,9 +107,11 @@ public class LessonController {
         Lesson lesson = currentLesson.getLesson();
         if (! exerciseRevers) {
             exerciseLabel.setText(String.valueOf(lesson.getCurrentRevers()));
+            exerciseLabel.setStyle(REVERS_STYLE);
             exerciseRevers = true;
         } else {
             exerciseLabel.setText(String.valueOf(lesson.getCurrentAvers()));
+            exerciseLabel.setStyle(AVERS_STYLE);
             exerciseRevers = false;
         }
     }
