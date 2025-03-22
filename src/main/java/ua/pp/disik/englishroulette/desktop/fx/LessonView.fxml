@@ -36,12 +36,21 @@
                GridPane.columnIndex="1"
                GridPane.rowIndex="0"
                style="-fx-font-size: 15px;"/>
-        <Label fx:id="exerciseLabel" onMouseClicked="#handleTurn"
-               GridPane.halignment="CENTER"
-               GridPane.columnIndex="0"
-               GridPane.rowIndex="1"
-               GridPane.columnSpan="2"
-               style="-fx-font-size: 30px;"/>
+        <StackPane GridPane.columnIndex="0"
+                   GridPane.rowIndex="1"
+                   GridPane.columnSpan="2">
+            <padding>
+                <Insets bottom="25" left="25" right="25"/>
+            </padding>
+            <children>
+                <StackPane fx:id="card" onMouseClicked="#handleTurn">
+                    <children>
+                        <Label fx:id="exerciseLabel"
+                               style="-fx-font-size: 30px"/>
+                    </children>
+                </StackPane>
+            </children>
+        </StackPane>
         <Button text="Speak" onAction="#handleSpeak"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="0"
@@ -52,11 +61,11 @@
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="0"
                 GridPane.rowIndex="3"
-                style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: green"/>
+                style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: green;"/>
         <Button text="NO" onAction="#handleNO"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="1"
                 GridPane.rowIndex="3"
-                style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: red"/>
+                style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: red;"/>
     </children>
 </GridPane>

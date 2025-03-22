@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -20,6 +21,17 @@ import ua.pp.disik.englishroulette.desktop.lesson.Lesson;
 
 @Component
 public class LessonController {
+    private final String AVERS_STYLE = "" +
+            "-fx-border-width: 2px; " +
+            "-fx-border-radius: 5px; " +
+            "-fx-border-style: dotted; " +
+            "-fx-border-color: black; ";
+    private final String REVERS_STYLE = "" +
+            "-fx-border-width: 2px; " +
+            "-fx-border-radius: 5px; " +
+            "-fx-border-style: dotted; " +
+            "-fx-border-color: blue; ";
+
     @Autowired
     private CurrentLesson currentLesson;
 
@@ -38,6 +50,9 @@ public class LessonController {
     private Label countLabel;
 
     @FXML
+    private StackPane card;
+
+    @FXML
     private Label exerciseLabel;
 
     @FXML
@@ -50,11 +65,13 @@ public class LessonController {
         if (lesson.getAmmount() > 0) {
             numberLabel.setText(String.valueOf(lesson.getAmmount()));
             countLabel.setText(String.valueOf(lesson.getCurrentCount()));
+            card.setStyle(AVERS_STYLE);
             exerciseLabel.setText(String.valueOf(lesson.getCurrentAvers()));
             exerciseRevers = false;
         } else {
             numberLabel.setText("");
             countLabel.setText("");
+            card.setStyle("");
             exerciseLabel.setText("");
             renderScore(lesson.getSuccessNumber(), lesson.getAllNumber());
         }
@@ -91,9 +108,11 @@ public class LessonController {
     public void handleTurn(MouseEvent event) {
         Lesson lesson = currentLesson.getLesson();
         if (! exerciseRevers) {
+            card.setStyle(REVERS_STYLE);
             exerciseLabel.setText(String.valueOf(lesson.getCurrentRevers()));
             exerciseRevers = true;
         } else {
+            card.setStyle(AVERS_STYLE);
             exerciseLabel.setText(String.valueOf(lesson.getCurrentAvers()));
             exerciseRevers = false;
         }
