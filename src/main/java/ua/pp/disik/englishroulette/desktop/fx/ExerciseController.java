@@ -51,6 +51,8 @@ public class ExerciseController {
 
     private ExerciseWriteDto currentExerciseDto;
 
+    private Stage phraseStage;
+
     @FXML
     private GridPane main;
 
@@ -76,6 +78,11 @@ public class ExerciseController {
         renderNativeList();
 
         renderPriorityBox();
+
+        phraseStage = new Stage();
+        phraseStage.setOnShown(phraseWindowEvent -> {
+            main.getScene().getWindow().setOnHiding(mainWindowEvent -> phraseStage.hide());
+        });
     }
 
     private void renderForeignList() {
@@ -158,30 +165,6 @@ public class ExerciseController {
         priorityBox.getChildren().addAll(priorityButtons);
     }
 
-    @SneakyThrows
-    public void handlePhrase(ActionEvent event) {
-        FXMLLoader viewLoader = new FXMLLoader(
-                PhraseController.class.getResource("PhraseView.fxml")
-        );
-        viewLoader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
-        GridPane phraseView = viewLoader.load();
-
-        Scene scene = new Scene(phraseView);
-
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.setWidth(main.getScene().getWindow().getWidth());
-        stage.setHeight(main.getScene().getWindow().getHeight());
-        stage.setX(
-                main.getScene().getWindow().getX() +
-                main.getScene().getWindow().getWidth() +
-                Constants.WINDOW_OFFSET
-        );
-        stage.setY(main.getScene().getWindow().getY());
-        stage.setTitle("Phrase");
-        stage.showAndWait();
-    }
-
     public void handleSave(ActionEvent event) {
         // Unsetting of an empty phrase for addition new one.
         currentExerciseDto.foreignPhraseProperty().removeLast();
@@ -203,5 +186,30 @@ public class ExerciseController {
         exerciseService.save(exercise);
 
         main.getScene().getWindow().hide();
+    }
+
+    @SneakyThrows
+    public void handlePhrase(ActionEvent event) {
+        if (! phraseStage.isShowing()) {
+            FXMLLoader viewLoader = new FXMLLoader(
+                    PhraseController.class.getResource("PhraseView.fxml")
+            );
+            viewLoader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
+            GridPane phraseView = viewLoader.load();
+
+            Scene scene = new Scene(phraseView);
+
+            phraseStage.setScene(scene);
+            phraseStage.setWidth(main.getScene().getWindow().getWidth());
+            phraseStage.setHeight(main.getScene().getWindow().getHeight());
+            phraseStage.setX(
+                    main.getScene().getWindow().getX() +
+                    main.getScene().getWindow().getWidth() +
+                    Constants.WINDOW_OFFSET
+            );
+            phraseStage.setY(main.getScene().getWindow().getY());
+            phraseStage.setTitle("Phrase");
+            phraseStage.showAndWait();
+        }
     }
 }
