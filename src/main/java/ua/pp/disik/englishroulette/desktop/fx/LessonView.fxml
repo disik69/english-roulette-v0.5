@@ -21,8 +21,7 @@
     </columnConstraints>
     <rowConstraints>
         <RowConstraints percentHeight="20"/>
-        <RowConstraints percentHeight="60"/>
-        <RowConstraints percentHeight="10"/>
+        <RowConstraints percentHeight="70"/>
         <RowConstraints percentHeight="10"/>
     </rowConstraints>
     <children>
@@ -40,7 +39,7 @@
                    GridPane.rowIndex="1"
                    GridPane.columnSpan="2">
             <padding>
-                <Insets bottom="25" left="25" right="25"/>
+                <Insets left="25" right="25"/>
             </padding>
             <children>
                 <StackPane fx:id="card" onMouseClicked="#handleTurn">
@@ -51,21 +50,15 @@
                 </StackPane>
             </children>
         </StackPane>
-        <Button text="Speak" onAction="#handleSpeak"
-                GridPane.halignment="CENTER"
-                GridPane.columnIndex="0"
-                GridPane.rowIndex="2"
-                GridPane.columnSpan="2"
-                style="-fx-font-size: 15px;"/>
         <Button text="YES" onAction="#handleYES"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="0"
-                GridPane.rowIndex="3"
+                GridPane.rowIndex="2"
                 style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: green;"/>
         <Button text="NO" onAction="#handleNO"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="1"
-                GridPane.rowIndex="3"
+                GridPane.rowIndex="2"
                 style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: red;"/>
     </children>
 </GridPane>

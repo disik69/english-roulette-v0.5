@@ -1,5 +1,7 @@
 package ua.pp.disik.englishroulette.desktop.fx;
 
+import com.sun.speech.freetts.Voice;
+import com.sun.speech.freetts.VoiceManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -15,7 +17,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ua.pp.disik.englishroulette.desktop.freetts.FreeTTSSpeaker;
 import ua.pp.disik.englishroulette.desktop.fx.entity.CurrentLesson;
 import ua.pp.disik.englishroulette.desktop.lesson.Lesson;
 
@@ -32,11 +33,11 @@ public class LessonController {
             "-fx-border-style: dotted; " +
             "-fx-border-color: blue; ";
 
+    private final Voice kevin = VoiceManager.getInstance().getVoice("kevin16");
+
     @Autowired
     private CurrentLesson currentLesson;
 
-    @Autowired
-    private FreeTTSSpeaker freeTTSSpeaker;
 
     private boolean exerciseRevers = false;
 
@@ -57,6 +58,8 @@ public class LessonController {
 
     @FXML
     private void initialize() {
+        kevin.allocate();
+
         setCurrentExercise();
     }
 
@@ -65,14 +68,16 @@ public class LessonController {
         if (lesson.getAmmount() > 0) {
             numberLabel.setText(String.valueOf(lesson.getAmmount()));
             countLabel.setText(String.valueOf(lesson.getCurrentCount()));
-            card.setStyle(AVERS_STYLE);
-            exerciseLabel.setText(String.valueOf(lesson.getCurrentAvers()));
-            exerciseRevers = false;
+
+            setAvers();
         } else {
             numberLabel.setText("");
             countLabel.setText("");
+
             card.setStyle("");
+
             exerciseLabel.setText("");
+
             renderScore(lesson.getSuccessNumber(), lesson.getAllNumber());
         }
     }
@@ -102,24 +107,45 @@ public class LessonController {
         stage.setTitle("Result");
         stage.showAndWait();
 
+        kevin.deallocate();
+
         main.getScene().getWindow().hide();
     }
 
     public void handleTurn(MouseEvent event) {
-        Lesson lesson = currentLesson.getLesson();
-        if (! exerciseRevers) {
-            card.setStyle(REVERS_STYLE);
-            exerciseLabel.setText(String.valueOf(lesson.getCurrentRevers()));
-            exerciseRevers = true;
+        if (exerciseRevers) {
+            setAvers();
         } else {
-            card.setStyle(AVERS_STYLE);
-            exerciseLabel.setText(String.valueOf(lesson.getCurrentAvers()));
-            exerciseRevers = false;
+            setRevers();
         }
     }
 
-    public void handleSpeak(ActionEvent event) {
-        freeTTSSpeaker.speak(exerciseLabel.getText());
+    private void setAvers() {
+        card.setStyle(AVERS_STYLE);
+
+        Lesson lesson = currentLesson.getLesson();
+        Lesson.Side side = lesson.getCurrentAvers();
+        exerciseLabel.setText(side.getText());
+        speakSide(side);
+
+        exerciseRevers = false;
+    }
+
+    private void setRevers() {
+        card.setStyle(REVERS_STYLE);
+
+        Lesson lesson = currentLesson.getLesson();
+        Lesson.Side side = lesson.getCurrentRevers();
+        exerciseLabel.setText(side.getText());
+        speakSide(side);
+
+        exerciseRevers = true;
+    }
+
+    private void speakSide(Lesson.Side side) {
+        if (side.isSpoken()) {
+            new Thread(() -> kevin.speak(side.getText())).start();
+        }
     }
 
     public void handleYES(ActionEvent event) {

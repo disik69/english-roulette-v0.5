@@ -1,10 +1,21 @@
 package ua.pp.disik.englishroulette.desktop.lesson;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+
 public interface Lesson {
+    @AllArgsConstructor
+    @Getter
+    class Side {
+        private String text;
+        private boolean spoken;
+    }
+
     int getAmmount();
     int getCurrentCount();
-    String getCurrentAvers();
-    String getCurrentRevers();
+    Side getCurrentAvers();
+    Side getCurrentRevers();
     void rememberCurrentAndNext();
     void dontRememberCurrentAndNext();
     int getSuccessNumber();

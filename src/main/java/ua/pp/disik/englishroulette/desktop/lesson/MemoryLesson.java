@@ -46,19 +46,25 @@ public class MemoryLesson implements Lesson {
     }
 
     @Override
-    public String getCurrentAvers() {
-        return current.getNativePhrases().stream()
-                .map(phrase -> phrase.getBody())
-                .reduce((first, second) -> first + ",\n" + second)
-                .orElse("");
+    public Side getCurrentAvers() {
+        return new Side(
+                current.getNativePhrases().stream()
+                        .map(phrase -> phrase.getBody())
+                        .reduce((first, second) -> first + ",\n" + second)
+                        .orElse(""),
+                false
+        );
     }
 
     @Override
-    public String getCurrentRevers() {
-        return current.getForeignPhrases().stream()
-                .map(phrase -> phrase.getBody())
-                .reduce((first, second) -> first + ",\n" + second)
-                .orElse("");
+    public Side getCurrentRevers() {
+        return new Side(
+                current.getForeignPhrases().stream()
+                        .map(phrase -> phrase.getBody())
+                        .reduce((first, second) -> first + ",\n" + second)
+                        .orElse(""),
+                true
+        );
     }
 
     @Override

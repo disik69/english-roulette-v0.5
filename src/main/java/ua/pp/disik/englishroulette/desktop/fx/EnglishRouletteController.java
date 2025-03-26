@@ -109,8 +109,8 @@ public class EnglishRouletteController {
         System.exit(0);
     }
 
-    public void handleReading(ActionEvent event) {
-        Lesson lesson = new ReadingLesson(exerciseService);
+    public void handleRepeating(ActionEvent event) {
+        Lesson lesson = new RepeatingLesson(exerciseService, settingService);
         if (lesson.getAmmount() > 0) {
             currentLesson.setLesson(lesson);
 
@@ -127,8 +127,8 @@ public class EnglishRouletteController {
         }
     }
 
-    public void handleRepeating(ActionEvent event) {
-        Lesson lesson = new RepeatingLesson(exerciseService, settingService);
+    public void handleReading(ActionEvent event) {
+        Lesson lesson = new ReadingLesson(exerciseService);
         if (lesson.getAmmount() > 0) {
             currentLesson.setLesson(lesson);
 
