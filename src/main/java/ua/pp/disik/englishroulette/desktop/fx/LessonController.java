@@ -33,7 +33,7 @@ public class LessonController {
             "-fx-border-style: dotted; " +
             "-fx-border-color: blue; ";
 
-    private final Voice kevin = VoiceManager.getInstance().getVoice("kevin16");
+    private Voice voice;
 
     @Autowired
     private CurrentLesson currentLesson;
@@ -58,7 +58,8 @@ public class LessonController {
 
     @FXML
     private void initialize() {
-        kevin.allocate();
+        voice = VoiceManager.getInstance().getVoice("kevin16");
+        voice.allocate();
 
         setCurrentExercise();
     }
@@ -107,7 +108,7 @@ public class LessonController {
         stage.setTitle("Result");
         stage.showAndWait();
 
-        kevin.deallocate();
+        voice.deallocate();
 
         main.getScene().getWindow().hide();
     }
@@ -144,7 +145,7 @@ public class LessonController {
 
     private void speakSide(Lesson.Side side) {
         if (side.isSpoken()) {
-            new Thread(() -> kevin.speak(side.getText())).start();
+            new Thread(() -> voice.speak(side.getText())).start();
         }
     }
 
