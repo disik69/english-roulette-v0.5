@@ -55,7 +55,7 @@
                 GridPane.columnIndex="0"
                 GridPane.rowIndex="2"
                 style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: green;"/>
-        <Button fx:id="noButton"  text="NO" onAction="#handleNO"
+        <Button fx:id="noButton" text="NO" onAction="#handleNO"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="1"
                 GridPane.rowIndex="2"
