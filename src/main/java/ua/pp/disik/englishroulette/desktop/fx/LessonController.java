@@ -57,6 +57,12 @@ public class LessonController {
     private Label exerciseLabel;
 
     @FXML
+    private Button yesButton;
+
+    @FXML
+    private Button noButton;
+
+    @FXML
     private void initialize() {
         voice = VoiceManager.getInstance().getVoice("kevin16");
         voice.allocate();
@@ -122,6 +128,9 @@ public class LessonController {
     }
 
     private void setAvers() {
+        yesButton.setDisable(true);
+        noButton.setDisable(true);
+
         card.setStyle(AVERS_STYLE);
 
         Lesson lesson = currentLesson.getLesson();
@@ -133,6 +142,9 @@ public class LessonController {
     }
 
     private void setRevers() {
+        yesButton.setDisable(false);
+        noButton.setDisable(false);
+
         card.setStyle(REVERS_STYLE);
 
         Lesson lesson = currentLesson.getLesson();
