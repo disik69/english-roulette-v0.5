@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
@@ -16,7 +15,9 @@ import javafx.stage.Stage;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
@@ -32,11 +33,11 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class EnglishRouletteController {
     private static final int FIRST_PAGE = 0;
     private static final int PAGE_SIZE = 30;
-
     private static final int MIN_FILTER_LENGTH = 3;
 
     private int currentPage = FIRST_PAGE;
@@ -138,10 +139,10 @@ public class EnglishRouletteController {
 
     @SneakyThrows
     public void renderLesson() {
-        FXMLLoader viewLoader = new FXMLLoader(
-                LessonController.class.getResource("LessonView.fxml")
+        ApplicationContextFXMLLoader viewLoader = new ApplicationContextFXMLLoader(
+                LessonController.class.getResource("LessonView.fxml"),
+                applicationContext
         );
-        viewLoader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
         GridPane LessonView = viewLoader.load();
 
         Scene scene = new Scene(LessonView);
@@ -223,10 +224,10 @@ public class EnglishRouletteController {
     private void writeExercise(Integer exerciseId) {
         currentExercise.setId(exerciseId);
 
-        FXMLLoader viewLoader = new FXMLLoader(
-                ExerciseController.class.getResource("ExerciseView.fxml")
+        ApplicationContextFXMLLoader viewLoader = new ApplicationContextFXMLLoader(
+                ExerciseController.class.getResource("ExerciseView.fxml"),
+                applicationContext
         );
-        viewLoader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
         GridPane exerciseView = viewLoader.load();
 
         Scene scene = new Scene(exerciseView);

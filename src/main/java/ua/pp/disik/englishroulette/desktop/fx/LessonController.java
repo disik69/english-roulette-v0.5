@@ -16,11 +16,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.fx.entity.CurrentLesson;
 import ua.pp.disik.englishroulette.desktop.lesson.Lesson;
 
 @Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class LessonController {
     private final String AVERS_STYLE = "" +
             "-fx-border-width: 2px; " +
@@ -34,12 +37,10 @@ public class LessonController {
             "-fx-border-color: blue; ";
 
     private Voice voice;
+    private boolean exerciseRevers = false;
 
     @Autowired
     private CurrentLesson currentLesson;
-
-
-    private boolean exerciseRevers = false;
 
     @FXML
     private GridPane main;

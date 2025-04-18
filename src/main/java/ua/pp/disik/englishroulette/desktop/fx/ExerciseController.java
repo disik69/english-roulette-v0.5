@@ -4,7 +4,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
@@ -15,7 +14,9 @@ import javafx.util.StringConverter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
 import ua.pp.disik.englishroulette.desktop.entity.Phrase;
@@ -32,8 +33,13 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class ExerciseController {
+    private ExerciseWriteDto currentExerciseDto;
+    private Stage phraseStage;
+    private int phraseCommitCount = 0;
+
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -49,10 +55,6 @@ public class ExerciseController {
     @Autowired
     private CurrentExercise currentExercise;
 
-    private ExerciseWriteDto currentExerciseDto;
-
-    private Stage phraseStage;
-
     @FXML
     private GridPane main;
 
@@ -64,6 +66,9 @@ public class ExerciseController {
 
     @FXML
     private VBox priorityBox;
+
+    @FXML
+    private Button saveButton;
 
     @FXML
     private void initialize() {
@@ -93,6 +98,8 @@ public class ExerciseController {
         // Setting of an empty phrase for addition new one.
         currentExerciseDto.foreignPhraseProperty().add(new Phrase(""));
 
+        foreignList.setOnEditStart(this::handlePhraseListStart);
+        foreignList.setOnEditCancel(this::handlePhraseListCancel);
         foreignList.setOnEditCommit(this::handlePhraseListCommit);
     }
 
@@ -104,6 +111,8 @@ public class ExerciseController {
         // Setting of an empty phrase for addition new one.
         currentExerciseDto.nativePhraseProperty().add(new Phrase(""));
 
+        nativeList.setOnEditStart(this::handlePhraseListStart);
+        nativeList.setOnEditCancel(this::handlePhraseListCancel);
         nativeList.setOnEditCommit(this::handlePhraseListCommit);
     }
 
@@ -119,6 +128,15 @@ public class ExerciseController {
                 return new Phrase(string);
             }
         };
+    }
+
+    private void handlePhraseListStart(ListView.EditEvent<Phrase> event) {
+        phraseCommitCount++;
+        saveButton.setDisable(true);
+    }
+
+    private void handlePhraseListCancel(ListView.EditEvent<Phrase> event) {
+        enableSaveButton();
     }
 
     private void handlePhraseListCommit(ListView.EditEvent<Phrase> event) {
@@ -140,6 +158,15 @@ public class ExerciseController {
                 // Addition of new empty phrase for other new one.
                 list.add(new Phrase(""));
             }
+        }
+
+        enableSaveButton();
+    }
+
+    private void enableSaveButton() {
+        phraseCommitCount--;
+        if (phraseCommitCount < 1) {
+            saveButton.setDisable(false);
         }
     }
 
@@ -191,10 +218,10 @@ public class ExerciseController {
     @SneakyThrows
     public void handlePhrase(ActionEvent event) {
         if (! phraseStage.isShowing()) {
-            FXMLLoader viewLoader = new FXMLLoader(
-                    PhraseController.class.getResource("PhraseView.fxml")
+            ApplicationContextFXMLLoader viewLoader = new ApplicationContextFXMLLoader(
+                    PhraseController.class.getResource("PhraseView.fxml"),
+                    applicationContext
             );
-            viewLoader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
             GridPane phraseView = viewLoader.load();
 
             Scene scene = new Scene(phraseView);

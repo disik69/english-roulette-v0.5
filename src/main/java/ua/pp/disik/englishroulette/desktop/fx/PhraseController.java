@@ -7,15 +7,18 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.service.ReversoContextService;
 
 @Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PhraseController {
+    private String translationDirection = ReversoContextService.EN_RU_TRANSLATION;
+
     @Autowired
     private ReversoContextService reversoContextService;
-
-    private String translationDirection = ReversoContextService.EN_RU_TRANSLATION;
 
     @FXML
     private GridPane main;
