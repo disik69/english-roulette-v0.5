@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -25,17 +26,6 @@ import ua.pp.disik.englishroulette.desktop.lesson.Lesson;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class LessonController {
-    private final String AVERS_STYLE = "" +
-            "-fx-border-width: 2px; " +
-            "-fx-border-radius: 5px; " +
-            "-fx-border-style: dotted; " +
-            "-fx-border-color: black; ";
-    private final String REVERS_STYLE = "" +
-            "-fx-border-width: 2px; " +
-            "-fx-border-radius: 5px; " +
-            "-fx-border-style: dotted; " +
-            "-fx-border-color: blue; ";
-
     private Voice voice;
     private boolean exerciseRevers = false;
 
@@ -58,10 +48,13 @@ public class LessonController {
     private Label exerciseLabel;
 
     @FXML
-    private Button yesButton;
+    private TextArea checkText;
 
     @FXML
-    private Button noButton;
+    private Button checkButton;
+
+    @FXML
+    private Button nextButton;
 
     @FXML
     private void initialize() {
@@ -82,7 +75,7 @@ public class LessonController {
             numberLabel.setText("");
             countLabel.setText("");
 
-            card.setStyle("");
+            card.getStyleClass().removeAll("card", "revers");
 
             exerciseLabel.setText("");
 
@@ -129,10 +122,10 @@ public class LessonController {
     }
 
     private void setAvers() {
-        yesButton.setDisable(true);
-        noButton.setDisable(true);
+        checkButton.setDisable(true);
+        nextButton.setDisable(true);
 
-        card.setStyle(AVERS_STYLE);
+        card.getStyleClass().remove("revers");
 
         Lesson lesson = currentLesson.getLesson();
         Lesson.Side side = lesson.getCurrentAvers();
@@ -143,10 +136,10 @@ public class LessonController {
     }
 
     private void setRevers() {
-        yesButton.setDisable(false);
-        noButton.setDisable(false);
+        checkButton.setDisable(false);
+        nextButton.setDisable(false);
 
-        card.setStyle(REVERS_STYLE);
+        card.getStyleClass().add("revers");
 
         Lesson lesson = currentLesson.getLesson();
         Lesson.Side side = lesson.getCurrentRevers();
@@ -162,13 +155,13 @@ public class LessonController {
         }
     }
 
-    public void handleYES(ActionEvent event) {
+    public void handleCheck(ActionEvent event) {
         currentLesson.getLesson().rememberCurrentAndNext();
 
         setCurrentExercise();
     }
 
-    public void handleNO(ActionEvent event) {
+    public void handleNext(ActionEvent event) {
         currentLesson.getLesson().dontRememberCurrentAndNext();
 
         setCurrentExercise();

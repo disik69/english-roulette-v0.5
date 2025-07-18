@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
+<?import javafx.scene.text.TextFlow?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:id="main"
@@ -21,7 +22,8 @@
     </columnConstraints>
     <rowConstraints>
         <RowConstraints percentHeight="20"/>
-        <RowConstraints percentHeight="70"/>
+        <RowConstraints percentHeight="35"/>
+        <RowConstraints percentHeight="35"/>
         <RowConstraints percentHeight="10"/>
     </rowConstraints>
     <children>
@@ -42,7 +44,9 @@
                 <Insets left="25" right="25"/>
             </padding>
             <children>
-                <StackPane fx:id="card" onMouseClicked="#handleTurn">
+                <StackPane fx:id="card"
+                           styleClass="card"
+                           onMouseClicked="#handleTurn">
                     <children>
                         <Label fx:id="exerciseLabel"
                                style="-fx-font-size: 30px"/>
@@ -50,15 +54,31 @@
                 </StackPane>
             </children>
         </StackPane>
-        <Button fx:id="yesButton" text="YES" onAction="#handleYES"
+        <StackPane GridPane.columnIndex="0"
+                   GridPane.rowIndex="2"
+                   GridPane.columnSpan="2">
+            <padding>
+                <Insets left="25" right="25"/>
+            </padding>
+            <children>
+                <StackPane fx:id="check">
+                    <children>
+                        <TextArea fx:id="checkText"
+                                  id="checkText"
+                                  style="-fx-font-size: 30px;"/>
+                    </children>
+                </StackPane>
+            </children>
+        </StackPane>
+        <Button fx:id="checkButton" text="CHECK" onAction="#handleCheck"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="0"
-                GridPane.rowIndex="2"
-                style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: green;"/>
-        <Button fx:id="noButton" text="NO" onAction="#handleNO"
+                GridPane.rowIndex="3"
+                style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: blue;"/>
+        <Button fx:id="nextButton" text="NEXT" onAction="#handleNext"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="1"
-                GridPane.rowIndex="2"
+                GridPane.rowIndex="3"
                 style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: red;"/>
     </children>
 </GridPane>

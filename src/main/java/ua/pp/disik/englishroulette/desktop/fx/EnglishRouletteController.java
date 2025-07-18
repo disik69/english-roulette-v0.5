@@ -146,6 +146,9 @@ public class EnglishRouletteController {
         GridPane LessonView = viewLoader.load();
 
         Scene scene = new Scene(LessonView);
+        scene.getStylesheets().add(
+                LessonController.class.getResource("lesson-controller.css").toExternalForm()
+        );
 
         Stage stage = new Stage();
         stage.setScene(scene);

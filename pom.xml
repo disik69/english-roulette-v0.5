@@ -128,6 +128,7 @@
                 <directory>${project.build.sourceDirectory}</directory>
                 <includes>
                     <include>**/*.fxml</include>
+                    <include>**/*.css</include>
                 </includes>
             </resource>
         </resources>
