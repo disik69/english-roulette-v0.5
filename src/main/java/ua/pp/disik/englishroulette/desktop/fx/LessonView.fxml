@@ -49,7 +49,8 @@
                            onMouseClicked="#handleTurn">
                     <children>
                         <Label fx:id="exerciseLabel"
-                               style="-fx-font-size: 30px"/>
+                               id="exerciseLabel"
+                               style="-fx-font-size: 30px;"/>
                     </children>
                 </StackPane>
             </children>
@@ -61,7 +62,8 @@
                 <Insets left="25" right="25"/>
             </padding>
             <children>
-                <StackPane fx:id="check">
+                <StackPane fx:id="check"
+                           styleClass="card, revers-card">
                     <children>
                         <TextArea fx:id="checkText"
                                   id="checkText"
@@ -70,15 +72,11 @@
                 </StackPane>
             </children>
         </StackPane>
-        <Button fx:id="checkButton" text="CHECK" onAction="#handleCheck"
+        <Button fx:id="nextButton" text="NEXT" onAction="#handleNext"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="0"
                 GridPane.rowIndex="3"
+                GridPane.columnSpan="2"
                 style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: blue;"/>
-        <Button fx:id="nextButton" text="NEXT" onAction="#handleNext"
-                GridPane.halignment="CENTER"
-                GridPane.columnIndex="1"
-                GridPane.rowIndex="3"
-                style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: red;"/>
     </children>
 </GridPane>

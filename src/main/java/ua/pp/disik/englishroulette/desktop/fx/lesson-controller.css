@@ -5,15 +5,15 @@
     -fx-border-color: black;
 }
 
-.revers {
+.revers-card {
     -fx-border-color: blue;
 }
 
+.exercise-error {
+     -fx-text-fill: red;
+}
+
 #checkText {
-    -fx-border-width: 2px;
-    -fx-border-radius: 5px;
-    -fx-border-style: dotted;
-    -fx-border-color: blue;
     -fx-background-color: none;
     -fx-background-insets: 0;
     -fx-background-radius: 0;

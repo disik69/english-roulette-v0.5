@@ -39,9 +39,8 @@ public class ReadingLesson implements Lesson {
     public Side getCurrentAvers() {
         return new Side(
                 current.getForeignPhrases().stream()
-                        .map(phrase -> phrase.getBody())
-                        .reduce((first, second) -> first + ",\n" + second)
-                        .orElse(""),
+                        .map(phrase -> phrase.getBody().trim())
+                        .toList(),
                 true
         );
     }
@@ -50,15 +49,14 @@ public class ReadingLesson implements Lesson {
     public Side getCurrentRevers() {
         return new Side(
                 current.getNativePhrases().stream()
-                        .map(phrase -> phrase.getBody())
-                        .reduce((first, second) -> first + ",\n" + second)
-                        .orElse(""),
+                        .map(phrase -> phrase.getBody().trim())
+                        .toList(),
                 false
         );
     }
 
     @Override
-    public void rememberCurrentAndNext() {
+    public void rememberCurrent() {
         if (current != null) {
             successNumber++;
 
@@ -66,14 +64,10 @@ public class ReadingLesson implements Lesson {
             current.setReadingCount(readingCount);
             exerciseService.save(current);
         }
-
-        next();
     }
 
     @Override
-    public void dontRememberCurrentAndNext() {
-        next();
-    }
+    public void dontRememberCurrent() {}
 
     public void next() {
         if (exercises.size() > 0) {

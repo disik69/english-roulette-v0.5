@@ -49,9 +49,8 @@ public class RepeatingLesson implements Lesson {
     public Side getCurrentAvers() {
         return new Side(
                 current.getNativePhrases().stream()
-                        .map(phrase -> phrase.getBody())
-                        .reduce((first, second) -> first + ",\n" + second)
-                        .orElse(""),
+                        .map(phrase -> phrase.getBody().trim())
+                        .toList(),
                 false
         );
     }
@@ -60,15 +59,14 @@ public class RepeatingLesson implements Lesson {
     public Side getCurrentRevers() {
         return new Side(
                 current.getForeignPhrases().stream()
-                        .map(phrase -> phrase.getBody())
-                        .reduce((first, second) -> first + ",\n" + second)
-                        .orElse(""),
+                        .map(phrase -> phrase.getBody().trim())
+                        .toList(),
                 true
         );
     }
 
     @Override
-    public void rememberCurrentAndNext() {
+    public void rememberCurrent() {
         if (current != null) {
             successNumber++;
 
@@ -82,12 +80,10 @@ public class RepeatingLesson implements Lesson {
             current.setUpdatedAt(System.currentTimeMillis());
             exerciseService.save(current);
         }
-
-        next();
     }
 
     @Override
-    public void dontRememberCurrentAndNext() {
+    public void dontRememberCurrent() {
         if (current != null) {
             Map<SettingName, String> settings = settingService.getMap();
 
@@ -97,8 +93,6 @@ public class RepeatingLesson implements Lesson {
             current.setUpdatedAt(System.currentTimeMillis());
             exerciseService.save(current);
         }
-
-        next();
     }
 
     public void next() {

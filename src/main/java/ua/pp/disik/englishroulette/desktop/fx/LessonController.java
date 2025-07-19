@@ -23,11 +23,15 @@ import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.fx.entity.CurrentLesson;
 import ua.pp.disik.englishroulette.desktop.lesson.Lesson;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class LessonController {
     private Voice voice;
-    private boolean exerciseRevers = false;
+    private boolean reversExercise = false;
+    private boolean checkedExercise = false;
 
     @Autowired
     private CurrentLesson currentLesson;
@@ -48,10 +52,10 @@ public class LessonController {
     private Label exerciseLabel;
 
     @FXML
-    private TextArea checkText;
+    private StackPane check;
 
     @FXML
-    private Button checkButton;
+    private TextArea checkText;
 
     @FXML
     private Button nextButton;
@@ -70,14 +74,24 @@ public class LessonController {
             numberLabel.setText(String.valueOf(lesson.getAmmount()));
             countLabel.setText(String.valueOf(lesson.getCurrentCount()));
 
+            checkedExercise = false;
+
+            checkText.setText("");
+
+            nextButton.setDisable(true);
+
             setAvers();
         } else {
             numberLabel.setText("");
             countLabel.setText("");
 
-            card.getStyleClass().removeAll("card", "revers");
-
+            card.getStyleClass().removeAll("card", "revers-card");
             exerciseLabel.setText("");
+
+            check.getStyleClass().removeAll("card", "revers-card");
+            checkText.setText("");
+
+            nextButton.setDisable(true);
 
             renderScore(lesson.getSuccessNumber(), lesson.getAllNumber());
         }
@@ -114,7 +128,7 @@ public class LessonController {
     }
 
     public void handleTurn(MouseEvent event) {
-        if (exerciseRevers) {
+        if (reversExercise) {
             setAvers();
         } else {
             setRevers();
@@ -122,48 +136,92 @@ public class LessonController {
     }
 
     private void setAvers() {
-        checkButton.setDisable(true);
-        nextButton.setDisable(true);
-
-        card.getStyleClass().remove("revers");
+        card.getStyleClass().remove("revers-card");
 
         Lesson lesson = currentLesson.getLesson();
         Lesson.Side side = lesson.getCurrentAvers();
-        exerciseLabel.setText(side.getText());
+        exerciseLabel.setText(convertToCard(side.getPhrases()));
         speakSide(side);
 
-        exerciseRevers = false;
+        if (exerciseLabel.getStyleClass().contains("exercise-error")) {
+            exerciseLabel.getStyleClass().remove("exercise-error");
+        }
+
+        reversExercise = false;
     }
 
     private void setRevers() {
-        checkButton.setDisable(false);
-        nextButton.setDisable(false);
-
-        card.getStyleClass().add("revers");
+        card.getStyleClass().add("revers-card");
 
         Lesson lesson = currentLesson.getLesson();
         Lesson.Side side = lesson.getCurrentRevers();
-        exerciseLabel.setText(side.getText());
+        exerciseLabel.setText(convertToCard(side.getPhrases()));
         speakSide(side);
 
-        exerciseRevers = true;
+        boolean wordComparative = compareWords(side.getPhrases(), convertFromCard(checkText.getText()));
+
+        if (! checkedExercise) {
+            if (wordComparative) {
+                currentLesson.getLesson().rememberCurrent();
+            } else {
+                currentLesson.getLesson().dontRememberCurrent();
+            }
+            checkedExercise = true;
+        }
+
+        if (wordComparative) {
+            if (exerciseLabel.getStyleClass().contains("exercise-error")) {
+                exerciseLabel.getStyleClass().remove("exercise-error");
+            }
+            nextButton.setDisable(false);
+        } else {
+            if (! exerciseLabel.getStyleClass().contains("exercise-error")) {
+                exerciseLabel.getStyleClass().add("exercise-error");
+            }
+            nextButton.setDisable(true);
+        }
+
+        reversExercise = true;
     }
 
     private void speakSide(Lesson.Side side) {
         if (side.isSpoken()) {
-            new Thread(() -> voice.speak(side.getText())).start();
+            String card = convertToCard(side.getPhrases());
+            new Thread(() -> voice.speak(card)).start();
         }
     }
 
-    public void handleCheck(ActionEvent event) {
-        currentLesson.getLesson().rememberCurrentAndNext();
+    public void handleNext(ActionEvent event) {
+        currentLesson.getLesson().next();
 
         setCurrentExercise();
     }
 
-    public void handleNext(ActionEvent event) {
-        currentLesson.getLesson().dontRememberCurrentAndNext();
+    private String convertToCard(List<String> phrases) {
+        return phrases.stream()
+                .reduce((first, second) -> first + ",\n" + second)
+                .orElse("");
+    }
 
-        setCurrentExercise();
+    private List<String> convertFromCard(String card) {
+        return Arrays.stream(card.split(","))
+                .map(word -> word.trim())
+                .toList();
+    }
+
+    private boolean compareWords(List<String> cardPharases, List<String> checkPhrases) {
+        for (String cardPhrase : cardPharases) {
+            boolean found = false;
+            for (String checkPhrase : checkPhrases) {
+                if (cardPhrase.equals(checkPhrase)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (! found) {
+                return false;
+            }
+        }
+        return true;
     }
 }
