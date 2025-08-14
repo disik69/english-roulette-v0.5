@@ -13,6 +13,10 @@
      -fx-text-fill: red;
 }
 
+#exerciseLabel {
+    -fx-text-alignment: center;
+}
+
 #checkText {
     -fx-background-color: none;
     -fx-background-insets: 0;
