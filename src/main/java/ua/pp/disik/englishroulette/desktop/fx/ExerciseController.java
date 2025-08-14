@@ -4,11 +4,15 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import lombok.SneakyThrows;
@@ -58,11 +62,11 @@ public class ExerciseController {
     @FXML
     private GridPane main;
 
-    @FXML
-    private ListView<Phrase> foreignList;
-
-    @FXML
-    private ListView<Phrase> nativeList;
+//    @FXML
+//    private ListView<Phrase> foreignList;
+//
+//    @FXML
+//    private ListView<Phrase> nativeList;
 
     @FXML
     private VBox priorityBox;
@@ -78,9 +82,23 @@ public class ExerciseController {
             currentExerciseDto = exerciseService.findById(currentExercise.getId());
         }
 
-        renderForeignList();
+        PhraseVBox foreignVBox = new PhraseVBox(currentExerciseDto.foreignPhraseProperty(), body -> {
+            return phraseService.repository()
+                    .findByBody(body)
+                    .orElse(new Phrase(body));
+        });
+        main.add(foreignVBox, 0, 1);
 
-        renderNativeList();
+        PhraseVBox nativeVBox = new PhraseVBox(currentExerciseDto.nativePhraseProperty(), body -> {
+            return phraseService.repository()
+                    .findByBody(body)
+                    .orElse(new Phrase(body));
+        });
+        main.add(nativeVBox, 1, 1);
+
+//        renderForeignList();
+//
+//        renderNativeList();
 
         renderPriorityBox();
 
@@ -90,31 +108,31 @@ public class ExerciseController {
         });
     }
 
-    private void renderForeignList() {
-        foreignList.setEditable(true);
-        foreignList.setCellFactory(TextFieldListCell.forListView(phraseStringConverter()));
-        foreignList.setItems(currentExerciseDto.foreignPhraseProperty());
-
-        // Setting of an empty phrase for addition new one.
-        currentExerciseDto.foreignPhraseProperty().add(new Phrase(""));
-
-        foreignList.setOnEditStart(this::handlePhraseListStart);
-        foreignList.setOnEditCancel(this::handlePhraseListCancel);
-        foreignList.setOnEditCommit(this::handlePhraseListCommit);
-    }
-
-    private void renderNativeList() {
-        nativeList.setEditable(true);
-        nativeList.setCellFactory(TextFieldListCell.forListView(phraseStringConverter()));
-        nativeList.setItems(currentExerciseDto.nativePhraseProperty());
-
-        // Setting of an empty phrase for addition new one.
-        currentExerciseDto.nativePhraseProperty().add(new Phrase(""));
-
-        nativeList.setOnEditStart(this::handlePhraseListStart);
-        nativeList.setOnEditCancel(this::handlePhraseListCancel);
-        nativeList.setOnEditCommit(this::handlePhraseListCommit);
-    }
+//    private void renderForeignList() {
+//        foreignList.setEditable(true);
+//        foreignList.setCellFactory(TextFieldListCell.forListView(phraseStringConverter()));
+//        foreignList.setItems(currentExerciseDto.foreignPhraseProperty());
+//
+//        // Setting of an empty phrase for addition new one.
+//        currentExerciseDto.foreignPhraseProperty().add(new Phrase(""));
+//
+//        foreignList.setOnEditStart(this::handlePhraseListStart);
+//        foreignList.setOnEditCancel(this::handlePhraseListCancel);
+//        foreignList.setOnEditCommit(this::handlePhraseListCommit);
+//    }
+//
+//    private void renderNativeList() {
+//        nativeList.setEditable(true);
+//        nativeList.setCellFactory(TextFieldListCell.forListView(phraseStringConverter()));
+//        nativeList.setItems(currentExerciseDto.nativePhraseProperty());
+//
+//        // Setting of an empty phrase for addition new one.
+//        currentExerciseDto.nativePhraseProperty().add(new Phrase(""));
+//
+//        nativeList.setOnEditStart(this::handlePhraseListStart);
+//        nativeList.setOnEditCancel(this::handlePhraseListCancel);
+//        nativeList.setOnEditCommit(this::handlePhraseListCommit);
+//    }
 
     private StringConverter<Phrase> phraseStringConverter() {
         return new StringConverter<>() {
@@ -193,26 +211,66 @@ public class ExerciseController {
     }
 
     public void handleSave(ActionEvent event) {
-        // Unsetting of an empty phrase for addition new one.
-        currentExerciseDto.foreignPhraseProperty().removeLast();
-        currentExerciseDto.nativePhraseProperty().removeLast();
+        // todo check for empty phrases
 
-        Map<SettingName, String> settings = settingService.getMap();
+        if (
+                currentExerciseDto.foreignPhraseProperty().isEmpty() ||
+                currentExerciseDto.nativePhraseProperty().isEmpty()
+        ) {
+            renderError("You have unfilled side(s).", main);
+        } else {
+            Map<SettingName, String> settings = settingService.getMap();
 
-        Exercise exercise = new Exercise();
-        currentExerciseDto.fillExercise(exercise);
-        exercise.setReadingCount(Integer.parseInt(settings.get(SettingName.READING_COUNT)));
-        exercise.setMemoryCount(Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)));
-        exercise.setCheckedAt(null);
-        exercise.setUpdatedAt(System.currentTimeMillis());
-        // the cure for a new exercise "detached entity passed to persist"
-        if (exercise.getId() == null) {
+            Exercise exercise = new Exercise();
+            currentExerciseDto.fillExercise(exercise);
+            exercise.setReadingCount(Integer.parseInt(settings.get(SettingName.READING_COUNT)));
+            exercise.setMemoryCount(Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)));
+            exercise.setCheckedAt(null);
+            exercise.setUpdatedAt(System.currentTimeMillis());
+            // the cure for a new exercise "detached entity passed to persist"
+            if (exercise.getId() == null) {
+                exerciseService.save(exercise);
+            }
+            currentExerciseDto.fillForeignNative(exercise);
             exerciseService.save(exercise);
-        }
-        currentExerciseDto.fillForeignNative(exercise);
-        exerciseService.save(exercise);
 
-        main.getScene().getWindow().hide();
+            main.getScene().getWindow().hide();
+        }
+    }
+
+    private void renderError(String message, Node root) {
+        Label scoreLabel = new Label(message);
+        Button okButton = new Button("OK");
+        VBox vBox = new VBox(scoreLabel, okButton);
+        vBox.setAlignment(Pos.CENTER);
+        vBox.setPadding(new Insets(5));
+        vBox.setSpacing(5);
+
+        Scene scene = new Scene(vBox);
+
+        okButton.setOnAction(event -> scene.getWindow().hide());
+
+        double width = 200;
+        double height = 100;
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(root.getScene().getWindow());
+        stage.setWidth(200);
+        stage.setHeight(100);
+        stage.setX(
+                root.getScene().getWindow().getX() +
+                (root.getScene().getWindow().getWidth() / 2) -
+                (width / 2)
+        );
+        stage.setY(
+                root.getScene().getWindow().getY() +
+                (root.getScene().getWindow().getHeight() / 2) -
+                (height / 2)
+        );
+        stage.setTitle("Result");
+        stage.showAndWait();
     }
 
     @SneakyThrows
