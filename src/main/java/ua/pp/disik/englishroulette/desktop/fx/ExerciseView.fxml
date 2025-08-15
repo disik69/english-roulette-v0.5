@@ -21,7 +21,8 @@
     </columnConstraints>
     <rowConstraints>
         <RowConstraints percentHeight="10"/>
-        <RowConstraints percentHeight="60"/>
+        <RowConstraints percentHeight="40"/>
+        <RowConstraints percentHeight="20"/>
         <RowConstraints percentHeight="20"/>
         <RowConstraints percentHeight="10"/>
     </rowConstraints>
@@ -34,13 +35,34 @@
                GridPane.halignment="CENTER"
                GridPane.columnIndex="1"
                GridPane.rowIndex="0"/>
+        <StackPane GridPane.columnIndex="0"
+                   GridPane.rowIndex="2"
+                   GridPane.columnSpan="2">
+            <padding>
+                <Insets topRightBottomLeft="5"/>
+            </padding>
+            <children>
+                <TableView fx:id="exerciseTable"
+                           GridPane.columnIndex="0"
+                           GridPane.rowIndex="2"
+                           GridPane.columnSpan="2">
+                    <columns>
+                        <TableColumn fx:id="exerciseTableColumnForeign"
+                                     prefWidth="185.0" text="Foreign"/>
+                        <TableColumn fx:id="exerciseTableColumnNative"
+                                     prefWidth="185.0" text="Native"/>
+                    </columns>
+                </TableView>
+            </children>
+        </StackPane>
         <Label text="Priority:"
                GridPane.halignment="CENTER"
                GridPane.columnIndex="0"
-               GridPane.rowIndex="2"/>
+               GridPane.rowIndex="3"/>
         <VBox fx:id="priorityBox" spacing="5"
               GridPane.columnIndex="1"
-              GridPane.rowIndex="2">
+              GridPane.rowIndex="3"
+              alignment="CENTER_LEFT">
             <padding>
                 <Insets bottom="5" left="5" right="5" top="5"/>
             </padding>
@@ -48,10 +70,10 @@
         <Button text="Save" onAction="#handleSave"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="0"
-                GridPane.rowIndex="3"/>
+                GridPane.rowIndex="4"/>
         <Button text="Phrase" onAction="#handlePhrase"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="1"
-                GridPane.rowIndex="3"/>
+                GridPane.rowIndex="4"/>
     </children>
 </GridPane>

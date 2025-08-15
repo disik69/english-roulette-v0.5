@@ -2,6 +2,7 @@ package ua.pp.disik.englishroulette.desktop.fx;
 
 import io.micrometer.common.util.StringUtils;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -9,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -25,6 +27,7 @@ import ua.pp.disik.englishroulette.desktop.entity.Phrase;
 import ua.pp.disik.englishroulette.desktop.entity.Priority;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.fx.entity.CurrentExercise;
+import ua.pp.disik.englishroulette.desktop.fx.entity.ExerciseReadDto;
 import ua.pp.disik.englishroulette.desktop.fx.entity.ExerciseWriteDto;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
 import ua.pp.disik.englishroulette.desktop.service.PhraseService;
@@ -38,6 +41,9 @@ import java.util.Map;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class ExerciseController {
+    private static final int PAGE_SIZE = 30;
+    private static final int MIN_FILTER_LENGTH = 3;
+
     private ExerciseWriteDto currentExerciseDto;
     private Stage phraseStage;
 
@@ -60,6 +66,15 @@ public class ExerciseController {
     private GridPane main;
 
     @FXML
+    private TableView<ExerciseReadDto> exerciseTable;
+
+    @FXML
+    private TableColumn<ExerciseReadDto, String> exerciseTableColumnForeign;
+
+    @FXML
+    private TableColumn<ExerciseReadDto, String> exerciseTableColumnNative;
+
+    @FXML
     private VBox priorityBox;
 
     @FXML
@@ -70,11 +85,24 @@ public class ExerciseController {
             currentExerciseDto = exerciseService.findById(currentExercise.getId());
         }
 
-        PhraseVBox foreignVBox = new PhraseVBox(currentExerciseDto.getForeignPhrases(), this::phraseConverter);
+        PhraseVBox foreignVBox = new PhraseVBox(
+                currentExerciseDto.getForeignPhrases(),
+                this::convertPhrase,
+                this::handlePhraseUpdate,
+                this::handlePhraseReset
+        );
         main.add(foreignVBox, 0, 1);
 
-        PhraseVBox nativeVBox = new PhraseVBox(currentExerciseDto.getNativePhrases(), this::phraseConverter);
+        PhraseVBox nativeVBox = new PhraseVBox(
+                currentExerciseDto.getNativePhrases(),
+                this::convertPhrase,
+                this::handlePhraseUpdate,
+                this::handlePhraseReset
+        );
         main.add(nativeVBox, 1, 1);
+
+        exerciseTableColumnForeign.setCellValueFactory(new PropertyValueFactory<>("foreignPhrases"));
+        exerciseTableColumnNative.setCellValueFactory(new PropertyValueFactory<>("nativePhrases"));
 
         renderPriorityBox();
 
@@ -84,10 +112,21 @@ public class ExerciseController {
         });
     }
 
-    private Phrase phraseConverter(String body) {
+    private Phrase convertPhrase(String body) {
             return phraseService.repository()
                     .findByBody(body)
                     .orElse(new Phrase(body));
+    }
+
+    private void handlePhraseUpdate(String body) {
+        if (body.length() >= MIN_FILTER_LENGTH) {
+            List<ExerciseReadDto> exerciseReadDtos = exerciseService.findAllByFilter(body, 0, PAGE_SIZE);
+            exerciseTable.setItems(FXCollections.observableArrayList(exerciseReadDtos));
+        }
+    }
+
+    private void handlePhraseReset() {
+        exerciseTable.setItems(FXCollections.emptyObservableList());
     }
 
     private void renderPriorityBox() {
@@ -100,14 +139,13 @@ public class ExerciseController {
         }).toList();
         ToggleGroup group = new ToggleGroup();
         group.getToggles().setAll(priorityButtons);
-        group.selectedToggleProperty().addListener(
-                (ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) -> {
-                    currentExerciseDto.setPriority(
-                            Priority.valueOf(
-                                    ((Labeled) newValue).getText()
-                            ).getIndex());
-                }
-        );
+        group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            currentExerciseDto.setPriority(
+                    Priority.valueOf(
+                            ((Labeled) newValue).getText()
+                    ).getIndex()
+            );
+        });
 
         priorityBox.getChildren().addAll(priorityButtons);
     }

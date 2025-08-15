@@ -14,12 +14,15 @@ import lombok.extern.slf4j.Slf4j;
 import ua.pp.disik.englishroulette.desktop.entity.Phrase;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Slf4j
 public class PhraseVBox extends VBox {
     private List<Phrase> phrases;
     private Function<String, Phrase> phraseConverter;
+    private Consumer<String> updateHandler;
+    private Runnable resetHandler;
 
     private ObservableList<StringProperty> textList = FXCollections.observableArrayList(property -> {
         return new Observable[] {property};
@@ -27,9 +30,16 @@ public class PhraseVBox extends VBox {
 
     private VBox vBox = new VBox(5);
 
-    public PhraseVBox(List<Phrase> phrases, Function<String, Phrase> phraseConverter) {
+    public PhraseVBox(
+            List<Phrase> phrases,
+            Function<String, Phrase> phraseConverter,
+            Consumer<String> updateHandler,
+            Runnable resetHandler
+    ) {
         this.phrases = phrases;
         this.phraseConverter = phraseConverter;
+        this.updateHandler = updateHandler;
+        this.resetHandler = resetHandler;
 
         textList.addListener(this::changeListener);
 
@@ -47,6 +57,11 @@ public class PhraseVBox extends VBox {
         HBox hBox = new HBox();
 
         TextField inputField = new TextField(text);
+        inputField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (! newValue) {
+                resetHandler.run();
+            }
+        });
 
         Button deletionButton = new Button("-");
         deletionButton.setOnAction(event -> removeHBox(hBox));
@@ -74,20 +89,20 @@ public class PhraseVBox extends VBox {
         while (change.next()) {
             int index = change.getFrom();
             if (change.wasUpdated()) {
-                phrases.set(index, phraseConverter.apply(
-                        textList.get(index).get()
-                ));
+                String text = change.getList().get(index).get();
+
+                updateHandler.accept(text);
+
+                phrases.set(index, phraseConverter.apply(text));
             } else if (change.wasAdded()) {
                 if ((phrases.size() - 1) < index) {
-                    phrases.add(phraseConverter.apply(
-                            textList.getLast().get()
+                    phrases.add(new Phrase(
+                            change.getList().get(index).get()
                     ));
                 }
             } else if (change.wasRemoved()) {
                 phrases.remove(index);
             }
         }
-
-        log.debug(phrases.toString());
     }
 }
