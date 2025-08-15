@@ -1,7 +1,7 @@
 package ua.pp.disik.englishroulette.desktop.fx;
 
+import io.micrometer.common.util.StringUtils;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -9,12 +9,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +40,6 @@ import java.util.Map;
 public class ExerciseController {
     private ExerciseWriteDto currentExerciseDto;
     private Stage phraseStage;
-    private int phraseCommitCount = 0;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -62,17 +59,8 @@ public class ExerciseController {
     @FXML
     private GridPane main;
 
-//    @FXML
-//    private ListView<Phrase> foreignList;
-//
-//    @FXML
-//    private ListView<Phrase> nativeList;
-
     @FXML
     private VBox priorityBox;
-
-    @FXML
-    private Button saveButton;
 
     @FXML
     private void initialize() {
@@ -82,23 +70,11 @@ public class ExerciseController {
             currentExerciseDto = exerciseService.findById(currentExercise.getId());
         }
 
-        PhraseVBox foreignVBox = new PhraseVBox(currentExerciseDto.foreignPhraseProperty(), body -> {
-            return phraseService.repository()
-                    .findByBody(body)
-                    .orElse(new Phrase(body));
-        });
+        PhraseVBox foreignVBox = new PhraseVBox(currentExerciseDto.getForeignPhrases(), this::phraseConverter);
         main.add(foreignVBox, 0, 1);
 
-        PhraseVBox nativeVBox = new PhraseVBox(currentExerciseDto.nativePhraseProperty(), body -> {
-            return phraseService.repository()
-                    .findByBody(body)
-                    .orElse(new Phrase(body));
-        });
+        PhraseVBox nativeVBox = new PhraseVBox(currentExerciseDto.getNativePhrases(), this::phraseConverter);
         main.add(nativeVBox, 1, 1);
-
-//        renderForeignList();
-//
-//        renderNativeList();
 
         renderPriorityBox();
 
@@ -108,84 +84,10 @@ public class ExerciseController {
         });
     }
 
-//    private void renderForeignList() {
-//        foreignList.setEditable(true);
-//        foreignList.setCellFactory(TextFieldListCell.forListView(phraseStringConverter()));
-//        foreignList.setItems(currentExerciseDto.foreignPhraseProperty());
-//
-//        // Setting of an empty phrase for addition new one.
-//        currentExerciseDto.foreignPhraseProperty().add(new Phrase(""));
-//
-//        foreignList.setOnEditStart(this::handlePhraseListStart);
-//        foreignList.setOnEditCancel(this::handlePhraseListCancel);
-//        foreignList.setOnEditCommit(this::handlePhraseListCommit);
-//    }
-//
-//    private void renderNativeList() {
-//        nativeList.setEditable(true);
-//        nativeList.setCellFactory(TextFieldListCell.forListView(phraseStringConverter()));
-//        nativeList.setItems(currentExerciseDto.nativePhraseProperty());
-//
-//        // Setting of an empty phrase for addition new one.
-//        currentExerciseDto.nativePhraseProperty().add(new Phrase(""));
-//
-//        nativeList.setOnEditStart(this::handlePhraseListStart);
-//        nativeList.setOnEditCancel(this::handlePhraseListCancel);
-//        nativeList.setOnEditCommit(this::handlePhraseListCommit);
-//    }
-
-    private StringConverter<Phrase> phraseStringConverter() {
-        return new StringConverter<>() {
-            @Override
-            public String toString(Phrase object) {
-                return object.getBody();
-            }
-
-            @Override
-            public Phrase fromString(String string) {
-                return new Phrase(string);
-            }
-        };
-    }
-
-    private void handlePhraseListStart(ListView.EditEvent<Phrase> event) {
-        phraseCommitCount++;
-        saveButton.setDisable(true);
-    }
-
-    private void handlePhraseListCancel(ListView.EditEvent<Phrase> event) {
-        enableSaveButton();
-    }
-
-    private void handlePhraseListCommit(ListView.EditEvent<Phrase> event) {
-        ObservableList<Phrase> list = event.getSource().getItems();
-        int lastIndex = list.size() - 1;
-        if (event.getNewValue().getBody().isEmpty()) {
-            if (event.getIndex() != lastIndex) {
-                // Removing of an empty phrase.
-                list.remove(event.getIndex());
-            }
-        } else {
-            Phrase newPhrase = event.getNewValue();
-            Phrase dbPhrase = phraseService.repository()
-                    .findByBody(newPhrase.getBody())
-                    .orElse(newPhrase);
-            list.set(event.getIndex(), dbPhrase);
-
-            if (event.getIndex() == lastIndex) {
-                // Addition of new empty phrase for other new one.
-                list.add(new Phrase(""));
-            }
-        }
-
-        enableSaveButton();
-    }
-
-    private void enableSaveButton() {
-        phraseCommitCount--;
-        if (phraseCommitCount < 1) {
-            saveButton.setDisable(false);
-        }
+    private Phrase phraseConverter(String body) {
+            return phraseService.repository()
+                    .findByBody(body)
+                    .orElse(new Phrase(body));
     }
 
     private void renderPriorityBox() {
@@ -211,14 +113,13 @@ public class ExerciseController {
     }
 
     public void handleSave(ActionEvent event) {
-        // todo check for empty phrases
-
         if (
-                currentExerciseDto.foreignPhraseProperty().isEmpty() ||
-                currentExerciseDto.nativePhraseProperty().isEmpty()
+                findNotBlankPhrase(currentExerciseDto.getForeignPhrases()) &&
+                findNotBlankPhrase(currentExerciseDto.getNativePhrases())
         ) {
-            renderError("You have unfilled side(s).", main);
-        } else {
+            currentExerciseDto.getForeignPhrases().removeIf(phrase -> StringUtils.isBlank(phrase.getBody()));
+            currentExerciseDto.getNativePhrases().removeIf(phrase -> StringUtils.isBlank(phrase.getBody()));
+
             Map<SettingName, String> settings = settingService.getMap();
 
             Exercise exercise = new Exercise();
@@ -235,7 +136,18 @@ public class ExerciseController {
             exerciseService.save(exercise);
 
             main.getScene().getWindow().hide();
+        } else {
+            renderError("You have unfilled side(s).", main);
         }
+    }
+
+    private boolean findNotBlankPhrase(List<Phrase> phrases) {
+        for (Phrase phrase : phrases) {
+            if (StringUtils.isNotBlank(phrase.getBody())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void renderError(String message, Node root) {

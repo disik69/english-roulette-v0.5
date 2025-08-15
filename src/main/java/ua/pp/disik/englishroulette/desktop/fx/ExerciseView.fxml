@@ -34,12 +34,6 @@
                GridPane.halignment="CENTER"
                GridPane.columnIndex="1"
                GridPane.rowIndex="0"/>
-<!--        <ListView fx:id="foreignList"-->
-<!--                  GridPane.columnIndex="0"-->
-<!--                  GridPane.rowIndex="1"/>-->
-<!--        <ListView fx:id="nativeList"-->
-<!--                  GridPane.columnIndex="1"-->
-<!--                  GridPane.rowIndex="1"/>-->
         <Label text="Priority:"
                GridPane.halignment="CENTER"
                GridPane.columnIndex="0"
@@ -51,7 +45,7 @@
                 <Insets bottom="5" left="5" right="5" top="5"/>
             </padding>
         </VBox>
-        <Button fx:id="saveButton" text="Save" onAction="#handleSave"
+        <Button text="Save" onAction="#handleSave"
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="0"
                 GridPane.rowIndex="3"/>
