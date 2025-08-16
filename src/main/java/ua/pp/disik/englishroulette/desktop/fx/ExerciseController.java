@@ -184,7 +184,8 @@ public class ExerciseController {
 
             main.getScene().getWindow().hide();
         } else {
-            renderError("You have unfilled side(s).", main);
+            MessageStage error = new MessageStage("Error", "You have unfilled side(s).", main);
+            error.showAndWait();
         }
     }
 
@@ -195,41 +196,6 @@ public class ExerciseController {
             }
         }
         return false;
-    }
-
-    private void renderError(String message, Node root) {
-        Label scoreLabel = new Label(message);
-        Button okButton = new Button("OK");
-        VBox vBox = new VBox(scoreLabel, okButton);
-        vBox.setAlignment(Pos.CENTER);
-        vBox.setPadding(new Insets(5));
-        vBox.setSpacing(5);
-
-        Scene scene = new Scene(vBox);
-
-        okButton.setOnAction(event -> scene.getWindow().hide());
-
-        double width = 200;
-        double height = 100;
-
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(root.getScene().getWindow());
-        stage.setWidth(200);
-        stage.setHeight(100);
-        stage.setX(
-                root.getScene().getWindow().getX() +
-                (root.getScene().getWindow().getWidth() / 2) -
-                (width / 2)
-        );
-        stage.setY(
-                root.getScene().getWindow().getY() +
-                (root.getScene().getWindow().getHeight() / 2) -
-                (height / 2)
-        );
-        stage.setTitle("Result");
-        stage.showAndWait();
     }
 
     @SneakyThrows

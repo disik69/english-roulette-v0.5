@@ -93,38 +93,17 @@ public class LessonController {
 
             nextButton.setDisable(true);
 
-            renderScore(lesson.getSuccessNumber(), lesson.getAllNumber());
+            MessageStage result = new MessageStage(
+                    "Result",
+                    lesson.getSuccessNumber() + " from " + lesson.getAllNumber(),
+                    main
+            );
+            result.showAndWait();
+
+            voice.deallocate();
+
+            main.getScene().getWindow().hide();
         }
-    }
-
-    private void renderScore(int successNumber, int allNumber) {
-        Label scoreLabel = new Label(
-                successNumber +
-                " from " +
-                allNumber
-        );
-        Button okButton = new Button("OK");
-        VBox vBox = new VBox(scoreLabel, okButton);
-        vBox.setAlignment(Pos.CENTER);
-        vBox.setPadding(new Insets(5));
-        vBox.setSpacing(5);
-
-        Scene scene = new Scene(vBox);
-
-        okButton.setOnAction(event -> scene.getWindow().hide());
-
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(main.getScene().getWindow());
-        stage.setWidth(200);
-        stage.setHeight(100);
-        stage.setTitle("Result");
-        stage.showAndWait();
-
-        voice.deallocate();
-
-        main.getScene().getWindow().hide();
     }
 
     public void handleTurn(MouseEvent event) {
