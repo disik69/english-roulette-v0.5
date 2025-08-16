@@ -1,7 +1,6 @@
 package ua.pp.disik.englishroulette.desktop.fx;
 
 import io.micrometer.common.util.StringUtils;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -27,6 +26,7 @@ import ua.pp.disik.englishroulette.desktop.entity.Phrase;
 import ua.pp.disik.englishroulette.desktop.entity.Priority;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.fx.entity.CurrentExercise;
+import ua.pp.disik.englishroulette.desktop.fx.entity.CurrentPhrase;
 import ua.pp.disik.englishroulette.desktop.fx.entity.ExerciseReadDto;
 import ua.pp.disik.englishroulette.desktop.fx.entity.ExerciseWriteDto;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
@@ -62,6 +62,9 @@ public class ExerciseController {
     @Autowired
     private CurrentExercise currentExercise;
 
+    @Autowired
+    private CurrentPhrase currentPhrase;
+
     @FXML
     private GridPane main;
 
@@ -89,7 +92,8 @@ public class ExerciseController {
                 currentExerciseDto.getForeignPhrases(),
                 this::convertPhrase,
                 this::handlePhraseUpdate,
-                this::handlePhraseReset
+                this::handlePhraseFocus,
+                this::handlePhraseUnfocus
         );
         main.add(foreignVBox, 0, 1);
 
@@ -97,7 +101,8 @@ public class ExerciseController {
                 currentExerciseDto.getNativePhrases(),
                 this::convertPhrase,
                 this::handlePhraseUpdate,
-                this::handlePhraseReset
+                this::handlePhraseFocus,
+                this::handlePhraseUnfocus
         );
         main.add(nativeVBox, 1, 1);
 
@@ -125,7 +130,11 @@ public class ExerciseController {
         }
     }
 
-    private void handlePhraseReset() {
+    private void handlePhraseFocus(String body) {
+        currentPhrase.setBody(body);
+    }
+
+    private void handlePhraseUnfocus() {
         exerciseTable.setItems(FXCollections.emptyObservableList());
     }
 

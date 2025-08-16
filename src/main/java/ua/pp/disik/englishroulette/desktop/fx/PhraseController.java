@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import ua.pp.disik.englishroulette.desktop.fx.entity.CurrentPhrase;
 import ua.pp.disik.englishroulette.desktop.service.ReversoContextService;
 
 @Component
@@ -19,6 +20,9 @@ public class PhraseController {
 
     @Autowired
     private ReversoContextService reversoContextService;
+
+    @Autowired
+    private CurrentPhrase currentPhrase;
 
     @FXML
     private GridPane main;
@@ -37,10 +41,12 @@ public class PhraseController {
 
     @FXML
     private void initialize() {
+        phraseText.setText(currentPhrase.getBody());
+
         ToggleGroup group = new ToggleGroup();
         group.getToggles().setAll(fnRadio, nfRadio);
         group.selectedToggleProperty().addListener(
-                (ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) -> {
+                (observable, oldValue, newValue) -> {
                     switch (((Labeled) newValue).getText()) {
                         case "F->N":
                             translationDirection = ReversoContextService.EN_RU_TRANSLATION;

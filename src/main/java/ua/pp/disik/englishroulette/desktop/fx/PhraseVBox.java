@@ -19,10 +19,11 @@ import java.util.function.Function;
 
 @Slf4j
 public class PhraseVBox extends VBox {
-    private List<Phrase> phrases;
-    private Function<String, Phrase> phraseConverter;
-    private Consumer<String> updateHandler;
-    private Runnable resetHandler;
+    private final List<Phrase> phrases;
+    private final Function<String, Phrase> phraseConverter;
+    private final Consumer<String> updateHandler;
+    private final Consumer<String> focusHandler;
+    private final Runnable unfocusHandler;
 
     private ObservableList<StringProperty> textList = FXCollections.observableArrayList(property -> {
         return new Observable[] {property};
@@ -34,12 +35,14 @@ public class PhraseVBox extends VBox {
             List<Phrase> phrases,
             Function<String, Phrase> phraseConverter,
             Consumer<String> updateHandler,
-            Runnable resetHandler
+            Consumer<String> focusHandler,
+            Runnable unfocusHandler
     ) {
         this.phrases = phrases;
         this.phraseConverter = phraseConverter;
         this.updateHandler = updateHandler;
-        this.resetHandler = resetHandler;
+        this.focusHandler = focusHandler;
+        this.unfocusHandler = unfocusHandler;
 
         textList.addListener(this::changeListener);
 
@@ -58,8 +61,10 @@ public class PhraseVBox extends VBox {
 
         TextField inputField = new TextField(text);
         inputField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (! newValue) {
-                resetHandler.run();
+            if (newValue) {
+                focusHandler.accept(inputField.getText());
+            } else {
+                unfocusHandler.run();
             }
         });
 
@@ -90,6 +95,8 @@ public class PhraseVBox extends VBox {
             int index = change.getFrom();
             if (change.wasUpdated()) {
                 String text = change.getList().get(index).get();
+
+                focusHandler.accept(text);
 
                 updateHandler.accept(text);
 
