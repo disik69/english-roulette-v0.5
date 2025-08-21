@@ -29,6 +29,8 @@ import java.util.List;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class LessonController {
+    private static final String PHRASE_DIVIDER = "\n";
+
     private Voice voice;
     private boolean reversExercise = false;
     private boolean checkedExercise = false;
@@ -178,12 +180,12 @@ public class LessonController {
 
     private String convertToCard(List<String> phrases) {
         return phrases.stream()
-                .reduce((first, second) -> first + ",\n" + second)
+                .reduce((first, second) -> first + PHRASE_DIVIDER + second)
                 .orElse("");
     }
 
     private List<String> convertFromCard(String card) {
-        return Arrays.stream(card.split(","))
+        return Arrays.stream(card.split(PHRASE_DIVIDER))
                 .map(word -> word.trim())
                 .toList();
     }

@@ -31,7 +31,7 @@ public class FxApplication extends Application {
 
         stage.setScene(scene);
         stage.setWidth(830);
-        stage.setHeight(600);
+        stage.setHeight(800);
         stage.setTitle("English Roulette");
         stage.show();
     }
