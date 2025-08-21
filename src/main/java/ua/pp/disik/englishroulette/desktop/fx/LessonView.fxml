@@ -46,6 +46,7 @@
             <children>
                 <StackPane fx:id="card"
                            styleClass="card"
+                           alignment="TOP_CENTER"
                            onMouseClicked="#handleTurn">
                     <children>
                         <Label fx:id="exerciseLabel"
