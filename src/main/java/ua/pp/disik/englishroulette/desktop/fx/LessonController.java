@@ -167,8 +167,10 @@ public class LessonController {
 
     private void speakSide(Lesson.Side side) {
         if (side.isSpoken()) {
-            String card = convertToCard(side.getPhrases());
-            new Thread(() -> voice.speak(card)).start();
+            String speakingLine = side.getPhrases().stream()
+                    .reduce((first, second) -> first + "; " + second)
+                    .orElse("");
+            new Thread(() -> voice.speak(speakingLine)).start();
         }
     }
 
