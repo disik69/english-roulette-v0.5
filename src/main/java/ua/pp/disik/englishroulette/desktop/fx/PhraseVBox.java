@@ -25,11 +25,11 @@ public class PhraseVBox extends VBox {
     private final Consumer<String> focusHandler;
     private final Runnable unfocusHandler;
 
-    private ObservableList<StringProperty> textList = FXCollections.observableArrayList(property -> {
+    private final ObservableList<StringProperty> textList = FXCollections.observableArrayList(property -> {
         return new Observable[] {property};
     });
 
-    private VBox vBox = new VBox(5);
+    private final VBox vBox = new VBox(5);
 
     public PhraseVBox(
             List<Phrase> phrases,
@@ -102,6 +102,7 @@ public class PhraseVBox extends VBox {
 
                 phrases.set(index, phraseConverter.apply(text));
             } else if (change.wasAdded()) {
+                // It handles only phrases which were added from inside.
                 if ((phrases.size() - 1) < index) {
                     phrases.add(new Phrase(
                             change.getList().get(index).get()

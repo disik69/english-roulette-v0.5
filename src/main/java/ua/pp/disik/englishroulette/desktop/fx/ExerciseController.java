@@ -84,6 +84,10 @@ public class ExerciseController {
     private void initialize() {
         if (currentExercise.getId() == null) {
             currentExerciseDto = new ExerciseWriteDto();
+
+            // addition of initial phrases for new exercise
+            currentExerciseDto.getForeignPhrases().add(new Phrase(""));
+            currentExerciseDto.getNativePhrases().add(new Phrase(""));
         } else {
             currentExerciseDto = exerciseService.findById(currentExercise.getId());
         }
