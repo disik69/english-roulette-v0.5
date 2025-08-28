@@ -17,6 +17,7 @@ public class ExerciseWriteDto {
     private int priority;
 
     private Long checkedAt;
+    private long updatedAt;
 
     @Getter
     private List<Phrase> foreignPhrases = new ArrayList<>();
@@ -26,12 +27,14 @@ public class ExerciseWriteDto {
 
     public ExerciseWriteDto() {
         priority = Priority.MIDDLE.getIndex();
+        updatedAt = System.currentTimeMillis();
     }
 
     public ExerciseWriteDto(Exercise exercise) {
         id = exercise.getId();
         priority = exercise.getPriority();
         checkedAt = exercise.getCheckedAt();
+        updatedAt = exercise.getUpdatedAt();
         foreignPhrases.addAll(exercise.getForeignPhrases());
         nativePhrases.addAll(exercise.getNativePhrases());
     }
@@ -40,6 +43,7 @@ public class ExerciseWriteDto {
         exercise.setId(id);
         exercise.setPriority(priority);
         exercise.setCheckedAt(checkedAt);
+        exercise.setUpdatedAt(updatedAt);
     }
 
     public void fillForeignNative(Exercise exercise) {
