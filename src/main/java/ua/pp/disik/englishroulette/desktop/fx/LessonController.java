@@ -2,20 +2,18 @@ package ua.pp.disik.englishroulette.desktop.fx;
 
 import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -28,8 +26,11 @@ import java.util.List;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Slf4j
 public class LessonController {
     private static final String PHRASE_DIVIDER = "\n";
+
+    private final BooleanProperty disabledNextExercise = new SimpleBooleanProperty();
 
     private Voice voice;
     private boolean reversExercise = false;
@@ -64,6 +65,21 @@ public class LessonController {
 
     @FXML
     private void initialize() {
+        nextButton.disableProperty().bind(disabledNextExercise);
+
+        checkText.setOnKeyPressed(event -> {
+            if (event.isControlDown()) {
+                switch (event.getCode()) {
+                    case KeyCode.T -> {
+                        handleTurn(null);
+                    }
+                    case KeyCode.N -> {
+                        handleNext(null);
+                    }
+                }
+            }
+        });
+
         voice = VoiceManager.getInstance().getVoice("kevin16");
         voice.allocate();
 
@@ -80,7 +96,7 @@ public class LessonController {
 
             checkText.setText("");
 
-            nextButton.setDisable(true);
+            disabledNextExercise.set(true);
 
             setAvers();
         } else {
@@ -93,7 +109,7 @@ public class LessonController {
             check.getStyleClass().removeAll("card", "revers-card");
             checkText.setText("");
 
-            nextButton.setDisable(true);
+            disabledNextExercise.set(true);
 
             MessageStage result = new MessageStage(
                     "Result",
@@ -154,12 +170,12 @@ public class LessonController {
             if (exerciseLabel.getStyleClass().contains("exercise-error")) {
                 exerciseLabel.getStyleClass().remove("exercise-error");
             }
-            nextButton.setDisable(false);
+            disabledNextExercise.set(false);
         } else {
             if (! exerciseLabel.getStyleClass().contains("exercise-error")) {
                 exerciseLabel.getStyleClass().add("exercise-error");
             }
-            nextButton.setDisable(true);
+            disabledNextExercise.set(true);
         }
 
         reversExercise = true;
@@ -175,9 +191,11 @@ public class LessonController {
     }
 
     public void handleNext(ActionEvent event) {
-        currentLesson.getLesson().next();
+        if (! disabledNextExercise.get()) {
+            currentLesson.getLesson().next();
 
-        setCurrentExercise();
+            setCurrentExercise();
+        }
     }
 
     private String convertToCard(List<String> phrases) {
