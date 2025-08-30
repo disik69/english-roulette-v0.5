@@ -20,6 +20,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
+import ua.pp.disik.englishroulette.desktop.entity.ExerciseDto;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.fx.entity.*;
 import ua.pp.disik.englishroulette.desktop.lesson.Lesson;
@@ -64,31 +65,31 @@ public class EnglishRouletteController {
     private TextField filterText;
 
     @FXML
-    private TableView<ExerciseReadDto> exerciseTable;
+    private TableView<ExerciseTableItem> exerciseTable;
 
     @FXML
-    private TableColumn<ExerciseReadDto, String> exerciseTableColumnForeign;
+    private TableColumn<ExerciseTableItem, String> exerciseTableColumnForeign;
 
     @FXML
-    private TableColumn<ExerciseReadDto, String> exerciseTableColumnNative;
+    private TableColumn<ExerciseTableItem, String> exerciseTableColumnNative;
 
     @FXML
-    private TableColumn<ExerciseReadDto, Integer> exerciseTableColumnReading;
+    private TableColumn<ExerciseTableItem, Integer> exerciseTableColumnReading;
 
     @FXML
-    private TableColumn<ExerciseReadDto, Integer> exerciseTableColumnMemory;
+    private TableColumn<ExerciseTableItem, Integer> exerciseTableColumnMemory;
 
     @FXML
-    private TableColumn<ExerciseReadDto, String> exerciseTableColumnPriority;
+    private TableColumn<ExerciseTableItem, String> exerciseTableColumnPriority;
 
     @FXML
-    private TableColumn<ExerciseReadDto, String> exerciseTableColumnChecked;
+    private TableColumn<ExerciseTableItem, String> exerciseTableColumnChecked;
 
     @FXML
     private void initialize() {
         filterText.textProperty().addListener(this::handleInvalidateFilter);
 
-        TableView.TableViewSelectionModel<ExerciseReadDto> tableViewSelectionModel =
+        TableView.TableViewSelectionModel<ExerciseTableItem> tableViewSelectionModel =
                 exerciseTable.getSelectionModel();
         tableViewSelectionModel.setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -164,7 +165,7 @@ public class EnglishRouletteController {
         updateTableView();
     }
 
-    private ObservableList<ExerciseReadDto> getSelectedExercises() {
+    private ObservableList<ExerciseTableItem> getSelectedExercises() {
         return exerciseTable.getSelectionModel().getSelectedItems();
     }
 
@@ -173,29 +174,26 @@ public class EnglishRouletteController {
     }
 
     public void handleUpdate(ActionEvent event) {
-        ObservableList<ExerciseReadDto> selectedExercises = getSelectedExercises();
+        ObservableList<ExerciseTableItem> selectedExercises = getSelectedExercises();
         if (selectedExercises.size() == 1) {
             writeExercise(selectedExercises.getFirst().getId());
         }
     }
 
     public void handleReset(ActionEvent event) {
-        ObservableList<ExerciseReadDto> selectedExercises = getSelectedExercises();
+        ObservableList<ExerciseTableItem> selectedExercises = getSelectedExercises();
         if (selectedExercises.size() == 1) {
-            ExerciseWriteDto exerciseWriteDto = exerciseService.findById(selectedExercises.getFirst().getId());
+            ExerciseDto exerciseDto = exerciseService.findById(selectedExercises.getFirst().getId());
 
-            Exercise exercise = new Exercise();
-            exerciseWriteDto.fillExercise(exercise);
-            if (exercise.getCheckedAt() != null) {
+            if (exerciseDto.getCheckedAt() != null) {
                 Map<SettingName, String> settings = settingService.getMap();
 
-                exercise.setReadingCount(Integer.parseInt(settings.get(SettingName.READING_COUNT)));
-                exercise.setMemoryCount(Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)));
-                exercise.setCheckedAt(null);
-                exercise.setUpdatedAt(System.currentTimeMillis());
-                exerciseWriteDto.fillForeignNative(exercise);
+                exerciseDto.setReadingCount(Integer.parseInt(settings.get(SettingName.READING_COUNT)));
+                exerciseDto.setMemoryCount(Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)));
+                exerciseDto.setCheckedAt(null);
+                exerciseDto.setUpdatedAt(System.currentTimeMillis());
 
-                exerciseService.save(exercise);
+                exerciseService.save(exerciseDto);
 
                 updateTableView();
             }
@@ -213,14 +211,22 @@ public class EnglishRouletteController {
 
     private void updateTableView() {
         String filter = filterText.getText();
-        List<ExerciseReadDto> exerciseReadDtos = null;
+        List<ExerciseTableItem> exerciseTableItems;
         if (filter.length() >= MIN_FILTER_LENGTH) {
-            exerciseReadDtos = exerciseService.findAllByFilter(filter, currentPage, PAGE_SIZE);
+            exerciseTableItems =
+                    exerciseService.findAllByFilter(filter, currentPage, PAGE_SIZE)
+                            .stream()
+                            .map(dto -> new ExerciseTableItem(dto))
+                            .toList();
         } else {
-            exerciseReadDtos = exerciseService.findAll(currentPage, PAGE_SIZE);
+            exerciseTableItems =
+                    exerciseService.findAll(currentPage, PAGE_SIZE)
+                            .stream()
+                            .map(dto -> new ExerciseTableItem(dto))
+                            .toList();
         }
 
-        exerciseTable.setItems(FXCollections.observableArrayList(exerciseReadDtos));
+        exerciseTable.setItems(FXCollections.observableArrayList(exerciseTableItems));
     }
 
     @SneakyThrows

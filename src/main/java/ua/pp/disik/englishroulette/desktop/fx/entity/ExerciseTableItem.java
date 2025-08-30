@@ -6,31 +6,31 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-public class ExerciseReadDto {
-    private final Exercise exercise;
+public class ExerciseTableItem {
+    private final ExerciseDto exerciseDto;
 
-    public ExerciseReadDto(Exercise exercise) {
-        this.exercise = exercise;
+    public ExerciseTableItem(ExerciseDto exerciseDto) {
+        this.exerciseDto = exerciseDto;
     }
 
     public Integer getId() {
-        return exercise.getId();
+        return exerciseDto.getId();
     }
 
     public int getReadingCount() {
-        return exercise.getReadingCount();
+        return exerciseDto.getReadingCount();
     }
 
     public int getMemoryCount() {
-        return exercise.getMemoryCount();
+        return exerciseDto.getMemoryCount();
     }
 
     public String getPriority() {
-        return Priority.getByIndex(exercise.getPriority()).name();
+        return Priority.getByIndex(exerciseDto.getPriority()).name();
     }
 
     public String getCheckedAt() {
-        if (exercise.getCheckedAt() == null) {
+        if (exerciseDto.getCheckedAt() == null) {
             return "";
         } else {
             return DateTimeFormatter.ofPattern(
@@ -38,20 +38,20 @@ public class ExerciseReadDto {
             ).withZone(
                     ZoneId.systemDefault()
             ).format(
-                    Instant.ofEpochMilli(exercise.getCheckedAt())
+                    Instant.ofEpochMilli(exerciseDto.getCheckedAt())
             );
         }
     }
 
     public String getForeignPhrases() {
-        return exercise.getForeignPhrases().stream()
+        return exerciseDto.getForeignPhrases().stream()
                 .map(phrase -> phrase.getBody())
                 .reduce((first, second) -> first + "\n" + second)
                 .orElse("");
     }
 
     public String getNativePhrases() {
-        return exercise.getNativePhrases().stream()
+        return exerciseDto.getNativePhrases().stream()
                 .map(phrase -> phrase.getBody())
                 .reduce((first, second) -> first + "\n" + second)
                 .orElse("");

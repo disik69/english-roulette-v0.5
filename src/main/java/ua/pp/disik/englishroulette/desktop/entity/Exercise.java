@@ -27,32 +27,20 @@ public class Exercise {
 
     private long updatedAt;
 
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE,
-            CascadeType.REFRESH,
-            CascadeType.DETACH
-    }, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<Phrase> foreignPhrases;
+    private List<Phrase> foreignPhrases = new ArrayList<>();
 
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE,
-            CascadeType.REFRESH,
-            CascadeType.DETACH
-    }, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<Phrase> nativePhrases;
+    private List<Phrase> nativePhrases = new ArrayList<>();
 
     public Exercise(int readingCount, int memoryCount, int priority) {
         this.readingCount = readingCount;
         this.memoryCount = memoryCount;
         this.priority = priority;
         this.updatedAt = System.currentTimeMillis();
-        this.foreignPhrases = new ArrayList<>();
-        this.nativePhrases = new ArrayList<>();
     }
 }

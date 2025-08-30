@@ -1,6 +1,7 @@
 package ua.pp.disik.englishroulette.desktop.lesson;
 
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
+import ua.pp.disik.englishroulette.desktop.entity.ExerciseDto;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
 import ua.pp.disik.englishroulette.desktop.service.SettingService;
@@ -15,8 +16,8 @@ public class MemoryLesson implements Lesson {
     private final ExerciseService exerciseService;
     private final SettingService settingService;
 
-    private List<Exercise> exercises;
-    private Exercise current;
+    private List<ExerciseDto> exercises;
+    private ExerciseDto current;
     private int successNumber = 0;
     private int allNumber;
 

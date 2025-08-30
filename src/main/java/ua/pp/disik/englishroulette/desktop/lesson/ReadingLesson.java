@@ -1,6 +1,7 @@
 package ua.pp.disik.englishroulette.desktop.lesson;
 
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
+import ua.pp.disik.englishroulette.desktop.entity.ExerciseDto;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
 
 import java.util.Collections;
@@ -9,8 +10,8 @@ import java.util.List;
 public class ReadingLesson implements Lesson {
     private final ExerciseService exerciseService;
 
-    private List<Exercise> exercises;
-    private Exercise current;
+    private List<ExerciseDto> exercises;
+    private ExerciseDto current;
     private int successNumber = 0;
     private int allNumber;
 

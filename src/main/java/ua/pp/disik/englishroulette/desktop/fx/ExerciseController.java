@@ -4,15 +4,11 @@ import io.micrometer.common.util.StringUtils;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +23,8 @@ import ua.pp.disik.englishroulette.desktop.entity.Priority;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.fx.entity.CurrentExercise;
 import ua.pp.disik.englishroulette.desktop.fx.entity.CurrentPhrase;
-import ua.pp.disik.englishroulette.desktop.fx.entity.ExerciseReadDto;
-import ua.pp.disik.englishroulette.desktop.fx.entity.ExerciseWriteDto;
+import ua.pp.disik.englishroulette.desktop.fx.entity.ExerciseTableItem;
+import ua.pp.disik.englishroulette.desktop.entity.ExerciseDto;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
 import ua.pp.disik.englishroulette.desktop.service.PhraseService;
 import ua.pp.disik.englishroulette.desktop.service.SettingService;
@@ -44,7 +40,7 @@ public class ExerciseController {
     private static final int PAGE_SIZE = 30;
     private static final int MIN_FILTER_LENGTH = 3;
 
-    private ExerciseWriteDto currentExerciseDto;
+    private ExerciseDto currentExerciseDto;
     private Stage phraseStage;
 
     @Autowired
@@ -69,13 +65,13 @@ public class ExerciseController {
     private GridPane main;
 
     @FXML
-    private TableView<ExerciseReadDto> exerciseTable;
+    private TableView<ExerciseTableItem> exerciseTable;
 
     @FXML
-    private TableColumn<ExerciseReadDto, String> exerciseTableColumnForeign;
+    private TableColumn<ExerciseTableItem, String> exerciseTableColumnForeign;
 
     @FXML
-    private TableColumn<ExerciseReadDto, String> exerciseTableColumnNative;
+    private TableColumn<ExerciseTableItem, String> exerciseTableColumnNative;
 
     @FXML
     private VBox priorityBox;
@@ -83,7 +79,7 @@ public class ExerciseController {
     @FXML
     private void initialize() {
         if (currentExercise.getId() == null) {
-            currentExerciseDto = new ExerciseWriteDto();
+            currentExerciseDto = new ExerciseDto();
 
             // addition of initial phrases for new exercise
             currentExerciseDto.getForeignPhrases().add(new Phrase(""));
@@ -129,8 +125,12 @@ public class ExerciseController {
 
     private void handlePhraseUpdate(String body) {
         if (body.length() >= MIN_FILTER_LENGTH) {
-            List<ExerciseReadDto> exerciseReadDtos = exerciseService.findAllByFilter(body, 0, PAGE_SIZE);
-            exerciseTable.setItems(FXCollections.observableArrayList(exerciseReadDtos));
+            List<ExerciseTableItem> exerciseTableItems =
+                    exerciseService.findAllByFilter(body, 0, PAGE_SIZE)
+                            .stream()
+                            .map(dto -> new ExerciseTableItem(dto))
+                            .toList();
+            exerciseTable.setItems(FXCollections.observableArrayList(exerciseTableItems));
         }
     }
 
@@ -173,18 +173,11 @@ public class ExerciseController {
 
             Map<SettingName, String> settings = settingService.getMap();
 
-            Exercise exercise = new Exercise();
-            currentExerciseDto.fillExercise(exercise);
-            exercise.setReadingCount(Integer.parseInt(settings.get(SettingName.READING_COUNT)));
-            exercise.setMemoryCount(Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)));
-            exercise.setCheckedAt(null);
-            exercise.setUpdatedAt(System.currentTimeMillis());
-            // the cure for a new exercise "detached entity passed to persist"
-            if (exercise.getId() == null) {
-                exerciseService.save(exercise);
-            }
-            currentExerciseDto.fillForeignNative(exercise);
-            exerciseService.save(exercise);
+            currentExerciseDto.setReadingCount(Integer.parseInt(settings.get(SettingName.READING_COUNT)));
+            currentExerciseDto.setMemoryCount(Integer.parseInt(settings.get(SettingName.MEMORY_COUNT)));
+            currentExerciseDto.setCheckedAt(null);
+            currentExerciseDto.setUpdatedAt(System.currentTimeMillis());
+            exerciseService.save(currentExerciseDto);
 
             main.getScene().getWindow().hide();
         } else {
