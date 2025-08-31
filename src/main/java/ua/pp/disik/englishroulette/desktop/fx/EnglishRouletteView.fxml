@@ -14,10 +14,16 @@
                 <MenuItem onAction="#handleCreate" text="Create"/>
                 <MenuItem onAction="#handleExit" text="Exit"/>
             </Menu>
+            <Menu text="Filter">
+                <MenuItem onAction="#handleFilterReset" text="Reset"/>
+                <MenuItem onAction="#handleReadingFilter" text="Reading"/>
+                <MenuItem onAction="#handleMemoryFilter" text="Memory"/>
+                <MenuItem onAction="#handleRepeatingFilter" text="Repeating"/>
+            </Menu>
             <Menu text="Studying">
-                <MenuItem onAction="#handleRepeating" text="Repeating"/>
-                <MenuItem onAction="#handleMemory" text="Memory"/>
-                <MenuItem onAction="#handleReading" text="Reading"/>
+                <MenuItem onAction="#handleRepeating" text="&#x25BC; Repeating"/>
+                <MenuItem onAction="#handleMemory" text="&#x25BC; Memory"/>
+                <MenuItem onAction="#handleReading" text="&#x25BC; Reading"/>
             </Menu>
         </MenuBar>
     </top>

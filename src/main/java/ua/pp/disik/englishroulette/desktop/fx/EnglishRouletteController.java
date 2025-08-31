@@ -19,7 +19,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import ua.pp.disik.englishroulette.desktop.entity.Exercise;
 import ua.pp.disik.englishroulette.desktop.entity.ExerciseDto;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.fx.entity.*;
@@ -105,6 +104,22 @@ public class EnglishRouletteController {
 
     public void handleCreate(ActionEvent event) {
         writeExercise(null);
+    }
+
+    public void handleFilterReset(ActionEvent event) {
+        updateTableView();
+    }
+
+    public void handleReadingFilter(ActionEvent event) {
+        updateTableView(exerciseService.getReading());
+    }
+
+    public void handleMemoryFilter(ActionEvent event) {
+        updateTableView(exerciseService.getMemory());
+    }
+
+    public void handleRepeatingFilter(ActionEvent event) {
+        updateTableView(exerciseService.getRepeating());
     }
 
     public void handleExit(ActionEvent event) {
@@ -211,22 +226,22 @@ public class EnglishRouletteController {
 
     private void updateTableView() {
         String filter = filterText.getText();
-        List<ExerciseTableItem> exerciseTableItems;
+        List<ExerciseDto> exercises;
         if (filter.length() >= MIN_FILTER_LENGTH) {
-            exerciseTableItems =
-                    exerciseService.findAllByFilter(filter, currentPage, PAGE_SIZE)
-                            .stream()
-                            .map(dto -> new ExerciseTableItem(dto))
-                            .toList();
+            exercises = exerciseService.findAllByFilter(filter, currentPage, PAGE_SIZE);
         } else {
-            exerciseTableItems =
-                    exerciseService.findAll(currentPage, PAGE_SIZE)
-                            .stream()
-                            .map(dto -> new ExerciseTableItem(dto))
-                            .toList();
+            exercises = exerciseService.findAll(currentPage, PAGE_SIZE);
         }
 
-        exerciseTable.setItems(FXCollections.observableArrayList(exerciseTableItems));
+        updateTableView(exercises);
+    }
+
+    private void updateTableView(List<ExerciseDto> exercises) {
+        exerciseTable.setItems(FXCollections.observableArrayList(
+                exercises.stream()
+                        .map(exercise -> new ExerciseTableItem(exercise))
+                        .toList()
+        ));
     }
 
     @SneakyThrows
