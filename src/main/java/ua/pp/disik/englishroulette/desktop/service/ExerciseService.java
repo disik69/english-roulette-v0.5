@@ -39,15 +39,26 @@ public class ExerciseService implements RepositoryService<ExerciseRepository> {
                 .toList();
     }
 
+    public int countAll() {
+        return exerciseRepository.countBy();
+    }
+
     @Transactional
     public List<ExerciseDto> findAllByFilter(String filter, int page, int size) {
-        return exerciseRepository.findByForeignPhrases_BodyContainingOrNativePhrases_BodyContainingOrderByUpdatedAtDesc(
+        return exerciseRepository.findDistinctByForeignPhrases_BodyContainingOrNativePhrases_BodyContainingOrderByUpdatedAtDesc(
                         filter,
                         filter,
                         PageRequest.of(page, size)
                 ).stream()
                 .map(exercise -> new ExerciseDto(exercise))
                 .toList();
+    }
+
+    public int countAllByFilter(String filter) {
+        return exerciseRepository.countDistinctByForeignPhrases_BodyContainingOrNativePhrases_BodyContaining(
+                filter,
+                filter
+        );
     }
 
     @Transactional
@@ -59,36 +70,57 @@ public class ExerciseService implements RepositoryService<ExerciseRepository> {
     }
 
     @Transactional
-    public List<ExerciseDto> getReading() {
+    public List<ExerciseDto> getReading(int page, int size) {
         return exerciseRepository.findByReadingCountNotOrderByPriorityAscReadingCountAscUpdatedAtAsc(
                         0,
-                        Limit.of(Integer.parseInt(settingService.getMap().get(SettingName.LESSON_SIZE)))
+                        PageRequest.of(page, size)
                 ).stream()
                 .map(exercise -> new ExerciseDto(exercise))
                 .collect(Collectors.toList());
     }
 
+    public int countReading() {
+        return exerciseRepository.countByReadingCountNot(
+                0
+        );
+    }
+
     @Transactional
-    public List<ExerciseDto> getMemory() {
+    public List<ExerciseDto> getMemory(int page, int size) {
         return exerciseRepository.findByReadingCountAndMemoryCountNotOrderByPriorityAscMemoryCountAscUpdatedAtAsc(
                         0,
                         0,
-                        Limit.of(Integer.parseInt(settingService.getMap().get(SettingName.LESSON_SIZE)))
+                        PageRequest.of(page, size)
                 ).stream()
                 .map(exercise -> new ExerciseDto(exercise))
                 .collect(Collectors.toList());
     }
 
+    public int countMemory() {
+        return exerciseRepository.countByReadingCountAndMemoryCountNot(
+                0,
+                0
+        );
+    }
+
     @Transactional
-    public List<ExerciseDto> getRepeating() {
+    public List<ExerciseDto> getRepeating(int page, int size) {
         return exerciseRepository.findByReadingCountAndMemoryCountAndCheckedAtLessThanEqualOrderByPriorityAscCheckedAtAsc(
                         0,
                         0,
                         System.currentTimeMillis(),
-                        Limit.of(Integer.parseInt(settingService.getMap().get(SettingName.LESSON_SIZE)))
+                        PageRequest.of(page, size)
                 ).stream()
                 .map(exercise -> new ExerciseDto(exercise))
                 .collect(Collectors.toList());
+    }
+
+    public int countRepeating() {
+        return exerciseRepository.countByReadingCountAndMemoryCountAndCheckedAtLessThanEqual(
+                0,
+                0,
+                System.currentTimeMillis()
+        );
     }
 
     @Transactional

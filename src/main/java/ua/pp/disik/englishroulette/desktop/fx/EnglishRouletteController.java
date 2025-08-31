@@ -1,6 +1,6 @@
 package ua.pp.disik.englishroulette.desktop.fx;
 
-import javafx.beans.Observable;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -36,11 +36,12 @@ import java.util.Map;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class EnglishRouletteController {
-    private static final int FIRST_PAGE = 0;
+    private static final int FIRST_PAGE = 1;
     private static final int PAGE_SIZE = 30;
     private static final int MIN_FILTER_LENGTH = 3;
 
     private int currentPage = FIRST_PAGE;
+    private TablePaginator currentPaginator;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -86,7 +87,7 @@ public class EnglishRouletteController {
 
     @FXML
     private void initialize() {
-        filterText.textProperty().addListener(this::handleInvalidateFilter);
+        filterText.textProperty().addListener(this::handleChangeFilter);
 
         TableView.TableViewSelectionModel<ExerciseTableItem> tableViewSelectionModel =
                 exerciseTable.getSelectionModel();
@@ -99,35 +100,103 @@ public class EnglishRouletteController {
         exerciseTableColumnPriority.setCellValueFactory(new PropertyValueFactory<>("priority"));
         exerciseTableColumnChecked.setCellValueFactory(new PropertyValueFactory<>("checkedAt"));
 
-        updateTableView();
+        currentPaginator = TablePaginator.ALL;
+        updateTableView(true, true);
+    }
+
+    @FunctionalInterface
+    private interface TableSourceFunction<Service, Filter, Page, Size, Result> {
+        Result apply(Service service, Filter filter, Page page, Size size);
+    }
+
+    @FunctionalInterface
+    private interface TableCountFunction<Service, Filter, Count> {
+        Count apply(Service service, Filter filter);
+    }
+
+    @AllArgsConstructor
+    private enum TablePaginator {
+        ALL(
+                (service, filter, page, size) -> {
+                    return service.findAll(page, size);
+                },
+                (service, filter) -> {
+                    return service.countAll();
+                }
+        ),
+        FILTER(
+                (service, filter, page, size) -> {
+                    return service.findAllByFilter(filter, page, size);
+                },
+                (service, filter) -> {
+                    return service.countAllByFilter(filter);
+                }
+        ),
+        READING(
+                (service, filter, page, size) -> {
+                    return service.getReading(page, size);
+                },
+                (service, filter) -> {
+                    return service.countReading();
+                }
+        ),
+        MEMORY(
+                (service, filter, page, size) -> {
+                    return service.getMemory(page, size);
+                },
+                (service, filter) -> {
+                    return service.countMemory();
+                }
+        ),
+        REPEATING(
+                (service, filter, page, size) -> {
+                    return service.getRepeating(page, size);
+                },
+                (service, filter) -> {
+                    return service.countRepeating();
+                }
+        );
+
+        @Getter
+        private final TableSourceFunction<ExerciseService, String, Integer, Integer, List<ExerciseDto>> source;
+
+        @Getter
+        private final TableCountFunction<ExerciseService, String, Integer> count;
     }
 
     public void handleCreate(ActionEvent event) {
-        writeExercise(null);
+        if (writeExercise(null)) {
+            currentPaginator = TablePaginator.ALL;
+            updateTableView(true, true);
+        }
     }
 
     public void handleFilterReset(ActionEvent event) {
-        updateTableView();
+        currentPaginator = TablePaginator.ALL;
+        updateTableView(true, true);
     }
 
     public void handleReadingFilter(ActionEvent event) {
-        updateTableView(exerciseService.getReading());
+        currentPaginator = TablePaginator.READING;
+        updateTableView(true, true);
     }
 
     public void handleMemoryFilter(ActionEvent event) {
-        updateTableView(exerciseService.getMemory());
+        currentPaginator = TablePaginator.MEMORY;
+        updateTableView(true, true);
     }
 
     public void handleRepeatingFilter(ActionEvent event) {
-        updateTableView(exerciseService.getRepeating());
+        currentPaginator = TablePaginator.REPEATING;
+        updateTableView(true, true);
     }
 
     public void handleExit(ActionEvent event) {
         System.exit(0);
     }
 
-    public void handleRepeating(ActionEvent event) {
-        Lesson lesson = new RepeatingLesson(exerciseService, settingService);
+    public void handleReading(ActionEvent event) {
+        Lesson lesson = new ReadingLesson(exerciseService, settingService);
         if (lesson.getAmmount() > 0) {
             currentLesson.setLesson(lesson);
 
@@ -144,8 +213,8 @@ public class EnglishRouletteController {
         }
     }
 
-    public void handleReading(ActionEvent event) {
-        Lesson lesson = new ReadingLesson(exerciseService);
+    public void handleRepeating(ActionEvent event) {
+        Lesson lesson = new RepeatingLesson(exerciseService, settingService);
         if (lesson.getAmmount() > 0) {
             currentLesson.setLesson(lesson);
 
@@ -177,21 +246,34 @@ public class EnglishRouletteController {
         stage.setTitle("Lesson");
         stage.showAndWait();
 
-        updateTableView();
+        currentPaginator = TablePaginator.ALL;
+        updateTableView(true, true);
     }
 
     private ObservableList<ExerciseTableItem> getSelectedExercises() {
         return exerciseTable.getSelectionModel().getSelectedItems();
     }
 
-    private void handleInvalidateFilter(Observable property) {
-        updateTableView();
+    private void handleChangeFilter(
+            ObservableValue<? extends String> observable,
+            String oldValue,
+            String newValue
+    ) {
+        if (newValue.length() < MIN_FILTER_LENGTH) {
+            currentPaginator = TablePaginator.ALL;
+        } else {
+            currentPaginator = TablePaginator.FILTER;
+        }
+        updateTableView(true, false);
     }
 
     public void handleUpdate(ActionEvent event) {
         ObservableList<ExerciseTableItem> selectedExercises = getSelectedExercises();
         if (selectedExercises.size() == 1) {
-            writeExercise(selectedExercises.getFirst().getId());
+            if (writeExercise(selectedExercises.getFirst().getId())) {
+                currentPaginator = TablePaginator.ALL;
+                updateTableView(true, true);
+            }
         }
     }
 
@@ -210,7 +292,8 @@ public class EnglishRouletteController {
 
                 exerciseService.save(exerciseDto);
 
-                updateTableView();
+                currentPaginator = TablePaginator.ALL;
+                updateTableView(true, true);
             }
         }
     }
@@ -221,22 +304,24 @@ public class EnglishRouletteController {
                 .toList();
         exerciseService.repository().deleteAllById(ids);
 
-        updateTableView();
+        currentPaginator = TablePaginator.ALL;
+        updateTableView(true, true);
     }
 
-    private void updateTableView() {
-        String filter = filterText.getText();
-        List<ExerciseDto> exercises;
-        if (filter.length() >= MIN_FILTER_LENGTH) {
-            exercises = exerciseService.findAllByFilter(filter, currentPage, PAGE_SIZE);
-        } else {
-            exercises = exerciseService.findAll(currentPage, PAGE_SIZE);
+    private void updateTableView(boolean resetPaginator, boolean resetFilter) {
+        if (resetPaginator) {
+            currentPage = FIRST_PAGE;
         }
 
-        updateTableView(exercises);
-    }
+        if (resetFilter) {
+            filterText.setText("");
+        }
 
-    private void updateTableView(List<ExerciseDto> exercises) {
+        List<ExerciseDto> exercises = currentPaginator.getSource().apply(
+            exerciseService, filterText.getText(), currentPage - 1, PAGE_SIZE
+        );
+
+
         exerciseTable.setItems(FXCollections.observableArrayList(
                 exercises.stream()
                         .map(exercise -> new ExerciseTableItem(exercise))
@@ -245,8 +330,9 @@ public class EnglishRouletteController {
     }
 
     @SneakyThrows
-    private void writeExercise(Integer exerciseId) {
+    private boolean writeExercise(Integer exerciseId) {
         currentExercise.setId(exerciseId);
+        currentExercise.setChanged(false);
 
         ApplicationContextFXMLLoader viewLoader = new ApplicationContextFXMLLoader(
                 ExerciseController.class.getResource("ExerciseView.fxml"),
@@ -271,22 +357,26 @@ public class EnglishRouletteController {
         stage.setTitle("Exercise");
         stage.showAndWait();
 
-        updateTableView();
+        return currentExercise.isChanged();
     }
 
     public void handleLeftScroll(ActionEvent event) {
         if (currentPage > FIRST_PAGE) {
             currentPage--;
 
-            updateTableView();
+            updateTableView(false, false);
         }
     }
 
     public void handleRightScroll(ActionEvent event) {
-        if (exerciseTable.getItems().size() == PAGE_SIZE) {
+        int itemCount = currentPaginator.getCount().apply(
+                exerciseService, filterText.getText()
+        );
+        int pageCount = (itemCount / PAGE_SIZE) + (itemCount % PAGE_SIZE > 0 ? 1 : 0);
+        if (currentPage < pageCount) {
             currentPage++;
 
-            updateTableView();
+            updateTableView(false, false);
         }
     }
 }

@@ -17,7 +17,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import ua.pp.disik.englishroulette.desktop.entity.Exercise;
 import ua.pp.disik.englishroulette.desktop.entity.Phrase;
 import ua.pp.disik.englishroulette.desktop.entity.Priority;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
@@ -178,6 +177,8 @@ public class ExerciseController {
             currentExerciseDto.setCheckedAt(null);
             currentExerciseDto.setUpdatedAt(System.currentTimeMillis());
             exerciseService.save(currentExerciseDto);
+
+            currentExercise.setChanged(true);
 
             main.getScene().getWindow().hide();
         } else {

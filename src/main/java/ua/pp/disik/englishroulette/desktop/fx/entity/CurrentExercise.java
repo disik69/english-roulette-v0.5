@@ -7,4 +7,5 @@ import org.springframework.stereotype.Component;
 @Data
 public class CurrentExercise {
     private Integer id;
+    private boolean changed;
 }

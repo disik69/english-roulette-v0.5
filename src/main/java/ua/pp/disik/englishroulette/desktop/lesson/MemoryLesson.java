@@ -1,6 +1,5 @@
 package ua.pp.disik.englishroulette.desktop.lesson;
 
-import ua.pp.disik.englishroulette.desktop.entity.Exercise;
 import ua.pp.disik.englishroulette.desktop.entity.ExerciseDto;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
@@ -28,7 +27,10 @@ public class MemoryLesson implements Lesson {
         this.exerciseService = exerciseService;
         this.settingService = settingService;
 
-        exercises = exerciseService.getMemory();
+        exercises = exerciseService.getMemory(
+                0,
+                Integer.parseInt(settingService.getMap().get(SettingName.LESSON_SIZE))
+        );
         allNumber = exercises.size();
         Collections.shuffle(exercises);
         if (exercises.size() > 0) {

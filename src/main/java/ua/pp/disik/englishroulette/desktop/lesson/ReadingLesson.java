@@ -1,24 +1,33 @@
 package ua.pp.disik.englishroulette.desktop.lesson;
 
-import ua.pp.disik.englishroulette.desktop.entity.Exercise;
 import ua.pp.disik.englishroulette.desktop.entity.ExerciseDto;
+import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
+import ua.pp.disik.englishroulette.desktop.service.SettingService;
 
 import java.util.Collections;
 import java.util.List;
 
 public class ReadingLesson implements Lesson {
     private final ExerciseService exerciseService;
+    private final SettingService settingService;
 
     private List<ExerciseDto> exercises;
     private ExerciseDto current;
     private int successNumber = 0;
     private int allNumber;
 
-    public ReadingLesson(ExerciseService exerciseService) {
+    public ReadingLesson(
+            ExerciseService exerciseService,
+            SettingService settingService
+    ) {
         this.exerciseService = exerciseService;
+        this.settingService = settingService;
 
-        exercises = exerciseService.getReading();
+        exercises = exerciseService.getReading(
+                0,
+                Integer.parseInt(settingService.getMap().get(SettingName.LESSON_SIZE))
+        );
         allNumber = exercises.size();
         Collections.shuffle(exercises);
         if (exercises.size() > 0) {
