@@ -87,6 +87,16 @@
                         GridPane.halignment="RIGHT"
                         GridPane.columnIndex="1"
                         GridPane.rowIndex="2"/>
+                <HBox GridPane.columnIndex="2"
+                      GridPane.rowIndex="2"
+                      spacing="5"
+                      alignment="CENTER">
+                    <children>
+                        <Label fx:id="currentPageLabel"/>
+                        <Label text="from"/>
+                        <Label fx:id="pageCountLabel"/>
+                    </children>
+                </HBox>
                 <Button text="&gt;" onAction="#handleRightScroll"
                         GridPane.halignment="LEFT"
                         GridPane.columnIndex="3"

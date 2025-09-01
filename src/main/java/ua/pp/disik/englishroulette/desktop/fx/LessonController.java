@@ -30,7 +30,7 @@ import java.util.List;
 public class LessonController {
     private static final String PHRASE_DIVIDER = "\n";
 
-    private final BooleanProperty disabledNextExercise = new SimpleBooleanProperty();
+    private final BooleanProperty disabledNextExerciseProperty = new SimpleBooleanProperty();
 
     private Voice voice;
     private boolean reversExercise = false;
@@ -65,7 +65,7 @@ public class LessonController {
 
     @FXML
     private void initialize() {
-        nextButton.disableProperty().bind(disabledNextExercise);
+        nextButton.disableProperty().bind(disabledNextExerciseProperty);
 
         checkText.setOnKeyPressed(event -> {
             if (event.isControlDown()) {
@@ -96,7 +96,7 @@ public class LessonController {
 
             checkText.setText("");
 
-            disabledNextExercise.set(true);
+            disabledNextExerciseProperty.set(true);
 
             setAvers();
         } else {
@@ -109,7 +109,7 @@ public class LessonController {
             check.getStyleClass().removeAll("card", "revers-card");
             checkText.setText("");
 
-            disabledNextExercise.set(true);
+            disabledNextExerciseProperty.set(true);
 
             MessageStage result = new MessageStage(
                     "Result",
@@ -170,12 +170,12 @@ public class LessonController {
             if (exerciseLabel.getStyleClass().contains("exercise-error")) {
                 exerciseLabel.getStyleClass().remove("exercise-error");
             }
-            disabledNextExercise.set(false);
+            disabledNextExerciseProperty.set(false);
         } else {
             if (! exerciseLabel.getStyleClass().contains("exercise-error")) {
                 exerciseLabel.getStyleClass().add("exercise-error");
             }
-            disabledNextExercise.set(true);
+            disabledNextExerciseProperty.set(true);
         }
 
         reversExercise = true;
@@ -191,7 +191,7 @@ public class LessonController {
     }
 
     public void handleNext(ActionEvent event) {
-        if (! disabledNextExercise.get()) {
+        if (! disabledNextExerciseProperty.get()) {
             currentLesson.getLesson().next();
 
             setCurrentExercise();

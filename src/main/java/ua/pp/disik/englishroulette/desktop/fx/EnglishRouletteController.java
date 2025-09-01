@@ -1,5 +1,7 @@
 package ua.pp.disik.englishroulette.desktop.fx;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,7 +42,9 @@ public class EnglishRouletteController {
     private static final int PAGE_SIZE = 30;
     private static final int MIN_FILTER_LENGTH = 3;
 
-    private int currentPage = FIRST_PAGE;
+    private final IntegerProperty currentPageProperty = new SimpleIntegerProperty(FIRST_PAGE);
+    private final IntegerProperty pageCountProperty = new SimpleIntegerProperty(1);
+
     private TablePaginator currentPaginator;
 
     @Autowired
@@ -86,6 +90,12 @@ public class EnglishRouletteController {
     private TableColumn<ExerciseTableItem, String> exerciseTableColumnChecked;
 
     @FXML
+    private Label currentPageLabel;
+
+    @FXML
+    private Label pageCountLabel;
+
+    @FXML
     private void initialize() {
         filterText.textProperty().addListener(this::handleChangeFilter);
 
@@ -99,6 +109,9 @@ public class EnglishRouletteController {
         exerciseTableColumnMemory.setCellValueFactory(new PropertyValueFactory<>("memoryCount"));
         exerciseTableColumnPriority.setCellValueFactory(new PropertyValueFactory<>("priority"));
         exerciseTableColumnChecked.setCellValueFactory(new PropertyValueFactory<>("checkedAt"));
+
+        currentPageLabel.textProperty().bind(currentPageProperty.asString());
+        pageCountLabel.textProperty().bind(pageCountProperty.asString());
 
         currentPaginator = TablePaginator.ALL;
         updateTableView(true, true);
@@ -264,7 +277,7 @@ public class EnglishRouletteController {
         } else {
             currentPaginator = TablePaginator.FILTER;
         }
-        updateTableView(true, false);
+        updateTableView(false, true);
     }
 
     public void handleUpdate(ActionEvent event) {
@@ -308,17 +321,22 @@ public class EnglishRouletteController {
         updateTableView(true, true);
     }
 
-    private void updateTableView(boolean resetPaginator, boolean resetFilter) {
-        if (resetPaginator) {
-            currentPage = FIRST_PAGE;
-        }
-
+    private void updateTableView(boolean resetFilter, boolean resetPaginator) {
         if (resetFilter) {
             filterText.setText("");
         }
 
+        if (resetPaginator) {
+            currentPageProperty.set(FIRST_PAGE);
+        }
+        int itemCount = currentPaginator.getCount().apply(
+                exerciseService, filterText.getText()
+        );
+        int pageCount = (itemCount / PAGE_SIZE) + (itemCount % PAGE_SIZE > 0 ? 1 : 0);
+        this.pageCountProperty.set(pageCount);
+
         List<ExerciseDto> exercises = currentPaginator.getSource().apply(
-            exerciseService, filterText.getText(), currentPage - 1, PAGE_SIZE
+            exerciseService, filterText.getText(), currentPageProperty.get() - 1, PAGE_SIZE
         );
 
 
@@ -361,20 +379,16 @@ public class EnglishRouletteController {
     }
 
     public void handleLeftScroll(ActionEvent event) {
-        if (currentPage > FIRST_PAGE) {
-            currentPage--;
+        if (currentPageProperty.get() > FIRST_PAGE) {
+            currentPageProperty.set(currentPageProperty.get() - 1);
 
             updateTableView(false, false);
         }
     }
 
     public void handleRightScroll(ActionEvent event) {
-        int itemCount = currentPaginator.getCount().apply(
-                exerciseService, filterText.getText()
-        );
-        int pageCount = (itemCount / PAGE_SIZE) + (itemCount % PAGE_SIZE > 0 ? 1 : 0);
-        if (currentPage < pageCount) {
-            currentPage++;
+        if (currentPageProperty.get() < pageCountProperty.get()) {
+            currentPageProperty.set(currentPageProperty.get() + 1);
 
             updateTableView(false, false);
         }
