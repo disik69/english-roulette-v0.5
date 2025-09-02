@@ -1,11 +1,9 @@
 package ua.pp.disik.englishroulette.desktop.service;
 
-import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.pp.disik.englishroulette.desktop.entity.Exercise;
-import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.entity.ExerciseDto;
 import ua.pp.disik.englishroulette.desktop.repository.ExerciseRepository;
 
@@ -15,14 +13,11 @@ import java.util.stream.Collectors;
 @Service
 public class ExerciseService implements RepositoryService<ExerciseRepository> {
     private final ExerciseRepository exerciseRepository;
-    private final SettingService settingService;
 
     public ExerciseService(
-            ExerciseRepository exerciseRepository,
-            SettingService settingService
+            ExerciseRepository exerciseRepository
     ) {
         this.exerciseRepository = exerciseRepository;
-        this.settingService = settingService;
     }
 
     @Override
@@ -123,7 +118,6 @@ public class ExerciseService implements RepositoryService<ExerciseRepository> {
         );
     }
 
-    @Transactional
     public void save(ExerciseDto exerciseDto) {
         Exercise exercise = new Exercise();
         exercise.setId(exerciseDto.getId());
@@ -132,9 +126,14 @@ public class ExerciseService implements RepositoryService<ExerciseRepository> {
         exercise.setPriority(exerciseDto.getPriority());
         exercise.setCheckedAt(exerciseDto.getCheckedAt());
         exercise.setUpdatedAt(exerciseDto.getUpdatedAt());
+        if (exercise.getId() == null) {
+            // Phrase cascading
+            // PERSIST -> PERSIST
+            // MERGE -> PERSIST, MERGE
+            exerciseRepository.save(exercise);
+        }
         exercise.getForeignPhrases().addAll(exerciseDto.getForeignPhrases());
         exercise.getNativePhrases().addAll(exerciseDto.getNativePhrases());
-
         exerciseRepository.save(exercise);
     }
 }

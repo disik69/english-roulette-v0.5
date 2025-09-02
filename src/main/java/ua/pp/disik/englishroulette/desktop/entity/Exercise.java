@@ -27,12 +27,22 @@ public class Exercise {
 
     private long updatedAt;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH
+    })
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Phrase> foreignPhrases = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH
+    })
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Phrase> nativePhrases = new ArrayList<>();
