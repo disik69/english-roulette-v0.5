@@ -53,26 +53,26 @@
             <artifactId>lombok</artifactId>
             <version>1.18.34</version>
         </dependency>
-        <dependency>
-            <groupId>ua.pp.disik</groupId>
-            <artifactId>cmu_us_kal</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>ua.pp.disik</groupId>
-            <artifactId>cmulex</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>ua.pp.disik</groupId>
-            <artifactId>en_us</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>ua.pp.disik</groupId>
-            <artifactId>freetts</artifactId>
-            <version>1.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>ua.pp.disik</groupId>-->
+<!--            <artifactId>cmu_us_kal</artifactId>-->
+<!--            <version>1.0</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>ua.pp.disik</groupId>-->
+<!--            <artifactId>cmulex</artifactId>-->
+<!--            <version>1.0</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>ua.pp.disik</groupId>-->
+<!--            <artifactId>en_us</artifactId>-->
+<!--            <version>1.0</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>ua.pp.disik</groupId>-->
+<!--            <artifactId>freetts</artifactId>-->
+<!--            <version>1.0</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>

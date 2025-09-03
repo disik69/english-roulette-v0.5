@@ -71,9 +71,9 @@
                 GridPane.halignment="CENTER"
                 GridPane.columnIndex="0"
                 GridPane.rowIndex="4"/>
-        <Button text="Phrase" onAction="#handlePhrase"
-                GridPane.halignment="CENTER"
-                GridPane.columnIndex="1"
-                GridPane.rowIndex="4"/>
+<!--        <Button text="Phrase" onAction="#handlePhrase"-->
+<!--                GridPane.halignment="CENTER"-->
+<!--                GridPane.columnIndex="1"-->
+<!--                GridPane.rowIndex="4"/>-->
     </children>
 </GridPane>

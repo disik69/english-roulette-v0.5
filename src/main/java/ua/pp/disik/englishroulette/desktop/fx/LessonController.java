@@ -1,7 +1,7 @@
 package ua.pp.disik.englishroulette.desktop.fx;
 
-import com.sun.speech.freetts.Voice;
-import com.sun.speech.freetts.VoiceManager;
+//import com.sun.speech.freetts.Voice;
+//import com.sun.speech.freetts.VoiceManager;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -32,7 +32,7 @@ public class LessonController {
 
     private final BooleanProperty disabledNextExerciseProperty = new SimpleBooleanProperty();
 
-    private Voice voice;
+//    private Voice voice;
     private boolean reversExercise = false;
     private boolean checkedExercise = false;
 
@@ -80,8 +80,8 @@ public class LessonController {
             }
         });
 
-        voice = VoiceManager.getInstance().getVoice("kevin16");
-        voice.allocate();
+//        voice = VoiceManager.getInstance().getVoice("kevin16");
+//        voice.allocate();
 
         setCurrentExercise();
     }
@@ -118,7 +118,7 @@ public class LessonController {
             );
             result.showAndWait();
 
-            voice.deallocate();
+//            voice.deallocate();
 
             main.getScene().getWindow().hide();
         }
@@ -138,7 +138,7 @@ public class LessonController {
         Lesson lesson = currentLesson.getLesson();
         Lesson.Side side = lesson.getCurrentAvers();
         exerciseLabel.setText(convertToCard(side.getPhrases()));
-        speakSide(side);
+//        speakSide(side);
 
         if (exerciseLabel.getStyleClass().contains("exercise-error")) {
             exerciseLabel.getStyleClass().remove("exercise-error");
@@ -153,7 +153,7 @@ public class LessonController {
         Lesson lesson = currentLesson.getLesson();
         Lesson.Side side = lesson.getCurrentRevers();
         exerciseLabel.setText(convertToCard(side.getPhrases()));
-        speakSide(side);
+//        speakSide(side);
 
         boolean wordComparative = compareWords(side.getPhrases(), convertFromCard(checkText.getText()));
 
@@ -181,14 +181,14 @@ public class LessonController {
         reversExercise = true;
     }
 
-    private void speakSide(Lesson.Side side) {
-        if (side.isSpoken()) {
-            String speakingLine = side.getPhrases().stream()
-                    .reduce((first, second) -> first + "; " + second)
-                    .orElse("");
-            new Thread(() -> voice.speak(speakingLine)).start();
-        }
-    }
+//    private void speakSide(Lesson.Side side) {
+//        if (side.isSpoken()) {
+//            String speakingLine = side.getPhrases().stream()
+//                    .reduce((first, second) -> first + "; " + second)
+//                    .orElse("");
+//            new Thread(() -> voice.speak(speakingLine)).start();
+//        }
+//    }
 
     public void handleNext(ActionEvent event) {
         if (! disabledNextExerciseProperty.get()) {
