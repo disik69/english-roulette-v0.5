@@ -45,6 +45,7 @@
                 <StackPane fx:id="card" styleClass="card" onMouseClicked="#handleTurn">
                     <children>
                         <Label fx:id="exerciseLabel"
+                               id="exerciseLabel"
                                style="-fx-font-size: 30px"/>
                     </children>
                 </StackPane>

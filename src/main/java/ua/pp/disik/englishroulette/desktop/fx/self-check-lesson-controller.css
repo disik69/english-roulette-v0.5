@@ -9,3 +9,7 @@
     -fx-border-color: blue;
 }
 
+#exerciseLabel {
+    -fx-text-alignment: center;
+}
+
