@@ -1,4 +1,4 @@
-package ua.pp.disik.englishroulette.desktop.fx;
+package ua.pp.disik.englishroulette.desktop.fx.stage;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

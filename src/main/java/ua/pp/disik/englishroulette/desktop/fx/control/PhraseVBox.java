@@ -1,4 +1,4 @@
-package ua.pp.disik.englishroulette.desktop.fx;
+package ua.pp.disik.englishroulette.desktop.fx.control;
 
 import javafx.beans.Observable;
 import javafx.beans.property.StringProperty;

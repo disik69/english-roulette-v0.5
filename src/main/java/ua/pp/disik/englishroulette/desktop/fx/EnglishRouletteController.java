@@ -24,6 +24,8 @@ import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.entity.ExerciseDto;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.fx.entity.*;
+import ua.pp.disik.englishroulette.desktop.fx.stage.SelfCheckLessonStage;
+import ua.pp.disik.englishroulette.desktop.fx.stage.WritingCheckLessonStage;
 import ua.pp.disik.englishroulette.desktop.lesson.Lesson;
 import ua.pp.disik.englishroulette.desktop.lesson.MemoryLesson;
 import ua.pp.disik.englishroulette.desktop.lesson.ReadingLesson;
@@ -213,7 +215,10 @@ public class EnglishRouletteController {
         if (lesson.getAmmount() > 0) {
             currentLesson.setLesson(lesson);
 
-            renderLesson();
+            renderLesson(new SelfCheckLessonStage(
+                    applicationContext,
+                    main
+            ));
         }
     }
 
@@ -222,7 +227,10 @@ public class EnglishRouletteController {
         if (lesson.getAmmount() > 0) {
             currentLesson.setLesson(lesson);
 
-            renderLesson();
+            renderLesson(new WritingCheckLessonStage(
+                    applicationContext,
+                    main
+            ));
         }
     }
 
@@ -231,32 +239,15 @@ public class EnglishRouletteController {
         if (lesson.getAmmount() > 0) {
             currentLesson.setLesson(lesson);
 
-            renderLesson();
+            renderLesson(new WritingCheckLessonStage(
+                    applicationContext,
+                    main
+            ));
         }
     }
 
     @SneakyThrows
-    public void renderLesson() {
-        ApplicationContextFXMLLoader viewLoader = new ApplicationContextFXMLLoader(
-                LessonController.class.getResource("LessonView.fxml"),
-                applicationContext
-        );
-        GridPane LessonView = viewLoader.load();
-
-        Scene scene = new Scene(LessonView);
-        scene.getStylesheets().add(
-                LessonController.class.getResource("lesson-controller.css").toExternalForm()
-        );
-
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(main.getScene().getWindow());
-        stage.setWidth(main.getScene().getWindow().getWidth());
-        stage.setHeight(main.getScene().getWindow().getHeight());
-        stage.setX(main.getScene().getWindow().getX() + Constants.WINDOW_OFFSET);
-        stage.setY(main.getScene().getWindow().getY() + Constants.WINDOW_OFFSET);
-        stage.setTitle("Lesson");
+    public void renderLesson(Stage stage) {
         stage.showAndWait();
 
         currentPaginator = TablePaginator.ALL;

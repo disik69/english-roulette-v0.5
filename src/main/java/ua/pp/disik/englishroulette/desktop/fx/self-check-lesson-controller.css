@@ -1,0 +1,11 @@
+.card {
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-border-style: dotted;
+    -fx-border-color: black;
+}
+
+.revers-card {
+    -fx-border-color: blue;
+}
+

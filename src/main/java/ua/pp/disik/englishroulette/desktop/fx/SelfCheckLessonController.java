@@ -8,33 +8,26 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.fx.entity.CurrentLesson;
+import ua.pp.disik.englishroulette.desktop.fx.stage.MessageStage;
 import ua.pp.disik.englishroulette.desktop.lesson.Lesson;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@Slf4j
-public class LessonController {
-    private static final String PHRASE_DIVIDER = "\n";
-
-    private final BooleanProperty disabledNextExerciseProperty = new SimpleBooleanProperty();
+public class SelfCheckLessonController {
+    private final BooleanProperty disabledYesNoProperty = new SimpleBooleanProperty();
 
     private Voice voice;
     private boolean reversExercise = false;
-    private boolean checkedExercise = false;
 
     @Autowired
     private CurrentLesson currentLesson;
@@ -55,35 +48,24 @@ public class LessonController {
     private Label exerciseLabel;
 
     @FXML
-    private StackPane check;
+    private Button yesButton;
 
     @FXML
-    private TextArea checkText;
-
-    @FXML
-    private Button nextButton;
+    private Button noButton;
 
     @FXML
     private void initialize() {
-        nextButton.disableProperty().bind(disabledNextExerciseProperty);
-
-        checkText.setOnKeyPressed(event -> {
-            if (event.isControlDown()) {
-                switch (event.getCode()) {
-                    case KeyCode.T -> {
-                        handleTurn(null);
-                    }
-                    case KeyCode.N -> {
-                        handleNext(null);
-                    }
-                }
-            }
-        });
-
         voice = VoiceManager.getInstance().getVoice("kevin16");
         voice.allocate();
 
+        yesButton.disableProperty().bind(disabledYesNoProperty);
+        noButton.disableProperty().bind(disabledYesNoProperty);
+
         setCurrentExercise();
+    }
+
+    public void close() {
+        voice.deallocate();
     }
 
     private void setCurrentExercise() {
@@ -91,12 +73,6 @@ public class LessonController {
         if (lesson.getAmmount() > 0) {
             numberLabel.setText(String.valueOf(lesson.getAmmount()));
             countLabel.setText(String.valueOf(lesson.getCurrentCount()));
-
-            checkedExercise = false;
-
-            checkText.setText("");
-
-            disabledNextExerciseProperty.set(true);
 
             setAvers();
         } else {
@@ -106,10 +82,7 @@ public class LessonController {
             card.getStyleClass().removeAll("card", "revers-card");
             exerciseLabel.setText("");
 
-            check.getStyleClass().removeAll("card", "revers-card");
-            checkText.setText("");
-
-            disabledNextExerciseProperty.set(true);
+            disabledYesNoProperty.set(true);
 
             MessageStage result = new MessageStage(
                     "Result",
@@ -117,8 +90,6 @@ public class LessonController {
                     main
             );
             result.showAndWait();
-
-            voice.deallocate();
 
             main.getScene().getWindow().hide();
         }
@@ -133,6 +104,8 @@ public class LessonController {
     }
 
     private void setAvers() {
+        disabledYesNoProperty.set(true);
+
         card.getStyleClass().remove("revers-card");
 
         Lesson lesson = currentLesson.getLesson();
@@ -140,14 +113,12 @@ public class LessonController {
         exerciseLabel.setText(convertToCard(side.getPhrases()));
         speakSide(side);
 
-        if (exerciseLabel.getStyleClass().contains("exercise-error")) {
-            exerciseLabel.getStyleClass().remove("exercise-error");
-        }
-
         reversExercise = false;
     }
 
     private void setRevers() {
+        disabledYesNoProperty.set(false);
+
         card.getStyleClass().add("revers-card");
 
         Lesson lesson = currentLesson.getLesson();
@@ -155,30 +126,13 @@ public class LessonController {
         exerciseLabel.setText(convertToCard(side.getPhrases()));
         speakSide(side);
 
-        boolean wordComparative = compareWords(side.getPhrases(), convertFromCard(checkText.getText()));
-
-        if (! checkedExercise) {
-            if (wordComparative) {
-                currentLesson.getLesson().rememberCurrent();
-            } else {
-                currentLesson.getLesson().dontRememberCurrent();
-            }
-            checkedExercise = true;
-        }
-
-        if (wordComparative) {
-            if (exerciseLabel.getStyleClass().contains("exercise-error")) {
-                exerciseLabel.getStyleClass().remove("exercise-error");
-            }
-            disabledNextExerciseProperty.set(false);
-        } else {
-            if (! exerciseLabel.getStyleClass().contains("exercise-error")) {
-                exerciseLabel.getStyleClass().add("exercise-error");
-            }
-            disabledNextExerciseProperty.set(true);
-        }
-
         reversExercise = true;
+    }
+
+    private String convertToCard(List<String> phrases) {
+        return phrases.stream()
+                .reduce((first, second) -> first + Constants.PHRASE_DIVIDER + second)
+                .orElse("");
     }
 
     private void speakSide(Lesson.Side side) {
@@ -190,39 +144,21 @@ public class LessonController {
         }
     }
 
-    public void handleNext(ActionEvent event) {
-        if (! disabledNextExerciseProperty.get()) {
+    public void handleYES(ActionEvent event) {
+        if (! disabledYesNoProperty.get()) {
+            currentLesson.getLesson().rememberCurrent();
             currentLesson.getLesson().next();
 
             setCurrentExercise();
         }
     }
 
-    private String convertToCard(List<String> phrases) {
-        return phrases.stream()
-                .reduce((first, second) -> first + PHRASE_DIVIDER + second)
-                .orElse("");
-    }
+    public void handleNO(ActionEvent event) {
+        if (! disabledYesNoProperty.get()) {
+            currentLesson.getLesson().dontRememberCurrent();
+            currentLesson.getLesson().next();
 
-    private List<String> convertFromCard(String card) {
-        return Arrays.stream(card.split(PHRASE_DIVIDER))
-                .map(word -> word.trim())
-                .toList();
-    }
-
-    private boolean compareWords(List<String> cardPharases, List<String> checkPhrases) {
-        for (String cardPhrase : cardPharases) {
-            boolean found = false;
-            for (String checkPhrase : checkPhrases) {
-                if (cardPhrase.equals(checkPhrase)) {
-                    found = true;
-                    break;
-                }
-            }
-            if (! found) {
-                return false;
-            }
+            setCurrentExercise();
         }
-        return true;
     }
 }

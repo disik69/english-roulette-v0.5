@@ -7,7 +7,7 @@
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:id="main"
-          fx:controller="ua.pp.disik.englishroulette.desktop.fx.LessonController"
+          fx:controller="ua.pp.disik.englishroulette.desktop.fx.WritingCheckLessonController"
           hgap="5" vgap="5">
     <padding>
         <Insets bottom="5" left="5" right="5" top="5"/>

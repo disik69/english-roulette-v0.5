@@ -20,10 +20,12 @@ import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.entity.Phrase;
 import ua.pp.disik.englishroulette.desktop.entity.Priority;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
+import ua.pp.disik.englishroulette.desktop.fx.control.PhraseVBox;
 import ua.pp.disik.englishroulette.desktop.fx.entity.CurrentExercise;
 import ua.pp.disik.englishroulette.desktop.fx.entity.CurrentPhrase;
 import ua.pp.disik.englishroulette.desktop.fx.entity.ExerciseTableItem;
 import ua.pp.disik.englishroulette.desktop.entity.ExerciseDto;
+import ua.pp.disik.englishroulette.desktop.fx.stage.MessageStage;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
 import ua.pp.disik.englishroulette.desktop.service.PhraseService;
 import ua.pp.disik.englishroulette.desktop.service.SettingService;
@@ -111,7 +113,7 @@ public class ExerciseController {
         renderPriorityBox();
 
         phraseStage = new Stage();
-        phraseStage.setOnShown(phraseWindowEvent -> {
+        phraseStage.setOnShown(phraseStageEvent -> {
             main.getScene().getWindow().setOnHiding(mainWindowEvent -> phraseStage.hide());
         });
     }
