@@ -11,7 +11,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MessageStage extends Stage {
-    public MessageStage(String title, String message, Node root) {
+    public MessageStage(
+            String title,
+            String message,
+            Node root
+    ) {
         Label scoreLabel = new Label(message);
         Button okButton = new Button("OK");
         VBox vBox = new VBox(scoreLabel, okButton);
@@ -23,14 +27,14 @@ public class MessageStage extends Stage {
 
         okButton.setOnAction(event -> scene.getWindow().hide());
 
-        double width = 200;
+        double width = 250;
         double height = 100;
 
         setScene(scene);
         initModality(Modality.WINDOW_MODAL);
         initOwner(root.getScene().getWindow());
-        setWidth(200);
-        setHeight(100);
+        setWidth(width);
+        setHeight(height);
         setX(
                 root.getScene().getWindow().getX() +
                 (root.getScene().getWindow().getWidth() / 2) -

@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.entity.ExerciseDto;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.fx.entity.*;
+import ua.pp.disik.englishroulette.desktop.fx.stage.MessageStage;
 import ua.pp.disik.englishroulette.desktop.fx.stage.SelfCheckLessonStage;
 import ua.pp.disik.englishroulette.desktop.fx.stage.WritingCheckLessonStage;
 import ua.pp.disik.englishroulette.desktop.lesson.Lesson;
@@ -219,6 +220,13 @@ public class EnglishRouletteController {
                     applicationContext,
                     main
             ));
+        } else {
+            MessageStage error = new MessageStage(
+                    "Error",
+                    "You don't have reading exercises.",
+                    main
+            );
+            error.showAndWait();
         }
     }
 
@@ -231,6 +239,13 @@ public class EnglishRouletteController {
                     applicationContext,
                     main
             ));
+        } else {
+            MessageStage error = new MessageStage(
+                    "Error",
+                    "You don't have reading exercises.",
+                    main
+            );
+            error.showAndWait();
         }
     }
 
@@ -243,6 +258,13 @@ public class EnglishRouletteController {
                     applicationContext,
                     main
             ));
+        } else {
+            MessageStage error = new MessageStage(
+                    "Error",
+                    "You don't have reading exercises.",
+                    main
+            );
+            error.showAndWait();
         }
     }
 
