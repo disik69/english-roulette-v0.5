@@ -4,17 +4,13 @@ import io.micrometer.common.util.StringUtils;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.entity.Phrase;
@@ -22,7 +18,6 @@ import ua.pp.disik.englishroulette.desktop.entity.Priority;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.fx.control.PhraseVBox;
 import ua.pp.disik.englishroulette.desktop.fx.entity.CurrentExercise;
-import ua.pp.disik.englishroulette.desktop.fx.entity.CurrentPhrase;
 import ua.pp.disik.englishroulette.desktop.fx.entity.ExerciseTableItem;
 import ua.pp.disik.englishroulette.desktop.entity.ExerciseDto;
 import ua.pp.disik.englishroulette.desktop.fx.stage.MessageStage;
@@ -42,10 +37,6 @@ public class ExerciseController {
     private static final int MIN_FILTER_LENGTH = 3;
 
     private ExerciseDto currentExerciseDto;
-    private Stage phraseStage;
-
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @Autowired
     private ExerciseService exerciseService;
@@ -58,9 +49,6 @@ public class ExerciseController {
 
     @Autowired
     private CurrentExercise currentExercise;
-
-    @Autowired
-    private CurrentPhrase currentPhrase;
 
     @FXML
     private GridPane main;
@@ -111,11 +99,6 @@ public class ExerciseController {
         exerciseTableColumnNative.setCellValueFactory(new PropertyValueFactory<>("nativePhrases"));
 
         renderPriorityBox();
-
-        phraseStage = new Stage();
-        phraseStage.setOnShown(phraseStageEvent -> {
-            main.getScene().getWindow().setOnHiding(mainWindowEvent -> phraseStage.hide());
-        });
     }
 
     private Phrase convertPhrase(String body) {
@@ -135,9 +118,7 @@ public class ExerciseController {
         }
     }
 
-    private void handlePhraseFocus(String body) {
-        currentPhrase.setBody(body);
-    }
+    private void handlePhraseFocus(String body) {}
 
     private void handlePhraseUnfocus() {
         exerciseTable.setItems(FXCollections.emptyObservableList());
@@ -196,30 +177,5 @@ public class ExerciseController {
             }
         }
         return false;
-    }
-
-    @SneakyThrows
-    public void handlePhrase(ActionEvent event) {
-        if (! phraseStage.isShowing()) {
-            ApplicationContextFXMLLoader viewLoader = new ApplicationContextFXMLLoader(
-                    PhraseController.class.getResource("PhraseView.fxml"),
-                    applicationContext
-            );
-            GridPane phraseView = viewLoader.load();
-
-            Scene scene = new Scene(phraseView);
-
-            phraseStage.setScene(scene);
-            phraseStage.setWidth(main.getScene().getWindow().getWidth());
-            phraseStage.setHeight(main.getScene().getWindow().getHeight());
-            phraseStage.setX(
-                    main.getScene().getWindow().getX() +
-                    main.getScene().getWindow().getWidth() +
-                    Constants.WINDOW_OFFSET
-            );
-            phraseStage.setY(main.getScene().getWindow().getY());
-            phraseStage.setTitle("Phrase");
-            phraseStage.showAndWait();
-        }
     }
 }

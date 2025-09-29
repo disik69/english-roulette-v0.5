@@ -1,7 +1,5 @@
 package ua.pp.disik.englishroulette.desktop.fx;
 
-import com.sun.speech.freetts.Voice;
-import com.sun.speech.freetts.VoiceManager;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -26,7 +24,6 @@ import java.util.List;
 public class SelfCheckLessonController {
     private final BooleanProperty disabledYesNoProperty = new SimpleBooleanProperty();
 
-    private Voice voice;
     private boolean reversExercise = false;
 
     @Autowired
@@ -55,18 +52,13 @@ public class SelfCheckLessonController {
 
     @FXML
     private void initialize() {
-        voice = VoiceManager.getInstance().getVoice("kevin16");
-        voice.allocate();
-
         yesButton.disableProperty().bind(disabledYesNoProperty);
         noButton.disableProperty().bind(disabledYesNoProperty);
 
         setCurrentExercise();
     }
 
-    public void close() {
-        voice.deallocate();
-    }
+    public void close() {}
 
     private void setCurrentExercise() {
         Lesson lesson = currentLesson.getLesson();
@@ -135,14 +127,7 @@ public class SelfCheckLessonController {
                 .orElse("");
     }
 
-    private void speakSide(Lesson.Side side) {
-        if (side.isSpoken()) {
-            String speakingLine = side.getPhrases().stream()
-                    .reduce((first, second) -> first + "; " + second)
-                    .orElse("");
-            new Thread(() -> voice.speak(speakingLine)).start();
-        }
-    }
+    private void speakSide(Lesson.Side side) {}
 
     public void handleYES(ActionEvent event) {
         if (! disabledYesNoProperty.get()) {

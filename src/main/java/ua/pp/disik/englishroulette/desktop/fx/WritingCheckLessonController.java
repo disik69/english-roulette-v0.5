@@ -1,7 +1,5 @@
 package ua.pp.disik.englishroulette.desktop.fx;
 
-import com.sun.speech.freetts.Voice;
-import com.sun.speech.freetts.VoiceManager;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -30,7 +28,6 @@ import java.util.List;
 public class WritingCheckLessonController {
     private final BooleanProperty disabledNextExerciseProperty = new SimpleBooleanProperty();
 
-    private Voice voice;
     private boolean reversExercise = false;
     private boolean checkedExercise = false;
 
@@ -63,17 +60,12 @@ public class WritingCheckLessonController {
 
     @FXML
     private void initialize() {
-        voice = VoiceManager.getInstance().getVoice("kevin16");
-        voice.allocate();
-
         nextButton.disableProperty().bind(disabledNextExerciseProperty);
 
         setCurrentExercise();
     }
 
-    public void close() {
-        voice.deallocate();
-    }
+    public void close() {}
 
     private void setCurrentExercise() {
         Lesson lesson = currentLesson.getLesson();
@@ -168,14 +160,7 @@ public class WritingCheckLessonController {
         reversExercise = true;
     }
 
-    private void speakSide(Lesson.Side side) {
-        if (side.isSpoken()) {
-            String speakingLine = side.getPhrases().stream()
-                    .reduce((first, second) -> first + "; " + second)
-                    .orElse("");
-            new Thread(() -> voice.speak(speakingLine)).start();
-        }
-    }
+    private void speakSide(Lesson.Side side) {}
 
     public void handleNext(ActionEvent event) {
         if (! disabledNextExerciseProperty.get()) {
