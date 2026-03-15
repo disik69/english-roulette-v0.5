@@ -242,7 +242,7 @@ public class EnglishRouletteController {
         } else {
             MessageStage error = new MessageStage(
                     "Error",
-                    "You don't have reading exercises.",
+                    "You don't have memory exercises.",
                     main
             );
             error.showAndWait();
@@ -261,7 +261,7 @@ public class EnglishRouletteController {
         } else {
             MessageStage error = new MessageStage(
                     "Error",
-                    "You don't have reading exercises.",
+                    "You don't have repeating exercises.",
                     main
             );
             error.showAndWait();
