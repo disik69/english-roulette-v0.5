@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import ua.pp.disik.englishroulette.desktop.fx.entity.CurrentLesson;
 import ua.pp.disik.englishroulette.desktop.fx.stage.MessageStage;
 import ua.pp.disik.englishroulette.desktop.lesson.Lesson;
+import ua.pp.disik.englishroulette.desktop.lesson.exercise.ExerciseSide;
 
 import java.util.Arrays;
 import java.util.List;
@@ -77,8 +78,8 @@ public class WritingCheckLessonController {
 
     private void setCurrentExercise() {
         Lesson lesson = currentLesson.getLesson();
-        if (lesson.getAmmount() > 0) {
-            numberLabel.setText(String.valueOf(lesson.getAmmount()));
+        if (lesson.getAmount() > 0) {
+            numberLabel.setText(String.valueOf(lesson.getAmount()));
             countLabel.setText(String.valueOf(lesson.getCurrentCount()));
 
             checkedExercise = false;
@@ -107,7 +108,14 @@ public class WritingCheckLessonController {
             );
             result.showAndWait();
 
-            main.getScene().getWindow().hide();
+            if (lesson.rewind()) {
+                card.getStyleClass().add("card");
+                check.getStyleClass().addAll("card", "revers-card");
+
+                setCurrentExercise();
+            } else {
+                main.getScene().getWindow().hide();
+            }
         }
     }
 
@@ -123,7 +131,7 @@ public class WritingCheckLessonController {
         card.getStyleClass().remove("revers-card");
 
         Lesson lesson = currentLesson.getLesson();
-        Lesson.Side side = lesson.getCurrentAvers();
+        ExerciseSide side = lesson.getCurrentAvers();
         exerciseLabel.setText(convertToCard(side.getPhrases()));
         speakSide(side);
 
@@ -138,7 +146,7 @@ public class WritingCheckLessonController {
         card.getStyleClass().add("revers-card");
 
         Lesson lesson = currentLesson.getLesson();
-        Lesson.Side side = lesson.getCurrentRevers();
+        ExerciseSide side = lesson.getCurrentRevers();
         exerciseLabel.setText(convertToCard(side.getPhrases()));
         speakSide(side);
 
@@ -168,7 +176,7 @@ public class WritingCheckLessonController {
         reversExercise = true;
     }
 
-    private void speakSide(Lesson.Side side) {
+    private void speakSide(ExerciseSide side) {
         if (side.isSpoken()) {
             String speakingLine = side.getPhrases().stream()
                     .reduce((first, second) -> first + "; " + second)

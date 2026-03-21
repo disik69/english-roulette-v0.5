@@ -1,26 +1,25 @@
-package ua.pp.disik.englishroulette.desktop.lesson;
+package ua.pp.disik.englishroulette.desktop.lesson.exercise;
 
 import ua.pp.disik.englishroulette.desktop.entity.ExerciseDto;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
 import ua.pp.disik.englishroulette.desktop.service.SettingService;
 
-import java.time.temporal.ChronoUnit;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class RepeatingLesson implements Lesson {
+public class RepeatingExerciseSet implements ExerciseSet {
     private final ExerciseService exerciseService;
     private final SettingService settingService;
 
     private List<ExerciseDto> exercises;
     private ExerciseDto current;
-    private int successNumber = 0;
     private int allNumber;
 
-    public RepeatingLesson(
+    public RepeatingExerciseSet(
             ExerciseService exerciseService,
             SettingService settingService
     ) {
@@ -39,40 +38,36 @@ public class RepeatingLesson implements Lesson {
     }
 
     @Override
-    public int getAmmount() {
+    public int getAmount() {
         return exercises.size();
     }
 
     @Override
-    public int getCurrentCount() {
-        return 0;
-    }
-
-    @Override
-    public Side getCurrentAvers() {
-        return new Side(
-                current.getNativePhrases().stream()
-                        .map(phrase -> phrase.getBody().trim())
-                        .toList(),
-                false
-        );
-    }
-
-    @Override
-    public Side getCurrentRevers() {
-        return new Side(
-                current.getForeignPhrases().stream()
-                        .map(phrase -> phrase.getBody().trim())
-                        .toList(),
-                true
-        );
+    public ExerciseCard getCurrent() {
+        if (current != null) {
+            return new ExerciseCard(
+                    new ExerciseSide(
+                            current.getNativePhrases().stream()
+                                    .map(phrase -> phrase.getBody().trim())
+                                    .toList(),
+                            false
+                    ),
+                    new ExerciseSide(
+                            current.getForeignPhrases().stream()
+                                   .map(phrase -> phrase.getBody().trim())
+                                   .toList(),
+                            true
+                    ),
+                    0
+            );
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void rememberCurrent() {
         if (current != null) {
-            successNumber++;
-
             Map<SettingName, String> settings = settingService.getMap();
 
             long checkedAt = Instant.now().truncatedTo(ChronoUnit.DAYS).plus(
@@ -100,18 +95,13 @@ public class RepeatingLesson implements Lesson {
 
     public void next() {
         if (exercises.size() > 0) {
-            exercises.removeFirst();
+            exercises.remove(current);
             if (exercises.size() > 0) {
                 current = exercises.getFirst();
             } else {
                 current = null;
             }
         }
-    }
-
-    @Override
-    public int getSuccessNumber() {
-        return successNumber;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ua.pp.disik.englishroulette.desktop.lesson;
+package ua.pp.disik.englishroulette.desktop.lesson.exercise;
 
 import ua.pp.disik.englishroulette.desktop.entity.ExerciseDto;
 import ua.pp.disik.englishroulette.desktop.entity.SettingName;
@@ -8,16 +8,15 @@ import ua.pp.disik.englishroulette.desktop.service.SettingService;
 import java.util.Collections;
 import java.util.List;
 
-public class ReadingLesson implements Lesson {
+public class ReadingExerciseSet implements ExerciseSet {
     private final ExerciseService exerciseService;
     private final SettingService settingService;
 
     private List<ExerciseDto> exercises;
     private ExerciseDto current;
-    private int successNumber = 0;
     private int allNumber;
 
-    public ReadingLesson(
+    public ReadingExerciseSet(
             ExerciseService exerciseService,
             SettingService settingService
     ) {
@@ -36,40 +35,36 @@ public class ReadingLesson implements Lesson {
     }
 
     @Override
-    public int getAmmount() {
+    public int getAmount() {
         return exercises.size();
     }
 
     @Override
-    public int getCurrentCount() {
-        return current.getReadingCount();
-    }
-
-    @Override
-    public Side getCurrentAvers() {
-        return new Side(
-                current.getForeignPhrases().stream()
-                        .map(phrase -> phrase.getBody().trim())
-                        .toList(),
-                true
-        );
-    }
-
-    @Override
-    public Side getCurrentRevers() {
-        return new Side(
-                current.getNativePhrases().stream()
-                        .map(phrase -> phrase.getBody().trim())
-                        .toList(),
-                false
-        );
+    public ExerciseCard getCurrent() {
+        if (current != null) {
+            return new ExerciseCard(
+                    new ExerciseSide(
+                            current.getForeignPhrases().stream()
+                                   .map(phrase -> phrase.getBody().trim())
+                                   .toList(),
+                            true
+                    ),
+                    new ExerciseSide(
+                            current.getNativePhrases().stream()
+                                    .map(phrase -> phrase.getBody().trim())
+                                    .toList(),
+                            false
+                    ),
+                    current.getReadingCount()
+            );
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void rememberCurrent() {
         if (current != null) {
-            successNumber++;
-
             int readingCount = current.getReadingCount() - 1;
             current.setReadingCount(readingCount);
             exerciseService.save(current);
@@ -81,18 +76,13 @@ public class ReadingLesson implements Lesson {
 
     public void next() {
         if (exercises.size() > 0) {
-            exercises.removeFirst();
+            exercises.remove(current);
             if (exercises.size() > 0) {
                 current = exercises.getFirst();
             } else {
                 current = null;
             }
         }
-    }
-
-    @Override
-    public int getSuccessNumber() {
-        return successNumber;
     }
 
     @Override

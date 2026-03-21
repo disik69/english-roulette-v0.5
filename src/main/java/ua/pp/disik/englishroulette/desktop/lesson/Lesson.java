@@ -1,25 +1,16 @@
 package ua.pp.disik.englishroulette.desktop.lesson;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-import java.util.List;
+import ua.pp.disik.englishroulette.desktop.lesson.exercise.ExerciseSide;
 
 public interface Lesson {
-    @AllArgsConstructor
-    @Getter
-    class Side {
-        private List<String> phrases;
-        private boolean spoken;
-    }
-
-    int getAmmount();
+    int getAmount();
     int getCurrentCount();
-    Side getCurrentAvers();
-    Side getCurrentRevers();
+    ExerciseSide getCurrentAvers();
+    ExerciseSide getCurrentRevers();
     void rememberCurrent();
     void dontRememberCurrent();
     void next();
     int getSuccessNumber();
     int getAllNumber();
+    boolean rewind();
 }

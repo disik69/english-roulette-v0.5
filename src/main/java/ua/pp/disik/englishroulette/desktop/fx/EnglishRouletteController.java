@@ -28,9 +28,11 @@ import ua.pp.disik.englishroulette.desktop.fx.stage.MessageStage;
 import ua.pp.disik.englishroulette.desktop.fx.stage.SelfCheckLessonStage;
 import ua.pp.disik.englishroulette.desktop.fx.stage.WritingCheckLessonStage;
 import ua.pp.disik.englishroulette.desktop.lesson.Lesson;
-import ua.pp.disik.englishroulette.desktop.lesson.MemoryLesson;
-import ua.pp.disik.englishroulette.desktop.lesson.ReadingLesson;
-import ua.pp.disik.englishroulette.desktop.lesson.RepeatingLesson;
+import ua.pp.disik.englishroulette.desktop.lesson.CycledLesson;
+import ua.pp.disik.englishroulette.desktop.lesson.SimpleLesson;
+import ua.pp.disik.englishroulette.desktop.lesson.exercise.MemoryExerciseSet;
+import ua.pp.disik.englishroulette.desktop.lesson.exercise.ReadingExerciseSet;
+import ua.pp.disik.englishroulette.desktop.lesson.exercise.RepeatingExerciseSet;
 import ua.pp.disik.englishroulette.desktop.service.ExerciseService;
 import ua.pp.disik.englishroulette.desktop.service.SettingService;
 
@@ -212,8 +214,11 @@ public class EnglishRouletteController {
     }
 
     public void handleReading(ActionEvent event) {
-        Lesson lesson = new ReadingLesson(exerciseService, settingService);
-        if (lesson.getAmmount() > 0) {
+        Lesson lesson = new CycledLesson(new ReadingExerciseSet(
+                exerciseService,
+                settingService
+        ));
+        if (lesson.getAmount() > 0) {
             currentLesson.setLesson(lesson);
 
             renderLesson(new SelfCheckLessonStage(
@@ -231,8 +236,10 @@ public class EnglishRouletteController {
     }
 
     public void handleMemory(ActionEvent event) {
-        Lesson lesson = new MemoryLesson(exerciseService, settingService);
-        if (lesson.getAmmount() > 0) {
+        Lesson lesson = new CycledLesson(new MemoryExerciseSet(
+                exerciseService, settingService
+        ));
+        if (lesson.getAmount() > 0) {
             currentLesson.setLesson(lesson);
 
             renderLesson(new WritingCheckLessonStage(
@@ -250,8 +257,10 @@ public class EnglishRouletteController {
     }
 
     public void handleRepeating(ActionEvent event) {
-        Lesson lesson = new RepeatingLesson(exerciseService, settingService);
-        if (lesson.getAmmount() > 0) {
+        Lesson lesson = new SimpleLesson(new RepeatingExerciseSet(
+                exerciseService, settingService
+        ));
+        if (lesson.getAmount() > 0) {
             currentLesson.setLesson(lesson);
 
             renderLesson(new WritingCheckLessonStage(
