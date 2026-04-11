@@ -9,6 +9,10 @@
     -fx-border-color: blue;
 }
 
+.exercise-error {
+     -fx-text-fill: red;
+}
+
 #exerciseLabel {
     -fx-text-alignment: center;
 }
