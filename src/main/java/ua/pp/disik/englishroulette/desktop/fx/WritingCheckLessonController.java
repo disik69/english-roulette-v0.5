@@ -29,7 +29,7 @@ import java.util.List;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class WritingCheckLessonController {
-    private final BooleanProperty disabledNextExerciseProperty = new SimpleBooleanProperty();
+    private final BooleanProperty disabledNextProperty = new SimpleBooleanProperty();
 
     private Voice voice;
     private boolean reversExercise = false;
@@ -67,7 +67,7 @@ public class WritingCheckLessonController {
         voice = VoiceManager.getInstance().getVoice("kevin16");
         voice.allocate();
 
-        nextButton.disableProperty().bind(disabledNextExerciseProperty);
+        nextButton.disableProperty().bind(disabledNextProperty);
 
         setCurrentExercise();
     }
@@ -86,7 +86,7 @@ public class WritingCheckLessonController {
 
             checkText.setText("");
 
-            disabledNextExerciseProperty.set(true);
+            disabledNextProperty.set(true);
 
             setAvers();
         } else {
@@ -99,7 +99,7 @@ public class WritingCheckLessonController {
             check.getStyleClass().removeAll("card", "revers-card");
             checkText.setText("");
 
-            disabledNextExerciseProperty.set(true);
+            disabledNextProperty.set(true);
 
             MessageStage result = new MessageStage(
                     "Result",
@@ -165,12 +165,12 @@ public class WritingCheckLessonController {
             if (exerciseLabel.getStyleClass().contains("exercise-error")) {
                 exerciseLabel.getStyleClass().remove("exercise-error");
             }
-            disabledNextExerciseProperty.set(false);
+            disabledNextProperty.set(false);
         } else {
             if (! exerciseLabel.getStyleClass().contains("exercise-error")) {
                 exerciseLabel.getStyleClass().add("exercise-error");
             }
-            disabledNextExerciseProperty.set(true);
+            disabledNextProperty.set(true);
         }
 
         reversExercise = true;
@@ -189,7 +189,7 @@ public class WritingCheckLessonController {
     }
 
     public void handleNext(ActionEvent event) {
-        if (! disabledNextExerciseProperty.get()) {
+        if (! disabledNextProperty.get()) {
             currentLesson.getLesson().next();
 
             setCurrentExercise();

@@ -35,10 +35,13 @@ public class SelfCheckLessonStage extends Stage {
                         ((SelfCheckLessonController) viewLoader.getController()).handleTurn(null);
                     }
                     case KeyCode.Y -> {
-                        ((SelfCheckLessonController) viewLoader.getController()).handleYES(null);
+                        ((SelfCheckLessonController) viewLoader.getController()).handleYes(null);
+                    }
+                    case KeyCode.E -> {
+                        ((SelfCheckLessonController) viewLoader.getController()).handleNext(null);
                     }
                     case KeyCode.N -> {
-                        ((SelfCheckLessonController) viewLoader.getController()).handleNO(null);
+                        ((SelfCheckLessonController) viewLoader.getController()).handleNo(null);
                     }
                 }
             }

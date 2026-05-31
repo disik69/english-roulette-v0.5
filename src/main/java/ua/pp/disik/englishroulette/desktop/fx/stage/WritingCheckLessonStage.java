@@ -34,7 +34,7 @@ public class WritingCheckLessonStage extends Stage {
                     case KeyCode.T -> {
                         ((WritingCheckLessonController) viewLoader.getController()).handleTurn(null);
                     }
-                    case KeyCode.N -> {
+                    case KeyCode.E -> {
                         ((WritingCheckLessonController) viewLoader.getController()).handleNext(null);
                     }
                 }

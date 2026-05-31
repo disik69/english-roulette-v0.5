@@ -4,7 +4,6 @@ import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -26,13 +24,14 @@ import java.util.List;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@Slf4j
 public class SelfCheckLessonController {
     private final BooleanProperty disabledYesNoProperty = new SimpleBooleanProperty();
+    private final BooleanProperty disabledYesProperty = new SimpleBooleanProperty();
+    private final BooleanProperty disabledNextProperty = new SimpleBooleanProperty();
+    private final BooleanProperty disabledNoProperty = new SimpleBooleanProperty();
 
     private Voice voice;
     private boolean reversExercise = false;
-    private boolean turnableExercise = true;
 
     @Autowired
     private CurrentLesson currentLesson;
@@ -54,6 +53,9 @@ public class SelfCheckLessonController {
 
     @FXML
     private Button yesButton;
+
+    @FXML
+    private Button nextButton;
 
     @FXML
     private Button noButton;
@@ -107,12 +109,10 @@ public class SelfCheckLessonController {
     }
 
     public void handleTurn(MouseEvent event) {
-        if (turnableExercise) {
-            if (reversExercise) {
-                setAvers();
-            } else {
-                setRevers();
-            }
+        if (reversExercise) {
+            setAvers();
+        } else {
+            setRevers();
         }
     }
 
@@ -160,7 +160,7 @@ public class SelfCheckLessonController {
         }
     }
 
-    public void handleYES(ActionEvent event) {
+    public void handleYes(ActionEvent event) {
         if (! disabledYesNoProperty.get()) {
             currentLesson.getLesson().rememberCurrent();
             currentLesson.getLesson().next();
@@ -169,35 +169,16 @@ public class SelfCheckLessonController {
         }
     }
 
-    public void handleNO(ActionEvent actionEvent) {
+    public void handleNext(ActionEvent event) {
+
+    }
+
+    public void handleNo(ActionEvent actionEvent) {
         if (! disabledYesNoProperty.get()) {
-            disabledYesNoProperty.set(true);
-            turnableExercise = false;
-            exerciseLabel.getStyleClass().add("exercise-error");
+            currentLesson.getLesson().dontRememberCurrent();
+            currentLesson.getLesson().next();
 
-            Task<Void> task = new Task<>() {
-                @Override
-                protected Void call() {
-                    try {
-                        Thread.sleep(1500);
-                    } catch (InterruptedException e) {
-                        log.debug("NO handler was interrupted.");
-                    } finally {
-                        succeeded();
-                    }
-                    return null;
-                }
-            };
-            task.setOnSucceeded(workStateEvent -> {
-                exerciseLabel.getStyleClass().remove("exercise-error");
-                turnableExercise = true;
-
-                currentLesson.getLesson().dontRememberCurrent();
-                currentLesson.getLesson().next();
-
-                setCurrentExercise();
-            });
-            new Thread(task).start();
+            setCurrentExercise();
         }
     }
 }

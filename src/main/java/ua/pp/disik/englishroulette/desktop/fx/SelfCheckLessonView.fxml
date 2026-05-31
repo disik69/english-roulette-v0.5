@@ -16,8 +16,12 @@
         <Insets bottom="5" left="5" right="5" top="5"/>
     </padding>
     <columnConstraints>
-        <ColumnConstraints percentWidth="50"/>
-        <ColumnConstraints percentWidth="50"/>
+        <ColumnConstraints percentWidth="16.65"/>
+        <ColumnConstraints percentWidth="16.65"/>
+        <ColumnConstraints percentWidth="16.65"/>
+        <ColumnConstraints percentWidth="16.65"/>
+        <ColumnConstraints percentWidth="16.65"/>
+        <ColumnConstraints percentWidth="16.65"/>
     </columnConstraints>
     <rowConstraints>
         <RowConstraints percentHeight="20"/>
@@ -29,15 +33,17 @@
                GridPane.halignment="CENTER"
                GridPane.columnIndex="0"
                GridPane.rowIndex="0"
+               GridPane.columnSpan="3"
                style="-fx-font-size: 15px;"/>
         <Label fx:id="countLabel"
                GridPane.halignment="CENTER"
-               GridPane.columnIndex="1"
+               GridPane.columnIndex="3"
                GridPane.rowIndex="0"
+               GridPane.columnSpan="3"
                style="-fx-font-size: 15px;"/>
         <StackPane GridPane.columnIndex="0"
                    GridPane.rowIndex="1"
-                   GridPane.columnSpan="2">
+                   GridPane.columnSpan="6">
             <padding>
                 <Insets left="25" right="25"/>
             </padding>
@@ -51,15 +57,23 @@
                 </StackPane>
             </children>
         </StackPane>
-        <Button fx:id="yesButton" text="YES" onAction="#handleYES"
-                GridPane.halignment="CENTER"
+        <Button fx:id="yesButton" text="YES" onAction="#handleYes"
+                GridPane.halignment="RIGHT"
                 GridPane.columnIndex="0"
                 GridPane.rowIndex="2"
+                GridPane.columnSpan="2"
                 style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: green;"/>
-        <Button fx:id="noButton" text="NO" onAction="#handleNO"
+        <Button fx:id="nextButton" text="NEXT" onAction="#handleNext"
                 GridPane.halignment="CENTER"
-                GridPane.columnIndex="1"
+                GridPane.columnIndex="2"
                 GridPane.rowIndex="2"
+                GridPane.columnSpan="2"
+                style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: blue;"/>
+        <Button fx:id="noButton" text="NO" onAction="#handleNo"
+                GridPane.halignment="LEFT"
+                GridPane.columnIndex="4"
+                GridPane.rowIndex="2"
+                GridPane.columnSpan="2"
                 style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: red;"/>
     </children>
 </GridPane>
