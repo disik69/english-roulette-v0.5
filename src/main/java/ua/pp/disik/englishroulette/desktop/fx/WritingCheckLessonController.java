@@ -181,7 +181,10 @@ public class WritingCheckLessonController {
             String speakingLine = side.getPhrases().stream()
                     .reduce((first, second) -> first + "; " + second)
                     .orElse("");
-            new Thread(() -> voice.speak(speakingLine)).start();
+            Thread speakingThread =
+                    new Thread(() -> voice.speak(speakingLine));
+            speakingThread.setDaemon(true);
+            speakingThread.start();
         }
     }
 
