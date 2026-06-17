@@ -82,11 +82,11 @@ public class WritingCheckLessonController {
             numberLabel.setText(String.valueOf(lesson.getAmount()));
             countLabel.setText(String.valueOf(lesson.getCurrentCount()));
 
+            disabledNextProperty.set(true);
+
             checkedExercise = false;
 
             checkText.setText("");
-
-            disabledNextProperty.set(true);
 
             setAvers();
         } else {

@@ -26,12 +26,12 @@ import java.util.List;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SelfCheckLessonController {
     private final BooleanProperty disabledYesNoProperty = new SimpleBooleanProperty();
-    private final BooleanProperty disabledYesProperty = new SimpleBooleanProperty();
     private final BooleanProperty disabledNextProperty = new SimpleBooleanProperty();
-    private final BooleanProperty disabledNoProperty = new SimpleBooleanProperty();
 
     private Voice voice;
     private boolean reversExercise = false;
+    private boolean yesAction = false;
+    private boolean noAction = false;
 
     @Autowired
     private CurrentLesson currentLesson;
@@ -66,6 +66,7 @@ public class SelfCheckLessonController {
         voice.allocate();
 
         yesButton.disableProperty().bind(disabledYesNoProperty);
+        nextButton.disableProperty().bind(disabledNextProperty);
         noButton.disableProperty().bind(disabledYesNoProperty);
 
         setCurrentExercise();
@@ -81,6 +82,11 @@ public class SelfCheckLessonController {
             numberLabel.setText(String.valueOf(lesson.getAmount()));
             countLabel.setText(String.valueOf(lesson.getCurrentCount()));
 
+            disabledNextProperty.set(true);
+
+            yesAction = false;
+            noAction = false;
+
             setAvers();
         } else {
             numberLabel.setText("");
@@ -90,6 +96,7 @@ public class SelfCheckLessonController {
             exerciseLabel.setText("");
 
             disabledYesNoProperty.set(true);
+            disabledNextProperty.set(true);
 
             MessageStage result = new MessageStage(
                     "Result",
@@ -117,7 +124,9 @@ public class SelfCheckLessonController {
     }
 
     private void setAvers() {
-        disabledYesNoProperty.set(true);
+        if ((! yesAction) && (! noAction)) {
+            disabledYesNoProperty.set(true);
+        }
 
         card.getStyleClass().remove("revers-card");
 
@@ -126,11 +135,17 @@ public class SelfCheckLessonController {
         exerciseLabel.setText(convertToCard(side.getPhrases()));
         speakSide(side);
 
+        if (exerciseLabel.getStyleClass().contains("exercise-error")) {
+            exerciseLabel.getStyleClass().remove("exercise-error");
+        }
+
         reversExercise = false;
     }
 
     private void setRevers() {
-        disabledYesNoProperty.set(false);
+        if ((! yesAction) && (! noAction)) {
+            disabledYesNoProperty.set(false);
+        }
 
         card.getStyleClass().add("revers-card");
 
@@ -138,6 +153,14 @@ public class SelfCheckLessonController {
         ExerciseSide side = lesson.getCurrentRevers();
         exerciseLabel.setText(convertToCard(side.getPhrases()));
         speakSide(side);
+
+        if (noAction) {
+            disabledNextProperty.set(false);
+
+            if (! exerciseLabel.getStyleClass().contains("exercise-error")) {
+                exerciseLabel.getStyleClass().add("exercise-error");
+            }
+        }
 
         reversExercise = true;
     }
@@ -162,23 +185,37 @@ public class SelfCheckLessonController {
 
     public void handleYes(ActionEvent event) {
         if (! disabledYesNoProperty.get()) {
+            disabledYesNoProperty.set(true);
+            yesAction = true;
+
             currentLesson.getLesson().rememberCurrent();
+
+            disabledNextProperty.set(false);
+        }
+    }
+
+    public void handleNext(ActionEvent event) {
+        if (! disabledNextProperty.get()) {
             currentLesson.getLesson().next();
+
+            if (exerciseLabel.getStyleClass().contains("exercise-error")) {
+                exerciseLabel.getStyleClass().remove("exercise-error");
+            }
 
             setCurrentExercise();
         }
     }
 
-    public void handleNext(ActionEvent event) {
-
-    }
-
     public void handleNo(ActionEvent actionEvent) {
         if (! disabledYesNoProperty.get()) {
-            currentLesson.getLesson().dontRememberCurrent();
-            currentLesson.getLesson().next();
+            disabledYesNoProperty.set(true);
+            noAction = true;
 
-            setCurrentExercise();
+            currentLesson.getLesson().dontRememberCurrent();
+
+            if (! exerciseLabel.getStyleClass().contains("exercise-error")) {
+                exerciseLabel.getStyleClass().add("exercise-error");
+            }
         }
     }
 }
