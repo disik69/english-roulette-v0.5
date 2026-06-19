@@ -64,10 +64,10 @@
                 GridPane.columnSpan="2"
                 style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: green;"/>
         <Button fx:id="nextButton" text="NEXT" onAction="#handleNext"
-                GridPane.halignment="CENTER"
-                GridPane.columnIndex="2"
+                GridPane.halignment="RIGHT"
+                GridPane.columnIndex="3"
                 GridPane.rowIndex="2"
-                GridPane.columnSpan="2"
+                GridPane.columnSpan="1"
                 style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: blue;"/>
         <Button fx:id="noButton" text="NO" onAction="#handleNo"
                 GridPane.halignment="LEFT"

@@ -30,7 +30,6 @@ public class SelfCheckLessonController {
 
     private Voice voice;
     private boolean reversExercise = false;
-    private boolean yesAction = false;
     private boolean noAction = false;
 
     @Autowired
@@ -82,9 +81,9 @@ public class SelfCheckLessonController {
             numberLabel.setText(String.valueOf(lesson.getAmount()));
             countLabel.setText(String.valueOf(lesson.getCurrentCount()));
 
+            disabledYesNoProperty.set(true);
             disabledNextProperty.set(true);
 
-            yesAction = false;
             noAction = false;
 
             setAvers();
@@ -124,7 +123,7 @@ public class SelfCheckLessonController {
     }
 
     private void setAvers() {
-        if ((! yesAction) && (! noAction)) {
+        if (! noAction) {
             disabledYesNoProperty.set(true);
         }
 
@@ -143,7 +142,7 @@ public class SelfCheckLessonController {
     }
 
     private void setRevers() {
-        if ((! yesAction) && (! noAction)) {
+        if (! noAction) {
             disabledYesNoProperty.set(false);
         }
 
@@ -185,12 +184,10 @@ public class SelfCheckLessonController {
 
     public void handleYes(ActionEvent event) {
         if (! disabledYesNoProperty.get()) {
-            disabledYesNoProperty.set(true);
-            yesAction = true;
-
             currentLesson.getLesson().rememberCurrent();
+            currentLesson.getLesson().next();
 
-            disabledNextProperty.set(false);
+            setCurrentExercise();
         }
     }
 
