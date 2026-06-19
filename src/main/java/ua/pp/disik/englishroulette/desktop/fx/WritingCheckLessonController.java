@@ -96,7 +96,7 @@ public class WritingCheckLessonController {
             card.getStyleClass().removeAll("card", "revers-card");
             exerciseLabel.setText("");
 
-            check.getStyleClass().removeAll("card", "revers-card");
+            check.setVisible(false);
             checkText.setText("");
 
             disabledNextProperty.set(true);
@@ -110,7 +110,7 @@ public class WritingCheckLessonController {
 
             if (lesson.rewind()) {
                 card.getStyleClass().add("card");
-                check.getStyleClass().addAll("card", "revers-card");
+                check.setVisible(true);
 
                 setCurrentExercise();
             } else {
