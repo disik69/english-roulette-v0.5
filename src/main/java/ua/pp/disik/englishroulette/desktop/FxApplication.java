@@ -1,6 +1,7 @@
 package ua.pp.disik.englishroulette.desktop;
 
 import javafx.application.Application;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -29,8 +30,17 @@ public class FxApplication extends Application {
         BorderPane englishRouletteView = viewLoader.load();
 
         Scene scene = new Scene(englishRouletteView);
-
+        scene.setOnKeyPressed(event -> {
+            if (event.isControlDown()) {
+                switch (event.getCode()) {
+                    case KeyCode.N -> {
+                        ((EnglishRouletteController) viewLoader.getController()).handleCreate(null);
+                    }
+                }
+            }
+        });
         stage.setScene(scene);
+
         stage.setWidth(Screen.getPrimary().getBounds().getWidth() / 2.1);
         stage.setHeight(Screen.getPrimary().getBounds().getHeight() / 1.2);
         stage.setTitle("English Roulette");

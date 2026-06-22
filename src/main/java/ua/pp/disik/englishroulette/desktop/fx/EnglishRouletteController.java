@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -381,9 +382,27 @@ public class EnglishRouletteController {
         GridPane exerciseView = viewLoader.load();
 
         Scene scene = new Scene(exerciseView);
+        scene.setOnKeyPressed(event -> {
+            if (event.isControlDown()) {
+                switch (event.getCode()) {
+                    case KeyCode.S -> {
+                        ((ExerciseController) viewLoader.getController()).handleSave(null);
+                    }
+                    case KeyCode.P -> {
+                        ((ExerciseController) viewLoader.getController()).handlePhrase(null);
+                    }
+                }
+            }
+            switch (event.getCode()) {
+                case KeyCode.ESCAPE -> {
+                    ((ExerciseController) viewLoader.getController()).handleESC(null);
+                }
+            }
+        });
 
         Stage stage = new Stage();
         stage.setScene(scene);
+
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(main.getScene().getWindow());
         stage.setWidth(main.getScene().getWindow().getWidth() / 2);

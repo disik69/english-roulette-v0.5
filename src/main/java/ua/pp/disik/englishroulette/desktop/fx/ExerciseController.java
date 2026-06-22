@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -208,8 +209,15 @@ public class ExerciseController {
             GridPane phraseView = viewLoader.load();
 
             Scene scene = new Scene(phraseView);
-
+            scene.setOnKeyPressed(keyPressEvent -> {
+                switch (keyPressEvent.getCode()) {
+                    case KeyCode.ESCAPE -> {
+                        ((PhraseController) viewLoader.getController()).handleOK(null);
+                    }
+                }
+            });
             phraseStage.setScene(scene);
+
             phraseStage.setWidth(main.getScene().getWindow().getWidth());
             phraseStage.setHeight(main.getScene().getWindow().getHeight());
             phraseStage.setX(
@@ -221,5 +229,9 @@ public class ExerciseController {
             phraseStage.setTitle("Phrase");
             phraseStage.showAndWait();
         }
+    }
+
+    public void handleESC(ActionEvent event) {
+        main.getScene().getWindow().hide();
     }
 }

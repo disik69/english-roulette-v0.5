@@ -4,6 +4,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,13 @@ public class PhraseController {
     @FXML
     private void initialize() {
         phraseText.setText(currentPhrase.getBody());
+        phraseText.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case KeyCode.ENTER -> {
+                    this.handleSearch(null);
+                }
+            }
+        });
 
         ToggleGroup group = new ToggleGroup();
         group.getToggles().setAll(fnRadio, nfRadio);
